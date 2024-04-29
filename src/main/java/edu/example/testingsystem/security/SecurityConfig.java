@@ -21,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -56,6 +57,12 @@ public class SecurityConfig {
                         .formLogin(form -> form
                                 .loginPage("/login")
                                 .permitAll());
+
+//                      <form method="POST" th:action="@{/logout}">
+//                      <input type="submit" value="Logout"/>
+//                      </form>
+//                        .logout()
+//                        .logoutSuccessUrl("/")
         return http.build();
     }
 
