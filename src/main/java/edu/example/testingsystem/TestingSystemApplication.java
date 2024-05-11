@@ -18,9 +18,7 @@ public class TestingSystemApplication implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("homeUser");
-        registry.addViewController("/admin").setViewName("homeAdmin");
-        registry.addViewController("/director").setViewName("homeDirector");
+        registry.addViewController("/").setViewName("home");
         registry.addViewController("/login");
     }
 

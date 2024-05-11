@@ -14,8 +14,11 @@ INSERT INTO userr VALUES ('2','admin','$2a$10$IxwXIodgb8Y5LfJ9LNAhf.3VpW8oVC954E
 
 --проекты
 INSERT INTO project VALUES (1,'Набор требований для проекта','Test project');
-INSERT INTO test_plan VALUES (false,3,1,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project');
-INSERT INTO scenario VALUES (3,4,1);
-INSERT INTO test_case VALUES (3,1,'Ввести по порядку следующие цифры','1 2 3','3 2 1','Test project');
+INSERT INTO test_plan VALUES (false,3,1,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование ввода');
+INSERT INTO scenario VALUES (3,4,1,'Тестирование ввода таким-то пользователем');
+INSERT INTO test_case VALUES (3,1,'Ввести по порядку следующие цифры','1 2 3','3 2 1','Test project','Проверка ввода формы');
+
+
+
 INSERT INTO scenario_case_connection VALUES (1,false,1,1,null);
 INSERT INTO test_plan_scenarios VALUES (1,1);

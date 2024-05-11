@@ -4,6 +4,7 @@ import edu.example.testingsystem.entities.Role;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
@@ -28,6 +30,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+    public SecurityConfig(AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,11 +58,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/director").hasRole("DIRECTOR")
                         .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/analyst/**").hasRole("ANALYST")
                         .anyRequest().permitAll())
-
-
 //                        .formLogin(withDefaults());
-                        .formLogin(form -> form
+                        .formLogin(form -> form.successHandler(authenticationSuccessHandler)
                                 .loginPage("/login")
                                 .permitAll());
 
