@@ -7,7 +7,7 @@
 <body>
 
 <h2>Удаление тест-плана</h2>
-<form th:action="@{/analyst/testPlans/process}" method="POST" th:object="${testPlanId}">
+<form th:action="@{/analyst/testPlans/delete}" method="POST" th:object="${testPlanId}">
     <select class="form-control" name="testPlanId">
         <option value="0">Выберите тест-план</option>
         <option th:each="plan : ${allPlans}" th:value="${plan.id}" th:text="${plan.title}"></option>
@@ -33,7 +33,7 @@
 </form>
 
 
-<h2>Выберите тест-план и тест-кейсы которые необходимо в него включить</h2>
+<h2>Выберите тест-план и сценарии которые необходимо в него включить</h2>
 <form  th:action="@{/analyst/testPlans/populate}" method="POST" th:object="${populateTestPlanForm}">
     <select class="form-control" name="testPlanId" th:field="*{testPlanId}">
         <option value="0">Выберите тест-план</option>

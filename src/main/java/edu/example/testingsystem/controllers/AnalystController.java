@@ -52,7 +52,6 @@ public class AnalystController {
 
     @PostMapping("/projectName")
     public String showSelectedProjectData(@ModelAttribute("projectName") String projectName,Model model) {
-        System.out.println(projectName);
         if(projectName.equals("0"))
             return "analyst";
         Project selectedProject = projectRepo.findById(projectName).get();
