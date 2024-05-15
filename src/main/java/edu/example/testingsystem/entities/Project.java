@@ -16,7 +16,7 @@ public class Project {
     private String title;
     @ManyToOne
     private Userr director;
-    private String requir;//требования
+
 //    @OneToMany(mappedBy = "project")
 //    private List<TestPlan> testPlans = new ArrayList<>();
 //    @OneToMany(mappedBy = "project")

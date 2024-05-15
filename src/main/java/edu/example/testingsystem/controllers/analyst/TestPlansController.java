@@ -1,4 +1,4 @@
-package edu.example.testingsystem.controllers;
+package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.Scenario;

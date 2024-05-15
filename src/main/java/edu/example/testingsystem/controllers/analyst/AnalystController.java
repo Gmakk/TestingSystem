@@ -1,15 +1,13 @@
-package edu.example.testingsystem.controllers;
+package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.Requirement;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.ProjectRepository;
+import edu.example.testingsystem.repos.RequirementRepository;
 import edu.example.testingsystem.repos.UserRepository;
 import edu.example.testingsystem.security.WorkWithData;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +20,11 @@ import java.util.List;
 public class AnalystController {
 
     private final ProjectRepository projectRepo;
-    private final UserRepository userRepo;
+    private final RequirementRepository requirementRepo;
 
-    public AnalystController(ProjectRepository projectRepository, UserRepository userRepository) {
+    public AnalystController(ProjectRepository projectRepository, RequirementRepository requirementRepository) {
         this.projectRepo = projectRepository;
-        this.userRepo = userRepository;
+        this.requirementRepo = requirementRepository;
     }
 
     @ModelAttribute("allProjects")
@@ -56,6 +54,8 @@ public class AnalystController {
             return "analyst";
         Project selectedProject = projectRepo.findById(projectName).get();
         model.addAttribute("selectedProject", selectedProject);
+        List<Requirement> requirements = requirementRepo.findByProject(selectedProject);
+        model.addAttribute("requirements", requirements);
         return "analyst";
     }
 }

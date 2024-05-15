@@ -1,4 +1,4 @@
-package edu.example.testingsystem.controllers;
+package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.forms.PopulateScenarioForm;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

@@ -56,9 +56,10 @@ public class SecurityConfig {
         //TODO: Настроить доступ для ролей
 
         http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/director").hasRole("DIRECTOR")
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/director/**").hasRole("DIRECTOR")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/analyst/**").hasRole("ANALYST")
+                        .requestMatchers("/tester/**").hasRole("TESTER")
                         .anyRequest().permitAll())
 //                        .formLogin(withDefaults());
                         .formLogin(form -> form.successHandler(authenticationSuccessHandler)

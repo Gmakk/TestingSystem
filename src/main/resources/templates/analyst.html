@@ -23,7 +23,11 @@
     <div th:if="${selectedProject != null}">
 <!--        описание проекта-->
         <h3 th:text="${selectedProject.title}"></h3>
-        <b th:text="${selectedProject.requir}"></b>
+        <div th:each="requirement : ${requirements}">
+            <b th:text="${requirement.description}"></b>
+            <br><br/>
+        </div>
+
 <!--        форма для добавления теста к выбранному проекту-->
 
         <form th:action="@{/analyst/testPlans}" method="get">
