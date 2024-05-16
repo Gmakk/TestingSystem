@@ -1,6 +1,7 @@
 package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.forms.TestCaseForm;
 import edu.example.testingsystem.repos.ConnectionRepository;
@@ -30,17 +31,20 @@ public class TestCasesController {
         return "testCases";
     }
 
-    @ModelAttribute("allTestCases")
+    @ModelAttribute("testCases")
     public List<TestCase> addTestCasesToModel(@ModelAttribute("selectedProject") Project project) {
         return testCaseRepo.findByProject(project);
     }
 
     @PostMapping("/delete")
-    public String deleteTestCase(@ModelAttribute("testCaseId") Integer testCaseId) {
-        if(testCaseId == 0)
+    public String deleteTestCase(@ModelAttribute("testCaseToDelete") TestCase testCase) {
+        if(testCase.getId() == null)
             return "testCases";
-        connectionRepo.deleteByTestCase(testCaseRepo.findById(testCaseId).get());
-        testCaseRepo.deleteById(testCaseId);
+        //List<ScenarioCaseConnection> connections = connectionRepo.findByTestCase(testCase);
+        //connectionRepo.deleteAll(connections);
+        //testCase = testCaseRepo.findById(testCase.getId()).get();
+        connectionRepo.deleteByTestCase(testCase);
+        testCaseRepo.deleteById(testCase.getId());
         return "redirect:/analyst/testCases";
 
     }

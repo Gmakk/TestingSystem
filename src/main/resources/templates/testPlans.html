@@ -7,10 +7,10 @@
 <body>
 
 <h2>Удаление тест-плана</h2>
-<form th:action="@{/analyst/testPlans/delete}" method="POST" th:object="${testPlanId}">
-    <select class="form-control" name="testPlanId">
+<form th:action="@{/analyst/testPlans/delete}" method="POST" th:object="${testPlanToDelete}">
+    <select class="form-control" name="testPlanToDelete">
         <option value="0">Выберите тест-план</option>
-        <option th:each="plan : ${allPlans}" th:value="${plan.id}" th:text="${plan.title}"></option>
+        <option th:each="plan : ${testPlans}" th:value="${plan.id}" th:text="${plan.title}"></option>
     </select>
     <button type="submit" name="action" value="delete">Удалить</button>
 </form>
@@ -35,13 +35,13 @@
 
 <h2>Выберите тест-план и сценарии которые необходимо в него включить</h2>
 <form  th:action="@{/analyst/testPlans/populate}" method="POST" th:object="${populateTestPlanForm}">
-    <select class="form-control" name="testPlanId" th:field="*{testPlanId}">
+    <select class="form-control" name="testPlanId" th:field="*{formTestPlan}">
         <option value="0">Выберите тест-план</option>
-        <option th:each="testPlan : ${allPlans}" th:value="${testPlan.id}" th:text="${testPlan.title}" ></option>
+        <option th:each="testPlan : ${testPlans}" th:value="${testPlan.id}" th:text="${testPlan.title}" ></option>
     </select>
 
 
-    <div th:each="scenario : ${allScenarios}">
+    <div th:each="scenario : ${scenarios}">
         <input type="checkbox"  th:value="${scenario.id}"  th:field="*{scenarios}"/>
         <span th:text="${scenario.title}"></span><br/>
     </div>

@@ -16,8 +16,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
-@Order(2)
+//@Component
+//@Order(2)
 public class RequestResponseLoggingFilter implements Filter {
 
     private final static Logger LOG = LoggerFactory.getLogger(RequestResponseLoggingFilter.class);

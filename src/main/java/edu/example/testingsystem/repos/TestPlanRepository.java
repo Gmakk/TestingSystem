@@ -13,4 +13,8 @@ public interface TestPlanRepository
         extends JpaRepository<TestPlan, Integer> {
 
     List<TestPlan> findByProject(Project project);
+
+    List<TestPlan> findByProjectAndApprovedIsFalse(Project project);
+
+    List<TestPlan> findByProjectAndApprovedIsTrue(Project project);
 }

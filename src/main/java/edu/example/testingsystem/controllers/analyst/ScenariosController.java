@@ -38,30 +38,30 @@ public class ScenariosController {
         return "scenarios";
     }
 
-    @ModelAttribute("allScenarios")
+    @ModelAttribute("scenarios")
     public List<Scenario> addScenariosToModel(@ModelAttribute("selectedProject") Project project) {
         //все тест планы текущего проекта
         //все сценарии этих тест планов
 //        List<TestPlan> allProjectPlans =  planRepo.findByProject(project);
-//        List<Scenario> allScenarios = new ArrayList<>();
+//        List<Scenario> scenarios = new ArrayList<>();
 //        for(TestPlan testPlan : allProjectPlans) {
-//            allScenarios.addAll(testPlan.getScenarios());
+//            scenarios.addAll(testPlan.getScenarios());
 //        }
-//        return allScenarios;
+//        return scenarios;
         return scenarioRepo.findAll();
     }
 
-    @ModelAttribute("allTestCases")
+    @ModelAttribute("testCases")
     public List<TestCase> addTestCasesToModel(@ModelAttribute("selectedProject") Project project) {
         return testCaseRepo.findByProject(project);
     }
 
     @PostMapping("/delete")
-    public String processTestPlan(@ModelAttribute("scenarioId") Integer scenarioId) {
-        if (scenarioId == 0)
+    public String processTestPlan(@ModelAttribute("scenarioToDelete") Scenario scenario) {
+        if (scenario.getId() == null)
             return "scenarios";
-        connectionRepo.deleteByScenario(scenarioRepo.findById(scenarioId).get());
-        scenarioRepo.deleteById(scenarioId);
+        connectionRepo.deleteByScenario(scenario);
+        scenarioRepo.delete(scenario);
         return "redirect:/analyst/scenarios";
     }
 
@@ -74,10 +74,10 @@ public class ScenariosController {
     @PostMapping("/populate")
     //TODO:удаление выбранных элементов
     public String populateScenario(@ModelAttribute("populateScenarioForm") PopulateScenarioForm form) {
-        if(form.getScenarioID() == 0)
-            return "scenarios";
+        if(form.getFormScenario() == null)
+            return "redirect:/analyst/scenarios";
         for(TestCase testCase : form.getTestCases())
-            connectionRepo.save(new ScenarioCaseConnection(null,null,false,scenarioRepo.findById(form.getScenarioID()).get(),testCase));
+            connectionRepo.save(new ScenarioCaseConnection(null,null,false,form.getFormScenario(),testCase));
         return "redirect:/analyst/scenarios";
     }
 }

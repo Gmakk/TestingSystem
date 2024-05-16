@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -37,21 +38,26 @@ public class TestPlansController {
         return "testPlans";
     }
 
-    @ModelAttribute("allPlans")
+    @ModelAttribute("testPlans")
     public List<TestPlan> addPlansToModel(@ModelAttribute("selectedProject") Project project) {
         return planRepo.findByProject(project);
     }
 
-    @ModelAttribute("allScenarios")
-    public List<Scenario> addScenariosToModel() {
+    @ModelAttribute("scenarios")
+    public List<Scenario> addScenariosToModel(@ModelAttribute("testPlans") List<TestPlan> testPlans) {
+//        List<Scenario> scenarios = new ArrayList<>();
+//        for (TestPlan testPlan : testPlans) {
+//            scenarios.addAll(testPlan.getScenarios());
+//        }
+//        return scenarios;
         return scenarioRepo.findAll();
     }
 
     @PostMapping("/delete")
-    public String processTestPlan(@ModelAttribute("testPlanId") Integer testPlanId) {
-        if (testPlanId == 0)
+    public String processTestPlan(@ModelAttribute("testPlanToDelete") TestPlan testPlan) {
+        if (testPlan.getId() == null)
             return "testPlans";
-        planRepo.deleteById(testPlanId);
+        planRepo.delete(testPlan);
         return "redirect:/analyst/testPlans";
     }
 
@@ -64,11 +70,10 @@ public class TestPlansController {
     @PostMapping("/populate")
     //TODO:удаление выбранных элементов
     public String populateTestPlan(@ModelAttribute("populateTestPlanForm") PopulateTestPlanForm form) {
-        if(form.getTestPlanId() == 0)
+        if(form.getFormTestPlan() == null)
             return "redirect:/analyst/testPlans";
-        TestPlan plan = planRepo.findById(form.getTestPlanId()).get();
-        plan.setScenarios(form.getScenarios());
-        planRepo.save(plan);
+        form.getFormTestPlan().setScenarios(form.getScenarios());
+        planRepo.save(form.getFormTestPlan());
         return "redirect:/analyst/testPlans";
     }
 

@@ -7,10 +7,10 @@
 <body>
 
 <h2>Удаление сценария</h2>
-<form th:action="@{/analyst/scenarios/delete}" method="POST" th:object="${scenarioId}">
-    <select class="form-control" name="scenarioId">
+<form th:action="@{/analyst/scenarios/delete}" method="POST" th:object="${scenarioToDelete}">
+    <select class="form-control" name="scenarioToDelete">
         <option value="0">Выберите сценарий тестирования</option>
-        <option th:each="scenario : ${allScenarios}" th:value="${scenario.id}" th:text="${scenario.title}"></option>
+        <option th:each="scenario : ${scenarios}" th:value="${scenario.id}" th:text="${scenario.title}"></option>
     </select>
     <button type="submit">Удалить</button>
 </form>
@@ -29,13 +29,13 @@
 
 <h2>Выберите сценарий и тест-кейсы которые необходимо в него включить</h2>
 <form  th:action="@{/analyst/scenarios/populate}" method="POST" th:object="${populateScenarioForm}">
-    <select class="form-control" name="scenarioId" th:field="*{scenarioID}">
+    <select class="form-control" name="scenarioId" th:field="*{formScenario}">
         <option value="0">Выберите сценарий тестирования</option>
-        <option th:each="scenario : ${allScenarios}" th:value="${scenario.id}" th:text="${scenario.title}" ></option>
+        <option th:each="scenario : ${scenarios}" th:value="${scenario.id}" th:text="${scenario.title}" ></option>
     </select>
 
 
-    <div th:each="testCase : ${allTestCases}">
+    <div th:each="testCase : ${testCases}">
         <input type="checkbox" name="linkedTestCases"  th:value="${testCase.id}"  th:field="*{testCases}"/>
         <span th:text="${testCase.title}"></span><br/>
     </div>

@@ -7,10 +7,10 @@
 <body>
 
 <h2>Выберите тест-кейс</h2>
-<form th:action="@{/analyst/testCases/delete}" method="POST" th:object="${testCaseId}">
-    <select class="form-control" name="testCaseId">
+<form th:action="@{/analyst/testCases/delete}" method="POST" th:object="${testCaseToDelete}">
+    <select class="form-control" name="testCaseToDelete">
         <option value="0">Выберите тест-кейс</option>
-        <option th:each="testCase : ${allTestCases}" th:value="${testCase.id}" th:text="${testCase.title}"></option>
+        <option th:each="testCase : ${testCases}" th:value="${testCase.id}" th:text="${testCase.title}"></option>
     </select>
     <button type="submit">Удалить</button>
 </form>

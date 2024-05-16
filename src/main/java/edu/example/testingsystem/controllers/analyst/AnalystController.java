@@ -5,7 +5,6 @@ import edu.example.testingsystem.entities.Requirement;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.RequirementRepository;
-import edu.example.testingsystem.repos.UserRepository;
 import edu.example.testingsystem.security.WorkWithData;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,7 @@ public class AnalystController {
         this.requirementRepo = requirementRepository;
     }
 
-    @ModelAttribute("allProjects")
+    @ModelAttribute("projects")
     public List<Project> addProjectsToModel() {
         return projectRepo.findAll();
     }
@@ -49,13 +48,14 @@ public class AnalystController {
     }
 
     @PostMapping("/projectName")
-    public String showSelectedProjectData(@ModelAttribute("projectName") String projectName,Model model) {
-        if(projectName.equals("0"))
+    public String showSelectedProjectData(@ModelAttribute("projectName") Project project,Model model) {
+        if(project.getTitle() == null)
             return "analyst";
-        Project selectedProject = projectRepo.findById(projectName).get();
-        model.addAttribute("selectedProject", selectedProject);
-        List<Requirement> requirements = requirementRepo.findByProject(selectedProject);
+        //Project selectedProject = projectRepo.findById(projectName).get();
+        model.addAttribute("selectedProject", project);
+        List<Requirement> requirements = requirementRepo.findByProject(project);
         model.addAttribute("requirements", requirements);
         return "analyst";
     }
+
 }

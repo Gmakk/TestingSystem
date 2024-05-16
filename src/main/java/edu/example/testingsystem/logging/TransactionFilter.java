@@ -15,8 +15,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class TransactionFilter implements Filter {
 
     private final static Logger LOG = LoggerFactory.getLogger(TransactionFilter.class);

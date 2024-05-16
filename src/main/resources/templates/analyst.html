@@ -14,7 +14,7 @@
     <form th:action="@{/analyst/projectName}" method="POST" th:object="${projectName}">
         <select class="form-control" id="dropDownProjectList" name="projectName">
             <option value="0">select project</option>
-            <option th:each="project : ${allProjects}" th:value="${project.title}" th:text="${project.title}"></option>
+            <option th:each="project : ${projects}" th:value="${project.title}" th:text="${project.title}"></option>
         </select>
         <button type="submit">Подтвердить</button>
     </form>
