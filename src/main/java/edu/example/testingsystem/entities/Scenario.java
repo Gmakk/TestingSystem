@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Scenario {
     //@ManyToMany(mappedBy = "scenarios")
     @ManyToMany
             //(mappedBy = "scenarios")
+    @ToString.Exclude
     @JoinTable(
             name = "test_plan_scenarios",
             joinColumns = { @JoinColumn(name = "scenario_id") },

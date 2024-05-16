@@ -2,16 +2,15 @@ package edu.example.testingsystem.controllers.director;
 
 import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.forms.ProjectManagementForm;
-import edu.example.testingsystem.repos.ProjectRepository;
-import edu.example.testingsystem.repos.RoleRepository;
-import edu.example.testingsystem.repos.TestPlanRepository;
-import edu.example.testingsystem.repos.UserRepository;
+import edu.example.testingsystem.repos.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/director/manageProject")
@@ -22,13 +21,15 @@ public class ProjectManagementController {
     ProjectRepository projectRepo;
     UserRepository userRepo;
     RoleRepository roleRepo;
+    ScenarioRepository scenarioRepo;
 
     public ProjectManagementController(TestPlanRepository planRepo, ProjectRepository projectRepo,
-                                       UserRepository userRepo, RoleRepository roleRepo) {
+                                       UserRepository userRepo, RoleRepository roleRepo, ScenarioRepository scenarioRepo) {
         this.planRepo = planRepo;
         this.projectRepo = projectRepo;
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
+        this.scenarioRepo = scenarioRepo;
     }
 
     @GetMapping
@@ -39,7 +40,7 @@ public class ProjectManagementController {
 
     @ModelAttribute("testPlans")
     public List<TestPlan> addTestPlansToModel(@ModelAttribute("selectedProject") Project selectedProject) {
-        return planRepo.findByProjectAndApprovedIsFalse(selectedProject);
+        return planRepo.findByProjectAndApprovedIsTrue(selectedProject);
     }
 
     @ModelAttribute("testers")
@@ -51,9 +52,10 @@ public class ProjectManagementController {
     }
 
     @ModelAttribute("scenarios")
-    public List<Scenario> addScenariosToModel(@ModelAttribute("selectedProject") Project selectedProject) {
+    public Set<Scenario> addScenariosToModel(@ModelAttribute("selectedProject") Project selectedProject) {
+        //TODO:проверить дубликаты сценариев
         List<TestPlan> testPlans = planRepo.findByProjectAndApprovedIsTrue(selectedProject);
-        List<Scenario> scenarios = new ArrayList<>();
+        Set<Scenario> scenarios = new HashSet<>();//чтобы избежать дубликатов, когда один сценарий в двух планах
         for (TestPlan testPlan : testPlans) {
             scenarios.addAll(testPlan.getScenarios());
         }
@@ -77,6 +79,7 @@ public class ProjectManagementController {
         for(Scenario scenario : form.getFormScenarios() ){
             scenario.setExecutor(form.getFormTester());
         }
+        scenarioRepo.saveAll(form.getFormScenarios());
         return "redirect:/director/manageProject";
     }
 }

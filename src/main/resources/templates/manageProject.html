@@ -7,7 +7,7 @@
 <body>
 
 <h2>Выберите тест-планы, которые хотите утвердить</h2>
-<form  th:action="@{/director/manageProject/approve}" method="POST" >
+<form  th:action="@{/director/manageProject/approve}" method="POST">
 <!--    th:object="${approvedPlans}"-->
     <div th:each="testPlan : ${testPlans}">
         <input type="checkbox" th:value="${testPlan.id}" th:name="approvedPlans"/>
@@ -22,7 +22,7 @@
 <form  th:action="@{/director/manageProject/assign}" method="POST" th:object="${assignForm}">
     <select th:field="*{formTester}">
         <option value="0">Выберите тестировщика</option>
-        <option th:each="tester : ${testers}" th:value="${tester.id}" th:text="${tester.login}" ></option>
+        <option th:each="tester : ${testers}" th:value="${tester.id}" th:text="${tester.login}" th:field="*{formTester}"></option>
     </select>
 
 
