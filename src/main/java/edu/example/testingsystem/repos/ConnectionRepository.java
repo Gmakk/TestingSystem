@@ -24,4 +24,8 @@ public interface ConnectionRepository
         List<ScenarioCaseConnection> findByScenarioAndExecutedIsFalse(Scenario Scenario);
 
         Integer countByScenarioAndExecutedIsFalse(Scenario scenario);
+
+        Integer countByScenario(Scenario scenario);
+
+        Integer countByScenarioAndPassedIsTrue(Scenario scenario);
 }

@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface TestCaseRepository
         extends JpaRepository<TestCase, Integer> {
+
     List<TestCase> findByProject(Project project);
 }
