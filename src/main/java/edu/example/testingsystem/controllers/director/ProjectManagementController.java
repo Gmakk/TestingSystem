@@ -40,7 +40,7 @@ public class ProjectManagementController {
 
     @ModelAttribute("testPlans")
     public List<TestPlan> addTestPlansToModel(@ModelAttribute("selectedProject") Project selectedProject) {
-        return planRepo.findByProjectAndApprovedIsTrue(selectedProject);
+        return planRepo.findByProjectAndApprovedIsFalse(selectedProject);
     }
 
     @ModelAttribute("testers")

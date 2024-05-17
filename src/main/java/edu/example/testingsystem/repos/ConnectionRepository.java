@@ -21,5 +21,7 @@ public interface ConnectionRepository
         @Transactional
         void deleteByTestCase(TestCase testCase);
 
-        //List<ScenarioCaseConnection> findByTestCase(TestCase testCase);
+        List<ScenarioCaseConnection> findByScenarioAndExecutedIsFalse(Scenario Scenario);
+
+        Integer countByScenarioAndExecutedIsFalse(Scenario scenario);
 }

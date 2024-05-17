@@ -77,7 +77,7 @@ public class ScenariosController {
         if(form.getFormScenario() == null)
             return "redirect:/analyst/scenarios";
         for(TestCase testCase : form.getTestCases())
-            connectionRepo.save(new ScenarioCaseConnection(null,null,false,form.getFormScenario(),testCase));
+            connectionRepo.save(new ScenarioCaseConnection(null,null,false,false,form.getFormScenario(),testCase));
         return "redirect:/analyst/scenarios";
     }
 }

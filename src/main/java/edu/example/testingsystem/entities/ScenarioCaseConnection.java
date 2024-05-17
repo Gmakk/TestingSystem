@@ -16,6 +16,7 @@ public class ScenarioCaseConnection {
     @NotNull
     private Integer id;
     private String comment;
+    private Boolean executed;
     private Boolean passed;
 
     @ManyToOne

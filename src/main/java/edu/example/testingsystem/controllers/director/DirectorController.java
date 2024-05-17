@@ -25,7 +25,7 @@ public class DirectorController {
         return "director";
     }
 
-    @ModelAttribute("allProjects")
+    @ModelAttribute("projects")
     public List<Project> addProjectsToModel() {
         return projectRepo.findAll();
     }

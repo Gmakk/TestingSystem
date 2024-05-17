@@ -6,5 +6,34 @@
 </head>
 <body>
 
+
+<h2>Выберите проект</h2>
+<form th:action="@{/tester/projectName}" method="POST" th:object="${projectName}">
+    <select class="form-control" name="projectName">
+        <option value="0">select project</option>
+        <option th:each="project : ${projects}" th:value="${project.title}" th:text="${project.title}"></option>
+    </select>
+    <button type="submit">Выбрать</button>
+</form>
+
+
+<div th:if="${selectedProject != null}">
+    <h2 th:if="${#sets.isEmpty(scenarios)}">В выбранном вами проекте нет одобренных тест-планов с назначенными вам сценариями</h2>
+
+    <div th:unless="${#sets.isEmpty(scenarios)}">
+        <h2>Выберите сценарий, с которым будете работать</h2>
+        <form th:action="@{/tester/scenario}" method="POST" th:object="${selectedScenario}">
+            <select class="form-control" name="selectedScenario">
+                <option value="0">select scenario</option>
+                <option th:each="scenario : ${scenarios}" th:value="${scenario.id}" th:text="${scenario.title}"></option>
+            </select>
+            <button type="submit">Выбрать</button>
+        </form>
+    </div>
+</div>
+
+
+
+
 </body>
 </html>
