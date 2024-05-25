@@ -1,8 +1,10 @@
 package edu.example.testingsystem.controllers.director;
 
 import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.security.WorkWithData;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +32,21 @@ public class DirectorController {
         return projectRepo.findAll();
     }
 
+    @ModelAttribute("currentUser")
+    public Userr addCurrentUserToModel() {
+        return WorkWithData.getCurrentUser();
+    }
+
+    @GetMapping("/logout")
+    public String logOut(){
+        SecurityContextHolder.clearContext();
+        return "/login";
+    }
+
     @PostMapping("/projectName")
     public String becomeProjectDirector(@ModelAttribute("projectName") String projectName, Model model){
         if(projectName.equals("0"))
             return "director";
-        System.out.println(projectName);
         Project selectedProject = projectRepo.findById(projectName).get();
         selectedProject.setDirector(WorkWithData.getCurrentUser());
         projectRepo.save(selectedProject);

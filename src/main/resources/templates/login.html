@@ -6,13 +6,11 @@
 </head>
 <body>
 <h1>Login</h1>
-<!--<img th:src="@{/images/Pepe.png}" style="position: absolute ; z-index: -1" />-->
-<img th:src="@{/images/Pepe.png}" />
 <div th:if="${error}">
     Unable to login. Check your username and password.
 </div>
-<p>New here? Click
-    <a th:href="@{/register}">here</a> to register.</p>
+<p>Вы новый пользователь системы? Нажмите
+    <a th:href="@{/register}">здесь</a>, чтобы зарегистрироваться.</p>
 <form method="POST" th:action="@{/login}" id="loginForm">
 
     <label for="username">Username: </label>

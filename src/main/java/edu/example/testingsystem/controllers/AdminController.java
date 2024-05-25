@@ -5,12 +5,11 @@ import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.forms.RoleAssigningForm;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
+import edu.example.testingsystem.security.WorkWithData;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,14 +35,25 @@ public class AdminController {
         return roleRepo.findAll();
     }
 
+    @ModelAttribute("currentUser")
+    public Userr addCurrentUserToModel() {
+        return WorkWithData.getCurrentUser();
+    }
+
     @GetMapping
     public String showAdminPage(Model model) {
         model.addAttribute("assignForm", new RoleAssigningForm());
         return "admin";
     }
 
+    @GetMapping("/logout")
+    public String logOut(){
+        SecurityContextHolder.clearContext();
+        return "/login";
+    }
+
     @PostMapping("/assignRole")
-    public String assignRole(@ModelAttribute("assignForm") RoleAssigningForm form, Model model) {
+    public String assignRole(@ModelAttribute("assignForm") RoleAssigningForm form) {
         if(form == null || form.getRole() == null || form.getUser() == null)
             return "redirect:/admin";
         form.getUser().setRole(form.getRole());

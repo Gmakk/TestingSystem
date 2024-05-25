@@ -13,7 +13,7 @@
     <h2>Выберите проект</h2>
     <form th:action="@{/analyst/projectName}" method="POST" th:object="${projectName}">
         <select class="form-control" id="dropDownProjectList" name="projectName">
-            <option value="0">select project</option>
+            <option value="0">Выберите проект</option>
             <option th:each="project : ${projects}" th:value="${project.title}" th:text="${project.title}"></option>
         </select>
         <button type="submit">Подтвердить</button>
@@ -28,8 +28,6 @@
             <br><br/>
         </div>
 
-<!--        форма для добавления теста к выбранному проекту-->
-
         <form th:action="@{/analyst/testPlans}" method="get">
             <button type="submit">Work with test plans</button>
         </form>
@@ -41,6 +39,11 @@
         </form>
     </div>
 
+    <br>
+    <br>
+    <form th:action="@{/statistics}" method="get">
+        <button type="submit" >Посмотреть статистику тестирования</button>
+    </form>
 
 </body>
 </html>

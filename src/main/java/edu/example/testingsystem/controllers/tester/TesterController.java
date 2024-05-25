@@ -1,13 +1,11 @@
 package edu.example.testingsystem.controllers.tester;
 
-import edu.example.testingsystem.entities.Project;
-import edu.example.testingsystem.entities.Scenario;
-import edu.example.testingsystem.entities.ScenarioCaseConnection;
-import edu.example.testingsystem.entities.TestPlan;
+import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
 import edu.example.testingsystem.security.WorkWithData;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +37,21 @@ public class TesterController {
         return projectRepo.findAll();
     }
 
+    @ModelAttribute("currentUser")
+    public Userr addCurrentUserToModel() {
+        return WorkWithData.getCurrentUser();
+    }
+
+    @GetMapping("/logout")
+    public String logOut(){
+        SecurityContextHolder.clearContext();
+        return "/login";
+    }
+
     @PostMapping("/projectName")
     public String showSelectedProjectData(@ModelAttribute("projectName") String projectName, Model model){
         if(projectName.equals("0"))
             return "tester";
-        System.out.println(projectName);
         Project selectedProject = projectRepo.findById(projectName).get();
         addScenariosToModel(selectedProject, model);
         model.addAttribute("selectedProject", selectedProject);
@@ -55,7 +63,6 @@ public class TesterController {
         if(scenario == null)
             return "redirect:/tester";
         model.addAttribute("testsToExecuteConnections", connectionRepo.findByScenarioAndExecutedIsFalse(scenario));
-        System.out.println(scenario.getTitle());
         return "redirect:/tester/testingProcess";
     }
 
