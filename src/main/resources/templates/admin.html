@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing management system</title>
+</head>
+<body>
+    <h3>Выберите пользователя и роль, которую ему нужно назначить</h3>
+    <form method="POST" th:action="@{/admin/assignRole}" th:object="${assignForm}">
+
+        <select th:field="*{user}">
+            <option value="0">Выберите пользователя</option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}" th:field="*{user}"></option>
+        </select>
+
+
+        <select th:field="*{role}">
+            <option value="0">Выберите роль</option>
+            <option th:each="role : ${roles}" th:value="${role.title}" th:text="${role.title} + '-' + ${role.description}" th:field="*{role}"></option>
+        </select>
+        <button>Назначить выбранному пользователю эту роль</button>
+
+    </form>
+</body>
+</html>

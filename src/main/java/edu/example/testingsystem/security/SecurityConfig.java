@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/analyst/**").hasRole("ANALYST")
                         .requestMatchers("/tester/**").hasRole("TESTER")
+                        .requestMatchers("/statistics/**").hasAnyRole("TESTER","DIRECTOR","ADMIN","ANALYST")
                         .anyRequest().permitAll())
 //                        .formLogin(withDefaults());
                         .formLogin(form -> form.successHandler(authenticationSuccessHandler)

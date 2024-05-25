@@ -21,7 +21,7 @@ import static edu.example.testingsystem.security.WorkWithData.findUsersRole;
 public class RegistrationForm {
     private String username;
     private String password;
-    private String role;
+    //private String role;
 
 
 
@@ -32,10 +32,10 @@ public class RegistrationForm {
 //    }
 
     public Userr toUser(PasswordEncoder passwordEncoder) {
-        Optional<Role> usersRole = findUsersRole(role);
+        //Optional<Role> usersRole = findUsersRole(role);
         //Optional<Role> usersRole = roleRepo.findById(role);
-        if(usersRole.isEmpty())
-            throw new RuntimeException("Role not found");
-        return new Userr(username, passwordEncoder.encode(password), usersRole.get());
+        //if(usersRole.isEmpty())
+            //throw new RuntimeException("Role not found");
+        return new Userr(username, passwordEncoder.encode(password), null);
     }
 }
