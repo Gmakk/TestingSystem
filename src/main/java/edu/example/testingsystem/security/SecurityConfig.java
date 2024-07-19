@@ -32,9 +32,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private AuthenticationSuccessHandler authenticationSuccessHandler;
+    private AuthenticationFailureHandler authenticationFailureHandler;
 
-    public SecurityConfig(AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public SecurityConfig(AuthenticationSuccessHandler authenticationSuccessHandler, AuthenticationFailureHandler authenticationFailureHandler) {
         this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
     @Bean
@@ -64,6 +66,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
 //                        .formLogin(withDefaults());
                         .formLogin(form -> form.successHandler(authenticationSuccessHandler)
+                                .failureHandler(authenticationFailureHandler)
                                 .loginPage("/login")
                                 .permitAll());
 

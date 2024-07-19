@@ -27,11 +27,18 @@ public class Userr implements UserDetails {
     private String password;
     @ManyToOne
     private Role role;
+    private Boolean isActive;
 
-    public Userr(String login, String password, Role role) {
+    public Userr(String login, String password) {
         this.login = login;
         this.password = password;
+        this.role = null;
+        this.isActive = false;
+    }
+
+    public void assignRoleAndMakeActive(Role role) {
         this.role = role;
+        this.isActive = true;
     }
 
     /**
@@ -76,7 +83,7 @@ public class Userr implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 
 //    @OneToMany(mappedBy = "director")

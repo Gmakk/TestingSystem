@@ -36,6 +36,6 @@ public class RegistrationForm {
         //Optional<Role> usersRole = roleRepo.findById(role);
         //if(usersRole.isEmpty())
             //throw new RuntimeException("Role not found");
-        return new Userr(username, passwordEncoder.encode(password), null);
+        return new Userr(username, passwordEncoder.encode(password));
     }
 }

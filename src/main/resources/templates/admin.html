@@ -24,6 +24,22 @@
             <option value="0">Выберите роль</option>
             <option th:each="role : ${roles}" th:value="${role.title}" th:text="${role.title} + '-' + ${role.description}" th:field="*{role}"></option>
         </select>
+        <button>Назначить роль пользователю</button>
+
+    </form>
+
+    <br>
+    <br>
+
+    <h3>Выберите пользователя и укажите, активен ли этот аккаунт</h3>
+    <form method="POST" th:action="@{/admin/setActive}" th:object="${activeForm}">
+
+        <select th:field="*{user}">
+            <option value="0">Выберите пользователя</option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}" th:field="*{user}"></option>
+        </select>
+
+        <input type="checkbox" th:field="*{active}">
         <button>Назначить выбранному пользователю эту роль</button>
 
     </form>
