@@ -56,9 +56,13 @@ public class AdminController {
 
     @PostMapping("/assignRole")
     public String assignRole(@ModelAttribute("assignForm") RoleAssigningForm form) {
-        if(form == null || form.getRole() == null || form.getUser() == null)
+        //если не стоит галочка убрать роль, то роль должна быть выбрана
+        if(form == null || form.getUser() == null || (!form.getRemove() && form.getRole() == null))
             return "redirect:/admin";
-        form.getUser().assignRoleAndMakeActive(form.getRole());
+        if(!form.getRemove())
+            form.getUser().assignRoleAndMakeActive(form.getRole());
+        else
+            form.getUser().assignRoleAndMakeActive(null);
         userRepo.save(form.getUser());
         return "redirect:/admin";
     }
@@ -69,6 +73,18 @@ public class AdminController {
             return "redirect:/admin";
         form.getUser().setIsActive(form.getActive());
         userRepo.save(form.getUser());
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteInactive")
+    public String deleteInactiveUsers() {
+        userRepo.deleteByIsActive(false);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteWithoutRoles")
+    public String deleteUsersWithoutRoles() {
+        userRepo.deleteByRole(null);
         return "redirect:/admin";
     }
 }

@@ -24,7 +24,10 @@
             <option value="0">Выберите роль</option>
             <option th:each="role : ${roles}" th:value="${role.title}" th:text="${role.title} + '-' + ${role.description}" th:field="*{role}"></option>
         </select>
-        <button>Назначить роль пользователю</button>
+
+        <input th:text="'Cнять роль'" type="checkbox" th:field="*{remove}">
+
+        <button>Обновить информацию о роли</button>
 
     </form>
 
@@ -39,9 +42,21 @@
             <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}" th:field="*{user}"></option>
         </select>
 
-        <input type="checkbox" th:field="*{active}">
-        <button>Назначить выбранному пользователю эту роль</button>
+        <input th:text="'активный/нет'" type="checkbox" th:field="*{active}">
+        <button>Обновить статус аккаунта</button>
 
     </form>
+
+    <br>
+    <br>
+
+    <form method="POST" th:action="@{/admin/deleteWithoutRoles}" >
+        <button>Удалить пользователей без ролей</button>
+    </form>
+
+    <form method="POST" th:action="@{/admin/deleteInactive}" >
+        <button>Удалить неактивных пользователей</button>
+    </form>
+
 </body>
 </html>

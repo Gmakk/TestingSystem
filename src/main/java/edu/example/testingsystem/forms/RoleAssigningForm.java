@@ -10,4 +10,5 @@ import org.springframework.stereotype.Service;
 public class RoleAssigningForm {
     private Role role;
     private Userr user;
+    private Boolean remove;
 }

@@ -15,6 +15,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
+        System.out.println(exception.getMessage());
+
         if(exception.getMessage().equals("User is disabled")) {
             response.sendRedirect("/inactive");
         }else
