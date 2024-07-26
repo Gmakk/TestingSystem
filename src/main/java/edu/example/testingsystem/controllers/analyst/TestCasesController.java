@@ -1,7 +1,6 @@
 package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
-import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.forms.TestCaseForm;
 import edu.example.testingsystem.repos.ConnectionRepository;
@@ -36,17 +35,23 @@ public class TestCasesController {
         return testCaseRepo.findByProject(project);
     }
 
-    @PostMapping("/delete")
-    public String deleteTestCase(@ModelAttribute("testCaseToDelete") TestCase testCase) {
+    @PostMapping(value="/alter", params="action=delete")
+    public String deleteTestCase(@ModelAttribute("chosenTestCase") TestCase testCase) {
         if(testCase.getId() == null)
-            return "testCases";
+            return "redirect:/analyst/testCases";
         //List<ScenarioCaseConnection> connections = connectionRepo.findByTestCase(testCase);
         //connectionRepo.deleteAll(connections);
         //testCase = testCaseRepo.findById(testCase.getId()).get();
         connectionRepo.deleteByTestCase(testCase);
         testCaseRepo.deleteById(testCase.getId());
         return "redirect:/analyst/testCases";
+    }
 
+    @PostMapping(value="/alter", params="action=change")
+    public String changeTestCase(@ModelAttribute("chosenTestCase") TestCase testCase){
+        if(testCase.getId() == null)
+            return "redirect:/analyst/testCases";
+        return "redirect:/analyst/testCases/" + testCase.getId();
     }
 
     @PostMapping("/add")

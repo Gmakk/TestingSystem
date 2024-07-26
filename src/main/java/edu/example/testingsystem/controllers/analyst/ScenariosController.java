@@ -2,11 +2,11 @@ package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.forms.PopulateScenarioForm;
-import edu.example.testingsystem.forms.ScenarioForm;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
+import edu.example.testingsystem.security.WorkWithData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +33,6 @@ public class ScenariosController {
 
     @GetMapping
     public String showScenariosPage(Model model) {
-        model.addAttribute("scenarioForm", new ScenarioForm());
         model.addAttribute("populateScenarioForm", new PopulateScenarioForm());
         return "scenarios";
     }
@@ -56,18 +55,26 @@ public class ScenariosController {
         return testCaseRepo.findByProject(project);
     }
 
-    @PostMapping("/delete")
-    public String processTestPlan(@ModelAttribute("scenarioToDelete") Scenario scenario) {
+    @PostMapping(value="/alter", params="action=delete")
+    public String deleteScenario(@ModelAttribute("chosenScenario") Scenario scenario) {
         if (scenario.getId() == null)
-            return "scenarios";
+            return "redirect:/analyst/scenarios";
         connectionRepo.deleteByScenario(scenario);
         scenarioRepo.delete(scenario);
         return "redirect:/analyst/scenarios";
     }
 
+    @PostMapping(value="/alter", params="action=change")
+    public String changeScenario(@ModelAttribute("chosenScenario") Scenario scenario) {
+        if (scenario.getId() == null)
+            return "redirect:/analyst/scenarios";
+        return "redirect:/analyst/scenarios/" + scenario.getId();
+    }
+
     @PostMapping("/add")
-    public String addScenario(@ModelAttribute("scenarioForm") ScenarioForm scenarioForm) {
-        scenarioRepo.save(scenarioForm.toScenario());
+    public String addScenario(@ModelAttribute("newScenarioTitle") String newScenarioTitle) {
+        Scenario newScenario = new Scenario(null,newScenarioTitle, WorkWithData.getCurrentUser(),null,null);
+        scenarioRepo.save(newScenario);
         return "redirect:/analyst/scenarios";
     }
 

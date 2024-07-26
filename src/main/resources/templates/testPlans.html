@@ -6,13 +6,14 @@
 </head>
 <body>
 
-<h2>Удаление тест-плана</h2>
-<form th:action="@{/analyst/testPlans/delete}" method="POST" th:object="${testPlanToDelete}">
-    <select class="form-control" name="testPlanToDelete">
+<h2>Выберите тест-план</h2>
+<form th:action="@{/analyst/testPlans/alter}" method="POST" th:object="${chosenTestPlan}">
+    <select class="form-control" name="chosenTestPlan">
         <option value="0">Выберите тест-план</option>
         <option th:each="plan : ${testPlans}" th:value="${plan.id}" th:text="${plan.title}"></option>
     </select>
     <button type="submit" name="action" value="delete">Удалить</button>
+    <button type="submit" name="action" value="change">Изменить</button>
 </form>
 <br>
 

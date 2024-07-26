@@ -6,21 +6,22 @@
 </head>
 <body>
 
-<h2>Удаление сценария</h2>
-<form th:action="@{/analyst/scenarios/delete}" method="POST" th:object="${scenarioToDelete}">
-    <select class="form-control" name="scenarioToDelete">
+<h2>Выберите сценарий</h2>
+<form th:action="@{/analyst/scenarios/alter}" method="POST" th:object="${chosenScenario}">
+    <select class="form-control" name="chosenScenario">
         <option value="0">Выберите сценарий тестирования</option>
         <option th:each="scenario : ${scenarios}" th:value="${scenario.id}" th:text="${scenario.title}"></option>
     </select>
-    <button type="submit">Удалить</button>
+    <button type="submit" name="action" value="delete">Удалить</button>
+    <button type="submit" name="action" value="change">Изменить</button>
 </form>
 <br>
 
 <h2>Добавить новый сценарий</h2>
-<form method="POST" th:action="@{/analyst/scenarios/add}" th:object="${scenarioForm}">
+<form method="POST" th:action="@{/analyst/scenarios/add}">
 
     <label for="title">Название: </label>
-    <input type="text" id="title" name="title" th:field="*{scenarioTitle}"/><br/>
+    <input th:value="${newScenarioTitle}" type="text" id="title" name="newScenarioTitle"/><br/>
 
     <button type="submit" name="action" value="add">Добавить новый сценарий</button>
 </form>

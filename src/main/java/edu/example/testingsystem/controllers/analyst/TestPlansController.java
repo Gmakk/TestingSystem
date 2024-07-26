@@ -53,12 +53,19 @@ public class TestPlansController {
         return scenarioRepo.findAll();
     }
 
-    @PostMapping("/delete")
-    public String processTestPlan(@ModelAttribute("testPlanToDelete") TestPlan testPlan) {
+    @PostMapping(value="/alter", params="action=delete")
+    public String processTestPlan(@ModelAttribute("chosenTestPlan") TestPlan testPlan) {
         if (testPlan.getId() == null)
             return "testPlans";
         planRepo.delete(testPlan);
         return "redirect:/analyst/testPlans";
+    }
+
+    @PostMapping(value="/alter", params="action=change")
+    public String changeTestPlan(@ModelAttribute("chosenTestPlan") TestPlan testPlan){
+        if(testPlan.getId() == null)
+            return "redirect:/analyst/testPlans";
+        return "redirect:/analyst/testPlans/" + testPlan.getId();
     }
 
     @PostMapping("/add")
