@@ -17,6 +17,8 @@ INSERT INTO userr VALUES ('2',true,'admin','$2a$10$IxwXIodgb8Y5LfJ9LNAhf.3VpW8oV
 
 --проекты
 INSERT INTO project VALUES (1,'Test project');
+INSERT INTO project VALUES (2,'Test project2');
+INSERT INTO project VALUES (3,'Test project3');
 INSERT INTO requirement VALUES (1,'Нужно протестировать ввод','Test project'),
                                (2,'Нужно протестировать отображение','Test project'),(3,'Нужно протестировать авторизацию','Test project');
 INSERT INTO test_plan VALUES (true,3,1,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование ввода');
@@ -34,7 +36,7 @@ INSERT INTO test_plan_scenarios VALUES (1,1);
 INSERT INTO test_plan_scenarios VALUES (2,1);
 INSERT INTO test_plan_scenarios VALUES (3,2);
 INSERT INTO scenario_case_connection VALUES (false,1,false,1,1,null);
-INSERT INTO scenario_case_connection VALUES (false,2,false,1,2,null);
-INSERT INTO scenario_case_connection VALUES (false,3,false,2,3,null);
-INSERT INTO scenario_case_connection VALUES (false,4,false,2,4,null);
+INSERT INTO scenario_case_connection VALUES (false,2,true,1,2,null);
+INSERT INTO scenario_case_connection VALUES (false,3,true,2,3,null);
+INSERT INTO scenario_case_connection VALUES (false,4,true,2,4,null);
 INSERT INTO scenario_case_connection VALUES (false,5,false,3,5,null);

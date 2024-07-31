@@ -8,6 +8,7 @@
 
 
 <h2>Изменить тест-кейс</h2>
+<h3>При изменении тест-кейса, он перестает считаться выполненным во всех сценариях</h3>
 <form method="POST" th:action="@{/analyst/testCases/__${id}__/submit}" th:object="${changeTestCaseForm}">
 
     <label for="title">Название: </label>

@@ -1,7 +1,9 @@
 package edu.example.testingsystem.controllers.analyst;
 
+import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.forms.TestCaseForm;
+import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -16,9 +19,11 @@ import java.util.Optional;
 public class ChangeTestCaseController {
 
     private final TestCaseRepository testCaseRepo;
+    private final ConnectionRepository connectionRepo;
 
-    public ChangeTestCaseController(TestCaseRepository testCaseRepo) {
+    public ChangeTestCaseController(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo) {
         this.testCaseRepo = testCaseRepo;
+        this.connectionRepo = connectionRepo;
     }
 
     @GetMapping
@@ -44,8 +49,16 @@ public class ChangeTestCaseController {
         testCase.setInputData(testCaseForm.getInputData());
         testCase.setOutputData(testCaseForm.getOutputData());
         testCase.setDescription(testCaseForm.getTestCaseDescription());
-
         testCaseRepo.save(testCase);
+
+        //При изменении тест-кейса, он перестает считаться выполненным во всех сценариях
+        List<ScenarioCaseConnection> connections = connectionRepo.findByTestCase(testCase);
+        for(ScenarioCaseConnection connection : connections) {
+            connection.setExecuted(false);
+            connection.setPassed(false);
+            connectionRepo.save(connection);
+        }
+
         return "redirect:/analyst/testCases";
     }
 

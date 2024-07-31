@@ -49,12 +49,12 @@ public class TesterController {
     }
 
     @PostMapping("/projectName")
-    public String showSelectedProjectData(@ModelAttribute("projectName") String projectName, Model model){
-        if(projectName.equals("0"))
-            return "tester";
-        Project selectedProject = projectRepo.findById(projectName).get();
-        addScenariosToModel(selectedProject, model);
-        model.addAttribute("selectedProject", selectedProject);
+    public String showSelectedProjectData(@ModelAttribute("projectName") Project project, Model model){
+        if(project.getTitle() == null)
+            return "redirect:/tester";
+        //Project selectedProject = projectRepo.findById(projectName).get();
+        addScenariosToModel(project, model);
+        model.addAttribute("selectedProject", project);
         return "redirect:/tester";
     }
 

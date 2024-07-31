@@ -50,12 +50,12 @@ public class AnalystController {
     @PostMapping("/projectName")
     public String showSelectedProjectData(@ModelAttribute("projectName") Project project,Model model) {
         if(project.getTitle() == null)
-            return "analyst";
+            return "redirect:/analyst";
         //Project selectedProject = projectRepo.findById(projectName).get();
         model.addAttribute("selectedProject", project);
         List<Requirement> requirements = requirementRepo.findByProject(project);
         model.addAttribute("requirements", requirements);
-        return "analyst";
+        return "redirect:/analyst";
     }
 
 }

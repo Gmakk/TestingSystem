@@ -44,13 +44,13 @@ public class DirectorController {
     }
 
     @PostMapping("/projectName")
-    public String becomeProjectDirector(@ModelAttribute("projectName") String projectName, Model model){
-        if(projectName.equals("0"))
-            return "director";
-        Project selectedProject = projectRepo.findById(projectName).get();
-        selectedProject.setDirector(WorkWithData.getCurrentUser());
-        projectRepo.save(selectedProject);
-        model.addAttribute("selectedProject", selectedProject);
+    public String becomeProjectDirector(@ModelAttribute("projectName") Project project, Model model){
+        if(project.getTitle() == null)
+            return "redirect:/director";
+        //Project selectedProject = projectRepo.findById(projectName).get();
+        project.setDirector(WorkWithData.getCurrentUser());
+        projectRepo.save(project);
+        model.addAttribute("selectedProject", project);
         return "redirect:/director/manageProject";
     }
 }

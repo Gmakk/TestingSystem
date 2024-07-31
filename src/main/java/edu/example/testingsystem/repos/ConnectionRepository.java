@@ -4,7 +4,6 @@ import edu.example.testingsystem.entities.Scenario;
 import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestCase;
 import jakarta.transaction.Transactional;
-import org.hibernate.annotations.Cascade;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +20,9 @@ public interface ConnectionRepository
         @Transactional
         void deleteByTestCase(TestCase testCase);
 
-        List<ScenarioCaseConnection> findByScenarioAndExecutedIsFalse(Scenario Scenario);
+        List<ScenarioCaseConnection> findByScenarioAndExecutedIsFalse(Scenario scenario);
+
+        List<ScenarioCaseConnection> findByTestCase(TestCase testCase);
 
         Integer countByScenarioAndExecutedIsFalse(Scenario scenario);
 

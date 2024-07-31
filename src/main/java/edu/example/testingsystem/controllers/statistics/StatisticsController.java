@@ -2,21 +2,16 @@ package edu.example.testingsystem.controllers.statistics;
 
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.Scenario;
-import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestPlan;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/statistics")
@@ -40,8 +35,13 @@ public class StatisticsController {
         return "statistics";
     }
 
+    @ModelAttribute("projects")
+    public List<Project> addProjectsToModel() {
+        return projectRepo.findAll();
+    }
+
     @ModelAttribute("totalStatistics")
-    public List<ProjectStatistics> addProjectsToModel() {
+    public List<ProjectStatistics> addStatisticsToModel() {
         //составляем статистику по каждому сценарию
         List<Scenario> allScenarios = scenarioRepo.findAll();
         List<ScenarioStatistics> scenarioStatistics = new ArrayList<>();
