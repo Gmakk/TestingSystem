@@ -27,6 +27,3 @@ public class Role {
 
 
 }
-
-
-//TODO: список для getAuthorities юзера

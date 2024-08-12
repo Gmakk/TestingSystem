@@ -1,5 +1,8 @@
 package edu.example.testingsystem;
 
+import edu.example.testingsystem.logging.RequestResponseLoggingFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableJpaRepositories
 public class TestingSystemApplication implements WebMvcConfigurer {
 
+    private final static Logger log = LoggerFactory.getLogger(TestingSystemApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(TestingSystemApplication.class, args);
+        log.info("Application started");
     }
 
     @Override

@@ -1,6 +1,9 @@
 server:
   port: 9091
-
+#  ssl:
+#    key-store: classpath:mykeys.jks
+#    key-store-password: G4s7Zd6h2
+#    key-password: G4s7Zd6h2
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -8,8 +11,28 @@ spring:
     username: testing_connection
     password: G4s7Zd6h2
   jpa:
-    database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-#      ddl-auto: create/validate/update
+      #ddl-auto: create/validate/update
+  data:
+    rest:
+      base-path: /api
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9093/oauth2/jwks
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+  file:
+    name: my.log
+  logback:
+    rollingpolicy:
+      max-history: 1
+
+
+#    add jpa:hibernate:ddl-auto=none in application.properties
+#    this sql will be executed
