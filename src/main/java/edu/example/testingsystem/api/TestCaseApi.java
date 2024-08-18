@@ -1,9 +1,13 @@
 package edu.example.testingsystem.api;
 
+import edu.example.testingsystem.entities.Test;
 import edu.example.testingsystem.entities.TestCase;
+import edu.example.testingsystem.messaging.TestCaseMessagingService;
+import edu.example.testingsystem.messaging.TestMessagingService;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,11 +26,12 @@ import java.util.Optional;
 @CrossOrigin(origins="http://localhost:9091")
 public class TestCaseApi {
     TestCaseRepository testCaseRepo;
-    ConnectionRepository connectionRepo;
+    TestCaseMessagingService messagingService;
 
-    public TestCaseApi(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo) {
+
+    public TestCaseApi(TestCaseRepository testCaseRepo, TestCaseMessagingService messagingService) {
         this.testCaseRepo = testCaseRepo;
-        this.connectionRepo = connectionRepo;
+        this.messagingService = messagingService;
     }
 
     @GetMapping(params = "recent")
@@ -47,6 +52,12 @@ public class TestCaseApi {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public TestCase createTestCase(@RequestBody TestCase testCase) {
+
+
+
+        messagingService.sendTestCase(testCase);
+
+
         return testCaseRepo.save(testCase);
     }
 

@@ -1,10 +1,14 @@
 package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.Test;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.forms.TestCaseForm;
+import edu.example.testingsystem.messaging.TestCaseMessagingService;
+import edu.example.testingsystem.messaging.TestMessagingService;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +22,17 @@ public class TestCasesController {
 
     TestCaseRepository testCaseRepo;
     ConnectionRepository connectionRepo;
+    TestCaseMessagingService messagingService;
 
-    public TestCasesController(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo) {
+
+    @Autowired
+    TestMessagingService testMessagingService;
+
+
+    public TestCasesController(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo, TestCaseMessagingService messagingService) {
         this.testCaseRepo = testCaseRepo;
         this.connectionRepo = connectionRepo;
+        this.messagingService = messagingService;
     }
 
     @GetMapping
@@ -56,7 +67,11 @@ public class TestCasesController {
 
     @PostMapping("/add")
     public String addTestCase(@ModelAttribute("testCaseForm") TestCaseForm testCaseForm, @ModelAttribute("selectedProject") Project project) {
-        testCaseRepo.save(testCaseForm.toTestCase(project));
+        TestCase testCase = testCaseForm.toTestCase(project);
+        testCaseRepo.save(testCase);
+        messagingService.sendTestCase(testCase);
+//        Test newTest = new Test("asd",123);
+//        testMessagingService.sendTest(newTest);
         return "redirect:/analyst/testCases";
     }
 }
