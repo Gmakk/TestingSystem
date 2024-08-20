@@ -1,11 +1,10 @@
 package edu.example.testingsystem.controllers.analyst;
 
 import edu.example.testingsystem.entities.Project;
-import edu.example.testingsystem.entities.Test;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.forms.TestCaseForm;
 import edu.example.testingsystem.messaging.TestCaseMessagingService;
-import edu.example.testingsystem.messaging.TestMessagingService;
+import edu.example.testingsystem.messaging.kafka.KafkaTestCaseMessagingService;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,7 @@ public class TestCasesController {
     TestCaseMessagingService messagingService;
 
 
-    @Autowired
-    TestMessagingService testMessagingService;
-
-
-    public TestCasesController(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo, TestCaseMessagingService messagingService) {
+    public TestCasesController(TestCaseRepository testCaseRepo, ConnectionRepository connectionRepo, KafkaTestCaseMessagingService messagingService) {
         this.testCaseRepo = testCaseRepo;
         this.connectionRepo = connectionRepo;
         this.messagingService = messagingService;

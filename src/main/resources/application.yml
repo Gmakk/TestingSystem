@@ -28,6 +28,24 @@ spring:
 #    broker-url: "tcp://192.168.1.210:9876"
     user: "gmak"
     password: "G4s7Zd6h2"
+  rabbitmq:
+    template:
+      exchange: testingSystem.case
+      routing-key: general
+  kafka:
+    bootstrap-servers:
+      - localhost:9092
+    template:
+      default-topic: testingSystem
+    producer:
+      keySerializer: org.springframework.kafka.support.serializer.JsonSerializer
+      valueSerializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            type:
+              headers: false
+
 logging:
   level:
     root: INFO

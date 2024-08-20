@@ -1,13 +1,9 @@
 package edu.example.testingsystem.api;
 
-import edu.example.testingsystem.entities.Test;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.messaging.TestCaseMessagingService;
-import edu.example.testingsystem.messaging.TestMessagingService;
-import edu.example.testingsystem.repos.ConnectionRepository;
+import edu.example.testingsystem.messaging.kafka.KafkaTestCaseMessagingService;
 import edu.example.testingsystem.repos.TestCaseRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +25,7 @@ public class TestCaseApi {
     TestCaseMessagingService messagingService;
 
 
-    public TestCaseApi(TestCaseRepository testCaseRepo, TestCaseMessagingService messagingService) {
+    public TestCaseApi(TestCaseRepository testCaseRepo, KafkaTestCaseMessagingService messagingService) {
         this.testCaseRepo = testCaseRepo;
         this.messagingService = messagingService;
     }
