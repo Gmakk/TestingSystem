@@ -64,7 +64,7 @@ public class TestCasesController {
     public String addTestCase(@ModelAttribute("testCaseForm") TestCaseForm testCaseForm, @ModelAttribute("selectedProject") Project project) {
         TestCase testCase = testCaseForm.toTestCase(project);
         testCaseRepo.save(testCase);
-        messagingService.sendTestCase(testCase);
+        //messagingService.sendTestCase(testCase);
 //        Test newTest = new Test("asd",123);
 //        testMessagingService.sendTest(newTest);
         return "redirect:/analyst/testCases";

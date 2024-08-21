@@ -7,6 +7,7 @@ INSERT INTO role_authorities VALUES ('ROLE_ADMIN','admin'),('ROLE_ANALYST','admi
                                   ('ROLE_TESTER','admin'),('ROLE_DIRECTOR','admin'),
                                   ('ROLE_ANALYST','analyst'),('ROLE_TESTER','tester'),
                                   ('ROLE_DIRECTOR','director');
+--пароли формата admin-admin
 INSERT INTO userr VALUES ('2',true,'admin','$2a$10$IxwXIodgb8Y5LfJ9LNAhf.3VpW8oVC954E0IBNrS76VKQC7chkxxK','admin'),
                          ('1',true,'director','$2a$10$RRwcXonX5z.GafLQ4H8pz.0KzLxtkMMV1Pbs51hQruLpaODgEjDte','director'),
                          ('3',true,'analyst','$2a$10$RJef5odVkEbE1mFrMIZfmet4f/JrLLEmDtdIPcgkFLwvMuejbSTJO','analyst'),
