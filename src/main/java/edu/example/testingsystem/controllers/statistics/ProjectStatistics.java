@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectStatistics {
-    private Project project;
+    private String title;
     private Integer total;
     private Integer passed;
     private List<TestPlanStatistics> testPlanStatistics;

@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -17,8 +20,8 @@ public class Project {
     @ManyToOne
     private Userr director;
 
-//    @OneToMany(mappedBy = "project")
-//    private List<TestPlan> testPlans = new ArrayList<>();
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    private List<TestPlan> testPlans = new ArrayList<>();
 //    @OneToMany(mappedBy = "project")
 //    private List<TestCase> testCases = new ArrayList<>();
 

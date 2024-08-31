@@ -25,7 +25,7 @@ public class Scenario {
     @ManyToOne
     private Userr executor;
     //@ManyToMany(mappedBy = "scenarios")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
             //(mappedBy = "scenarios")
     @ToString.Exclude
     @JoinTable(

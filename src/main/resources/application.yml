@@ -4,6 +4,20 @@ server:
 #    key-store: classpath:mykeys.jks
 #    key-store-password: G4s7Zd6h2
 #    key-password: G4s7Zd6h2
+management:
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+#        include: health,info,beans,conditions
+        include: "*"
+
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

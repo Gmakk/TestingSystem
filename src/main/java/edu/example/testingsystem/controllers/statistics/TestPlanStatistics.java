@@ -11,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TestPlanStatistics {
-    private TestPlan testPlan;
+    private Integer id;
+    private String title;
     private Integer total;
     private Integer passed;
     private List<ScenarioStatistics> scenarioStatistics;

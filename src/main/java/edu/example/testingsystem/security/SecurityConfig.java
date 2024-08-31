@@ -5,6 +5,7 @@ import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -64,6 +65,9 @@ public class SecurityConfig {
         //TODO: Настроить доступ для ролей
 
         http.authorizeHttpRequests((authorize) -> authorize
+                        //actuator
+                        .requestMatchers(EndpointRequest.toAnyEndpoint().excluding("health", "info")).hasRole("ADMIN")
+
                         //api
                         .requestMatchers(HttpMethod.PUT,"/api/testCases/**").hasAuthority("SCOPE_writeTestCases")
                         .requestMatchers(HttpMethod.DELETE,"/api/testCases/**").hasAuthority("SCOPE_deleteTestCases")
@@ -84,12 +88,6 @@ public class SecurityConfig {
                                 .failureHandler(authenticationFailureHandler)
                                 .loginPage("/login")
                                 .permitAll());
-
-//                      <form method="POST" th:action="@{/logout}">
-//                      <input type="submit" value="Logout"/>
-//                      </form>
-//                        .logout()
-//                        .logoutSuccessUrl("/")
         return http.build();
     }
 

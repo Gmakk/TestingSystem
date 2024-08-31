@@ -1,17 +1,12 @@
 package edu.example.testingsystem.controllers.statistics;
 
-import com.google.gson.*;
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.integration.file.FileWriterGateway;
 import edu.example.testingsystem.repos.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.DateFormatter;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +40,7 @@ public class StatisticsController {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         fileWriterGateway.writeToFile("Testing statistics " + formatter.format(new Date()),
-                statisticsCollector.contructJsonString(projectStatisticsList));
+                statisticsCollector.constructJsonString(projectStatisticsList));
 
         return projectStatisticsList;
     }

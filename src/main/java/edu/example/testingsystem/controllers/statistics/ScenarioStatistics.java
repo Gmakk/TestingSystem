@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScenarioStatistics {
-    private Scenario scenario;
+    private Integer id;
+    private String title;
     private Integer total;
     private Integer passed;
 }

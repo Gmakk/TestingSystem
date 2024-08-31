@@ -8,7 +8,6 @@ import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -57,8 +56,8 @@ public class StatisticsCollector {
         List<Scenario> allScenarios = scenarioRepo.findAll();
         List<ScenarioStatistics> scenarioStatistics = new ArrayList<>();
         for (Scenario scenario : allScenarios) {
-            scenarioStatistics.add(new ScenarioStatistics(scenario,connectionRepo.countByScenario(scenario),
-                    connectionRepo.countByScenarioAndPassedIsTrue(scenario)));
+            scenarioStatistics.add(new ScenarioStatistics(scenario.getId(),scenario.getTitle(),
+                    connectionRepo.countByScenario(scenario), connectionRepo.countByScenarioAndPassedIsTrue(scenario)));
         }
 
 
@@ -67,8 +66,8 @@ public class StatisticsCollector {
         List<TestPlan> allTestPlans = testPlanRepo.findAll();
         for (TestPlan testPlan : allTestPlans) {
             List<ScenarioStatistics> scenarioStatisticsForTestPlan = scenarioStatistics.stream()
-                    .filter(scenarioStat -> testPlan.getScenarios().contains(scenarioStat.getScenario())).toList();//если у тест плана есть такой сценарий
-            testPlanStatistics.add(new TestPlanStatistics(testPlan,
+                    .filter(scenarioStat -> testPlan.getScenarios().stream().map(Scenario::getId).toList().contains(scenarioStat.getId())).toList();//если у тест плана есть такой сценарий
+            testPlanStatistics.add(new TestPlanStatistics(testPlan.getId(),testPlan.getTitle(),
                     scenarioStatisticsForTestPlan.stream().mapToInt(ScenarioStatistics::getTotal).sum(),
                     scenarioStatisticsForTestPlan.stream().mapToInt(ScenarioStatistics::getPassed).sum(),
                     scenarioStatisticsForTestPlan));
@@ -80,8 +79,8 @@ public class StatisticsCollector {
         List<Project> allProjects = projectRepo.findAll();
         for (Project project : allProjects) {
             List<TestPlanStatistics> testPlanStatisticsForProject = testPlanStatistics.stream()
-                    .filter(testPlanStat -> testPlanStat.getTestPlan().getProject().equals(project)).toList();
-            projectStatistics.add(new ProjectStatistics(project,
+                    .filter(testPlanStat -> project.getTestPlans().stream().map(TestPlan::getId).toList().contains(testPlanStat.getId())).toList();
+            projectStatistics.add(new ProjectStatistics(project.getTitle(),
                     testPlanStatisticsForProject.stream().mapToInt(TestPlanStatistics::getTotal).sum(),
                     testPlanStatisticsForProject.stream().mapToInt(TestPlanStatistics::getPassed).sum(),
                     testPlanStatisticsForProject));
@@ -89,14 +88,13 @@ public class StatisticsCollector {
         return projectStatistics;
     }
 
-    public String contructJsonString(List<ProjectStatistics> projectStatisticsList){
+    public String constructJsonString(List<ProjectStatistics> projectStatisticsList){
         //регистрируются классы для сериализации, чтоб отображать только имена объектов
         Gson gson = new GsonBuilder().setPrettyPrinting()
                 .registerTypeAdapter(Project.class, new ProjectSerializer())
                 .registerTypeAdapter(TestPlan.class, new TestPlanSerializer())
                 .registerTypeAdapter(Scenario.class, new ScenarioSerializer())
                 .create();
-        String jsonStat = gson.toJson(projectStatisticsList);
-        return jsonStat;
+        return gson.toJson(projectStatisticsList);
     }
 }

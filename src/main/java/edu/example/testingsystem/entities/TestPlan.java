@@ -24,7 +24,7 @@ public class TestPlan {
     @ManyToOne
     private Userr creator;
     private Boolean approved;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "test_plan_scenarios",
             joinColumns = { @JoinColumn(name = "test_plan_id") },
@@ -32,6 +32,6 @@ public class TestPlan {
     )
     private List<Scenario> scenarios = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Project project;
 }

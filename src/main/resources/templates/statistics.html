@@ -21,18 +21,18 @@
 </head>
 <body>
 <h1>Общая статистика по всем проектам</h1>
-<div th:each="projectStat : ${totalStatistics}" th:attr="data-project=${projectStat.project.title}" class="project-stat">
-    <h3 th:text="'Проект ' + ${projectStat.project.title}"></h3>
+<div th:each="projectStat : ${totalStatistics}" th:attr="data-project=${projectStat.title}" class="project-stat">
+    <h3 th:text="'Проект ' + ${projectStat.title}"></h3>
     <h6>Прошло тестов/всего</h6>
     <b th:text="${projectStat.passed} + '/' + ${projectStat.total}"></b>
 
     <div th:each="testPlanStat : ${projectStat.testPlanStatistics}">
-        <h4 th:text="'Тест-план ' + ${testPlanStat.testPlan.title}"></h4>
+        <h4 th:text="'Тест-план ' + ${testPlanStat.title}"></h4>
         <h6>Прошло тестов/всего</h6>
         <b th:text="${testPlanStat.passed} + '/' + ${testPlanStat.total}"></b>
 
         <div th:each="scenarioStat : ${testPlanStat.scenarioStatistics}">
-            <h4 th:text="'Сценарий ' + ${scenarioStat.scenario.title}"></h4>
+            <h4 th:text="'Сценарий ' + ${scenarioStat.title}"></h4>
             <h6>Прошло тестов/всего</h6>
             <b th:text="${scenarioStat.passed} + '/' + ${scenarioStat.total}"></b>
         </div>
