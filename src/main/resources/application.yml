@@ -10,6 +10,9 @@ management:
       enabled: true
     os:
       enabled: true
+  endpoint:
+    env:
+      show-values: always
   endpoints:
     web:
       base-path: /management
@@ -60,6 +63,14 @@ spring:
           json:
             type:
               headers: false
+  boot:
+    admin:
+      client:
+        url: http://localhost:9095
+        username: admin
+        password: admin
+  application:
+    name: TestingSystem
 
 logging:
   level:

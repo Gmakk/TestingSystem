@@ -17,6 +17,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -81,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/statistics/**").hasAnyRole("TESTER","DIRECTOR","ADMIN","ANALYST")
                         .anyRequest().permitAll())
 
-
+                        .csrf(AbstractHttpConfigurer::disable)
                         .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 //                        .formLogin(withDefaults());
                         .formLogin(form -> form.successHandler(authenticationSuccessHandler)
