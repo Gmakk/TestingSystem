@@ -22,15 +22,18 @@ management:
 
 
 spring:
+  sql:
+    init:
+      mode: always
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/testing_system
     username: testing_connection
     password: G4s7Zd6h2
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       #ddl-auto: create/validate/update
     defer-datasource-initialization: true
   data:
@@ -71,10 +74,14 @@ spring:
         password: admin
   application:
     name: TestingSystem
+  jmx:
+    enabled: true
 
 logging:
   level:
     root: INFO
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc: DEBUG
     org.springframework.security: DEBUG
   file:
     name: my.log

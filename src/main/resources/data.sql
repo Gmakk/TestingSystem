@@ -3,7 +3,7 @@ INSERT INTO authority VALUES ('ROLE_ADMIN'),('ROLE_ANALYST'),
                              ('ROLE_TESTER'),('ROLE_DIRECTOR');
 INSERT INTO role VALUES ('Rules everything','admin'),('Creates test cases','analyst'),
                         ('Performs test cases','tester'),('Approves the plan','director');
-INSERT INTO role_authorities VALUES ('ROLE_ADMIN','admin'),('ROLE_ANALYST','admin'),
+INSERT INTO role_authorities(authorities_name, role_title) VALUES ('ROLE_ADMIN','admin'),('ROLE_ANALYST','admin'),
                                   ('ROLE_TESTER','admin'),('ROLE_DIRECTOR','admin'),
                                   ('ROLE_ANALYST','analyst'),('ROLE_TESTER','tester'),
                                   ('ROLE_DIRECTOR','director');

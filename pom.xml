@@ -5,17 +5,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>edu.example</groupId>
-    <artifactId>TestingSystem</artifactId>
+    <artifactId>testing-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>TestingSystem</name>
-    <description>TestingSystem</description>
+    <description>System for manual testing automatization</description>
     <properties>
         <java.version>17</java.version>
-        <spring-boot-admin.version>3.2.3</spring-boot-admin.version>
+        <spring-boot-admin.version>3.3.3</spring-boot-admin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -161,6 +161,9 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <name>testingsystem/${project.artifactId}:${project.version}</name>
+                    </image>
                 </configuration>
             </plugin>
         </plugins>
