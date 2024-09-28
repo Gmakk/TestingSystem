@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Представляет собранную в моменте статистику по тест-плану
+ * Содержит ссылки на статистику дочерних сценариев
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Представляет собранную в моменте статистику по проекту
+ * Является началом иерархической цепочки для записи статистики по тест-планам и сценариям
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
