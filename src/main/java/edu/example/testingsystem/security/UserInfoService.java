@@ -11,17 +11,21 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class WorkWithData {
+public class UserInfoService {
     private static RoleRepository roleRepo;
 
-    private WorkWithData(RoleRepository roleRepo) {
-        WorkWithData.roleRepo = roleRepo;
+    private UserInfoService(RoleRepository roleRepo) {
+        UserInfoService.roleRepo = roleRepo;
     }
 
     public static Optional<Role> findUsersRole(String role) {
         return roleRepo.findById(role);
     }
 
+    /**
+     * Позволяет получить информацию о пользователях в формах
+     * @return Текущий пользователь
+     */
     public static Userr getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //если ест авторизованный пользователь

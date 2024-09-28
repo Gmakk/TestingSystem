@@ -5,6 +5,10 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * Ведет статистику созданных тест-кейсов для метрик акутатора(/metrics)
+ * Почему-то временно не работает
+ */
 @Component
 public class TestCaseMetrics extends AbstractRepositoryEventListener<TestCase> {
     private MeterRegistry meterRegistry;

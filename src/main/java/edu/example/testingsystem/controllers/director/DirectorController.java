@@ -3,7 +3,7 @@ package edu.example.testingsystem.controllers.director;
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.ProjectRepository;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +34,7 @@ public class DirectorController {
 
     @ModelAttribute("currentUser")
     public Userr addCurrentUserToModel() {
-        return WorkWithData.getCurrentUser();
+        return UserInfoService.getCurrentUser();
     }
 
     @GetMapping("/logout")
@@ -43,12 +43,16 @@ public class DirectorController {
         return "/login";
     }
 
+    /**
+     * При выборе проекта, с которым будет работать руководитель тестирования, он автоматически становится главными в нем.
+     * После назначения на проект, он перенаправляется на страницу с выбранным проектом
+     */
     @PostMapping("/projectName")
     public String becomeProjectDirector(@ModelAttribute("projectName") Project project, Model model){
         if(project.getTitle() == null)
             return "redirect:/director";
         //Project selectedProject = projectRepo.findById(projectName).get();
-        project.setDirector(WorkWithData.getCurrentUser());
+        project.setDirector(UserInfoService.getCurrentUser());
         projectRepo.save(project);
         model.addAttribute("selectedProject", project);
         return "redirect:/director/manageProject";

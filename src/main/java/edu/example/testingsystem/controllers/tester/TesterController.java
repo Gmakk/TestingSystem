@@ -4,7 +4,7 @@ import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +39,7 @@ public class TesterController {
 
     @ModelAttribute("currentUser")
     public Userr addCurrentUserToModel() {
-        return WorkWithData.getCurrentUser();
+        return UserInfoService.getCurrentUser();
     }
 
     @GetMapping("/logout")
@@ -77,7 +77,7 @@ public class TesterController {
         Set<Scenario> scenarios = new HashSet<>();
         for (TestPlan testPlan : approvedTestPlans) {
             scenarios.addAll(testPlan.getScenarios().stream().
-                    filter(scenario -> (Objects.equals(scenario.getExecutor().getId(), WorkWithData.getCurrentUser().getId())
+                    filter(scenario -> (Objects.equals(scenario.getExecutor().getId(), UserInfoService.getCurrentUser().getId())
                             && connectionRepo.countByScenarioAndExecutedIsFalse(scenario) > 0))
                     .toList());
         }

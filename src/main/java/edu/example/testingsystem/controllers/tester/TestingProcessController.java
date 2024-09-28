@@ -39,14 +39,24 @@ public class TestingProcessController {
         return "testingProcess";
     }
 
+    /**
+     * Метод, вызываемый
+     * @param form Данные, которые заполняет тестировщик о прохождении тест-кейса
+     * @param connections Список оставшихся к прохождению тест-кейсов этим тестировщиком
+     * @param currentConnection Информация о текущем тест-кейсе(в связи со сценарием, в рамках которого он выполняется)
+     * @return страница со следующим тест-кейсом
+     */
     @PostMapping("/submit")
     public String submit(@ModelAttribute("executedTestCaseForm") ExecutedTestCaseForm form,Model model,
                          @ModelAttribute("testsToExecuteConnections") List<ScenarioCaseConnection> connections,
                          @ModelAttribute("currentConnection" ) ScenarioCaseConnection currentConnection) {
         if(form == null || form.getComment() == null)
             return "redirect:/testing/testingProcess";
+        //убираем из списка оставшихся тест-кейсов
         connections.remove(currentConnection);
+        //обновляем список оставшихся
         model.addAttribute("testsToExecuteConnections", connections);
+        //заносим и сохраняем информацию о похождении теста
         currentConnection.setPassed(form.getPassed());
         currentConnection.setComment(form.getComment());
         currentConnection.setExecuted(true);

@@ -11,10 +11,17 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * Обрабатывает успешные попытки авторизации пользователей
+ */
 @Configuration
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 
+    /**
+     * При наличии конкреной роли, направляет пользователя после авторизации на базовую для него страницу
+     * Пользователй без назначенной роли перенаправляет на страницу с соответствующей информацией
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());

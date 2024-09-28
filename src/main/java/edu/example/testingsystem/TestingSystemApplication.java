@@ -1,6 +1,5 @@
 package edu.example.testingsystem;
 
-import edu.example.testingsystem.logging.RequestResponseLoggingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -24,6 +23,9 @@ public class TestingSystemApplication implements WebMvcConfigurer {
         log.info("Application started");
     }
 
+    /**
+     * Добавляет конечные точки без контроллеров
+     */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("home");

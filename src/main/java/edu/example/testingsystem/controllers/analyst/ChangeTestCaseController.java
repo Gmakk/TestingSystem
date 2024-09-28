@@ -31,7 +31,7 @@ public class ChangeTestCaseController {
         TestCase testCase = findTestCase(id);
 
         TestCaseForm testCaseForm = new TestCaseForm();
-
+        //Заполняем форму с тест-кейсом существующими данными для дальнейшего редактирования
         testCaseForm.setTestCaseDescription(testCase.getDescription());
         testCaseForm.setTestCaseTitle(testCase.getTitle());
         testCaseForm.setInputData(testCase.getInputData());
@@ -44,7 +44,7 @@ public class ChangeTestCaseController {
     @PostMapping("/submit")
     public String submitChanges(@ModelAttribute("testCaseForm") TestCaseForm testCaseForm, @PathVariable("id") Integer id) {
         TestCase testCase = findTestCase(id);
-
+        //Обновляем данные в тест-кейсе после изменения и сохраняем его
         testCase.setTitle(testCaseForm.getTestCaseTitle());
         testCase.setInputData(testCaseForm.getInputData());
         testCase.setOutputData(testCaseForm.getOutputData());
@@ -56,8 +56,8 @@ public class ChangeTestCaseController {
         for(ScenarioCaseConnection connection : connections) {
             connection.setExecuted(false);
             connection.setPassed(false);
-            connectionRepo.save(connection);
         }
+        connectionRepo.saveAll(connections);
 
         return "redirect:/analyst/testCases";
     }

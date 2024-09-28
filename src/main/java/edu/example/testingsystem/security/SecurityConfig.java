@@ -50,6 +50,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Позволяет найти информацию о пользователе
+     * @param userRepo Репозиторий с пользователями
+     */
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepo) {
         return login -> {
@@ -61,6 +65,9 @@ public class SecurityConfig {
         };
     }
 
+    /**
+     * Определяет необходимые права для доступа к различным конечным точкам, отключает csrf, определяет страницу для авторизации
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //TODO: Настроить доступ для ролей

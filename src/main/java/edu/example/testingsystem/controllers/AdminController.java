@@ -6,7 +6,7 @@ import edu.example.testingsystem.forms.ActiveUserForm;
 import edu.example.testingsystem.forms.RoleAssigningForm;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +38,7 @@ public class AdminController {
 
     @ModelAttribute("currentUser")
     public Userr addCurrentUserToModel() {
-        return WorkWithData.getCurrentUser();
+        return UserInfoService.getCurrentUser();
     }
 
     @GetMapping

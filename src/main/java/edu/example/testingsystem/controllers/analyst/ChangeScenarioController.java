@@ -32,6 +32,7 @@ public class ChangeScenarioController {
     @PostMapping("/submit")
     public String submitChanges(@ModelAttribute("scenarioTitle") String scenarioTitle, @PathVariable("id") Integer id) {
         Scenario scenario = findScenario(id);
+        //Обновляем данные в сценарии после изменения и сохраняем его
         scenario.setTitle(scenarioTitle);
         scenarioRepo.save(scenario);
         return "redirect:/analyst/scenarios";

@@ -2,17 +2,14 @@ package edu.example.testingsystem.forms;
 
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.TestPlan;
-import edu.example.testingsystem.security.WorkWithData;
-import lombok.Data;
+import edu.example.testingsystem.security.UserInfoService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 @Service
 public class TestPlanForm {
@@ -86,7 +83,7 @@ public class TestPlanForm {
             e.printStackTrace();
         }
 
-        return new TestPlan(null,startDateFormatted,endDateFormatted,testPlanTitle,WorkWithData.getCurrentUser(),false,null,project);
+        return new TestPlan(null,startDateFormatted,endDateFormatted,testPlanTitle, UserInfoService.getCurrentUser(),false,null,project);
 
     }
 }

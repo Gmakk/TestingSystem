@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * Позволяет просматривать статистику в конечной точке info актуатора
+ */
 @Component
 public class StatisticsInfoContributor implements InfoContributor {
 

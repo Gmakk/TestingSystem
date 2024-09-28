@@ -2,7 +2,7 @@ package edu.example.testingsystem.forms;
 
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.TestCase;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,6 @@ public class TestCaseForm {
 
     public TestCase toTestCase(Project project) {
         return new TestCase(null,testCaseTitle,project,
-                WorkWithData.getCurrentUser(),testCaseDescription,inputData,outputData);
+                UserInfoService.getCurrentUser(),testCaseDescription,inputData,outputData);
     }
 }

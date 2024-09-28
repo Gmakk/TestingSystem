@@ -4,10 +4,13 @@ import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeReposi
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Для отслеживания запросов к сервису в конечной точке /management/httpexchanges актуатора
+ */
 @Configuration
 public class HttpTraceConfig {
 
-    ///management/httpexchanges
+    // /management/httpexchanges
     @Bean
     public InMemoryHttpExchangeRepository createTraceRepository() {
         return new InMemoryHttpExchangeRepository();

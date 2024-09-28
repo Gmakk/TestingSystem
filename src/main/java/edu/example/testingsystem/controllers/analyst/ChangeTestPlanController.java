@@ -42,6 +42,7 @@ public class ChangeTestPlanController {
     public String submitChanges(@ModelAttribute("testPlanForm") TestPlanForm testPlanForm, @PathVariable("id") Integer id) {
         TestPlan testPlan = findTestPlan(id);
 
+        //Обновляем данные в тест-плане после изменения и сохраняем его
         testPlan.setTitle(testPlanForm.getTestPlanTitle());
         testPlan.setStartDate(testPlanForm.getStartDateDate());
         testPlan.setEndDate(testPlanForm.getEndDateDate());

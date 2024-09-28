@@ -1,20 +1,10 @@
 package edu.example.testingsystem.security;
 
-import edu.example.testingsystem.entities.Role;
 import edu.example.testingsystem.entities.Userr;
-import edu.example.testingsystem.repos.RoleRepository;
-import edu.example.testingsystem.repos.UserRepository;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-import edu.example.testingsystem.security.WorkWithData;
 import org.springframework.stereotype.Service;
-
-import static edu.example.testingsystem.security.WorkWithData.findUsersRole;
 
 @Data
 @Service

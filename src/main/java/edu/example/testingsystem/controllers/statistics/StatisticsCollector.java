@@ -89,6 +89,7 @@ public class StatisticsCollector {
         //составляем статистику по каждому тест-плану
         List<TestPlanStatistics> testPlanStatistics = new ArrayList<>();
         List<TestPlan> allTestPlans = testPlanRepo.findAll();
+        List<TestPlanStat> allTestPlanStats = new ArrayList<>();
         for (TestPlan testPlan : allTestPlans) {
             //собираем статистику по сценариям тест-плана
             List<ScenarioStatistics> scenarioStatisticsForTestPlan = scenarioStatistics.stream()
@@ -99,17 +100,18 @@ public class StatisticsCollector {
                     scenarioStatisticsForTestPlan);
             testPlanStatistics.add(buffer);
 
-            //Записываем в денормализованную таблицу БД последнюю информацию по статистике тест-плана
+            //заносим статистику в бд
             List<TestPlanStat> testPlanStats = testPlanStatRepo.findByTestPlan(testPlan);
             if(!testPlanStats.isEmpty()){//если для этого тест плана уже создавался объект со статистикой
                 testPlanStats.get(0).setPassedTestsAmount(buffer.getPassed());
                 testPlanStats.get(0).setTotalTestsAmount(buffer.getTotal());
-                testPlanStatRepo.save(testPlanStats.get(0));
+                allTestPlanStats.add(testPlanStats.get(0));
             }else {//если нет, то создаем новый и записываем в бд
-                testPlanStatRepo.save(new TestPlanStat(null,testPlan, buffer.getTotal(), buffer.getPassed()));
+                allTestPlanStats.add(new TestPlanStat(null,testPlan, buffer.getTotal(), buffer.getPassed()));
                 System.out.println("New test plan stat created and written to db");
             }
         }
+        testPlanStatRepo.saveAll(allTestPlanStats);
         return testPlanStatistics;
     }
 

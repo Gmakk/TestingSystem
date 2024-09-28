@@ -5,7 +5,7 @@ import edu.example.testingsystem.entities.Requirement;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.RequirementRepository;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class AnalystController {
 
     @ModelAttribute("currentUser")
     public Userr addCurrentUserToModel() {
-        return WorkWithData.getCurrentUser();
+        return UserInfoService.getCurrentUser();
     }
 
     @GetMapping("/logout")

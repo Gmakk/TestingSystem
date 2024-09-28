@@ -6,12 +6,13 @@ import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
-import edu.example.testingsystem.security.WorkWithData;
+import edu.example.testingsystem.security.UserInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -75,7 +76,7 @@ public class ScenariosController {
 
     @PostMapping("/add")
     public String addScenario(@ModelAttribute("newScenarioTitle") String newScenarioTitle) {
-        Scenario newScenario = new Scenario(null,newScenarioTitle, WorkWithData.getCurrentUser(),null,null);
+        Scenario newScenario = new Scenario(null,newScenarioTitle, UserInfoService.getCurrentUser(),null,null);
         scenarioRepo.save(newScenario);
         return "redirect:/analyst/scenarios";
     }
@@ -85,8 +86,10 @@ public class ScenariosController {
     public String populateScenario(@ModelAttribute("populateScenarioForm") PopulateScenarioForm form) {
         if(form.getFormScenario() == null)
             return "redirect:/analyst/scenarios";
+        List<ScenarioCaseConnection> scenarioCaseConnections = new ArrayList<>();
         for(TestCase testCase : form.getTestCases())
-            connectionRepo.save(new ScenarioCaseConnection(null,null,false,false,form.getFormScenario(),testCase));
+            scenarioCaseConnections.add(new ScenarioCaseConnection(null,null,false,false,form.getFormScenario(),testCase));
+        connectionRepo.saveAll(scenarioCaseConnections);
         return "redirect:/analyst/scenarios";
     }
 }

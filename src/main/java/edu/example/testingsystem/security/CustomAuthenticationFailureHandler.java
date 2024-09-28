@@ -10,9 +10,16 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
+/**
+ * Обрабатывает неудачи при авторизации пользователей
+ */
 @Configuration
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
+    /**
+     * При неудаче по причине неактивности аккаунта, перенаправляет пользователя на страницу с соответствующей информацией.
+     * Во всех других случаях перенаправляет для повторной попытки авторизоваться
+     */
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
         System.out.println(exception.getMessage());
