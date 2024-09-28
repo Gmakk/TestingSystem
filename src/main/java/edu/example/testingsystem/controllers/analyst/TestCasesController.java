@@ -9,6 +9,7 @@ import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class TestCasesController {
     }
 
     @PostMapping(value="/alter", params="action=delete")
+    @Transactional
     public String deleteTestCase(@ModelAttribute("chosenTestCase") TestCase testCase) {
         if(testCase.getId() == null)
             return "redirect:/analyst/testCases";

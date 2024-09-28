@@ -8,6 +8,7 @@ import edu.example.testingsystem.repos.TestCaseRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
 import edu.example.testingsystem.security.WorkWithData;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,7 @@ public class ScenariosController {
     }
 
     @PostMapping(value="/alter", params="action=delete")
+    @Transactional
     public String deleteScenario(@ModelAttribute("chosenScenario") Scenario scenario) {
         if (scenario.getId() == null)
             return "redirect:/analyst/scenarios";
