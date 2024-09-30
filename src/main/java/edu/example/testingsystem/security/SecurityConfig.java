@@ -77,9 +77,9 @@ public class SecurityConfig {
                         .requestMatchers(EndpointRequest.toAnyEndpoint().excluding("health", "info")).hasRole("ADMIN")
 
                         //api
-                        .requestMatchers(HttpMethod.PUT,"/api/testCases/**").hasAuthority("SCOPE_writeTestCases")
-                        .requestMatchers(HttpMethod.DELETE,"/api/testCases/**").hasAuthority("SCOPE_deleteTestCases")
-                        .requestMatchers("/api/**").hasAuthority("SCOPE_fullAccess")
+//                        .requestMatchers(HttpMethod.PUT,"/api/testCases/**").hasAuthority("SCOPE_writeTestCases")
+//                        .requestMatchers(HttpMethod.DELETE,"/api/testCases/**").hasAuthority("SCOPE_deleteTestCases")
+//                        .requestMatchers("/api/**").hasAuthority("SCOPE_fullAccess")
 
                         //web
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
@@ -90,7 +90,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
 
                         .csrf(AbstractHttpConfigurer::disable)
-                        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                        //.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 //                        .formLogin(withDefaults());
                         .formLogin(form -> form.successHandler(authenticationSuccessHandler)
                                 .failureHandler(authenticationFailureHandler)
