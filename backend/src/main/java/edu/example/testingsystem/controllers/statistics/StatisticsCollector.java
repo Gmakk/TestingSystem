@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StatisticsCollector {
@@ -101,11 +102,12 @@ public class StatisticsCollector {
             testPlanStatistics.add(buffer);
 
             //заносим статистику в бд
-            List<TestPlanStat> testPlanStats = testPlanStatRepo.findByTestPlan(testPlan);
-            if(!testPlanStats.isEmpty()){//если для этого тест плана уже создавался объект со статистикой
-                testPlanStats.get(0).setPassedTestsAmount(buffer.getPassed());
-                testPlanStats.get(0).setTotalTestsAmount(buffer.getTotal());
-                allTestPlanStats.add(testPlanStats.get(0));
+            Optional<TestPlanStat> optionalTestPlanStats = testPlanStatRepo.findById(testPlan.getId());
+            if(optionalTestPlanStats.isPresent()){//если для этого тест плана уже создавался объект со статистикой
+                TestPlanStat testPlanStats = optionalTestPlanStats.get();
+                testPlanStats.setPassedTestsAmount(buffer.getPassed());
+                testPlanStats.setTotalTestsAmount(buffer.getTotal());
+                allTestPlanStats.add(testPlanStats);
             }else {//если нет, то создаем новый и записываем в бд
                 allTestPlanStats.add(new TestPlanStat(null,testPlan, buffer.getTotal(), buffer.getPassed()));
                 System.out.println("New test plan stat created and written to db");

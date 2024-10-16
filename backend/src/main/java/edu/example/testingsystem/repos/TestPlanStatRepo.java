@@ -3,10 +3,11 @@ package edu.example.testingsystem.repos;
 import edu.example.testingsystem.entities.TestPlan;
 import edu.example.testingsystem.entities.TestPlanStat;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface TestPlanStatRepo extends JpaRepository<TestPlanStat, Integer> {
-
-    List<TestPlanStat> findByTestPlan(TestPlan testPlan);
+@Repository
+public interface TestPlanStatRepo
+        extends JpaRepository<TestPlanStat, Integer> {
 }

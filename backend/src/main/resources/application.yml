@@ -27,7 +27,7 @@ spring:
       mode: always
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/testing_system
+    url: jdbc:postgresql://localhost:5432/testing_system
     username: testing_connection
     password: G4s7Zd6h2
   jpa:

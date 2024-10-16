@@ -1,5 +1,6 @@
 package edu.example.testingsystem.entities;
 
+import edu.example.testingsystem.controllers.statistics.TestPlanStatistics;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,4 +34,9 @@ public class TestPlan {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Project project;
+
+
+//    @OneToOne(mappedBy = "testPlan", cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private TestPlanStat statistics;
 }
