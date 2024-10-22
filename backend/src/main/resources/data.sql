@@ -1,3 +1,21 @@
+--запускать после старта
+--для проверки транзакции
+-- alter table scenario
+--     add constraint scenario_pk
+--         unique (title);
+--
+-- create table test_table
+-- (
+--     id integer
+--         constraint test_table_pk
+--             primary key
+--         constraint id references scenario (id)
+-- );
+-- INSERT INTO test_table VALUES (1),(2),(3);
+
+
+
+
 --пользователи
 INSERT INTO authority VALUES ('ROLE_ADMIN'),('ROLE_ANALYST'),
                              ('ROLE_TESTER'),('ROLE_DIRECTOR');

@@ -7,11 +7,13 @@ import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
 import edu.example.testingsystem.security.UserInfoService;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,12 @@ import java.util.List;
 @SessionAttributes("selectedProject")
 public class ScenariosController {
 
-    ScenarioRepository scenarioRepo;
-    ConnectionRepository connectionRepo;
-    TestPlanRepository planRepo;
-    TestCaseRepository testCaseRepo;
+    private static final Logger log = Logger.getLogger(ScenariosController.class);
+
+    private ScenarioRepository scenarioRepo;
+    private ConnectionRepository connectionRepo;
+    private TestPlanRepository planRepo;
+    private TestCaseRepository testCaseRepo;
 
     public ScenariosController(ScenarioRepository scenarioRepo, ConnectionRepository connectionRepo,
                                TestPlanRepository testPlanRepo, TestCaseRepository testCaseRepo) {
@@ -60,10 +64,10 @@ public class ScenariosController {
     @PostMapping(value="/alter", params="action=delete")
     @Transactional
     public String deleteScenario(@ModelAttribute("chosenScenario") Scenario scenario) {
-        if (scenario.getId() == null)
-            return "redirect:/analyst/scenarios";
-        connectionRepo.deleteByScenario(scenario);
-        scenarioRepo.delete(scenario);
+        if (scenario.getId() != null) {
+            connectionRepo.deleteByScenario(scenario);
+            scenarioRepo.delete(scenario);
+        }
         return "redirect:/analyst/scenarios";
     }
 
@@ -90,6 +94,12 @@ public class ScenariosController {
         for(TestCase testCase : form.getTestCases())
             scenarioCaseConnections.add(new ScenarioCaseConnection(null,null,false,false,form.getFormScenario(),testCase));
         connectionRepo.saveAll(scenarioCaseConnections);
+        return "redirect:/analyst/scenarios";
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public String conflict() {
+        log.error("Error occurred during the execution of the transaction");
         return "redirect:/analyst/scenarios";
     }
 }
