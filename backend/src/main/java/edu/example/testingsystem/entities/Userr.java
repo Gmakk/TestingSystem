@@ -20,6 +20,7 @@ public class Userr implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     private Integer id;
+    private String fullName;
     @NotNull
     private String login;
     @NotNull

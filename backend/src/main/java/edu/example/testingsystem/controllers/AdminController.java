@@ -4,6 +4,7 @@ import edu.example.testingsystem.entities.Role;
 import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.forms.ActiveUserForm;
 import edu.example.testingsystem.forms.RoleAssigningForm;
+import edu.example.testingsystem.forms.UsersFullNameForm;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
 import edu.example.testingsystem.security.UserInfoService;
@@ -45,6 +46,7 @@ public class AdminController {
     public String showAdminPage(Model model) {
         model.addAttribute("assignForm", new RoleAssigningForm());
         model.addAttribute("activeForm", new ActiveUserForm());
+        model.addAttribute("fullNameForm", new UsersFullNameForm());
         return "admin";
     }
 
@@ -72,6 +74,15 @@ public class AdminController {
         if(form == null || form.getUser() == null)
             return "redirect:/admin";
         form.getUser().setIsActive(form.getActive());
+        userRepo.save(form.getUser());
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/setFullName")
+    public String setFullName(@ModelAttribute("fullNameForm") UsersFullNameForm form) {
+        if(form == null || form.getUser() == null)
+            return "redirect:/admin";
+        form.getUser().setFullName(form.getFullName());
         userRepo.save(form.getUser());
         return "redirect:/admin";
     }

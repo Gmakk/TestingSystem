@@ -50,6 +50,21 @@
     <br>
     <br>
 
+    <h3>Выберите пользователя для редактирования его фио</h3>
+    <form method="POST" th:action="@{/admin/setFullName}" th:object="${fullNameForm}">
+
+        <select th:field="*{user}">
+            <option value="0">Выберите пользователя</option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.login}" th:field="*{user}"></option>
+        </select>
+
+        <input th:text="'ФИО полностью'" type="text" th:field="*{fullName}">
+        <button>Обновить ФИО пользователя</button>
+
+    </form>
+
+    <br>
+    <br>
     <form method="POST" th:action="@{/admin/deleteWithoutRoles}" >
         <button>Удалить пользователей без ролей</button>
     </form>
