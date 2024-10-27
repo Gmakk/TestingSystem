@@ -42,9 +42,9 @@ INSERT INTO requirement VALUES (1,'Нужно протестировать вв�
                                (2,'Нужно протестировать отображение','Test project'),(3,'Нужно протестировать авторизацию','Test project');
 INSERT INTO test_plan VALUES (true,3,1,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование ввода');
 INSERT INTO test_plan VALUES (true,3,2,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование вывода');
-INSERT INTO scenario VALUES (3,4,1,'Тестирование ввода таким-то пользователем');
-INSERT INTO scenario VALUES (3,4,2,'Тестирование ввода сяким-то пользователем');
-INSERT INTO scenario VALUES (3,4,3,'Тестирование ввода тем самым пользователем');
+INSERT INTO scenario VALUES (3,4,1,'Test project','Тестирование ввода таким-то пользователем');
+INSERT INTO scenario VALUES (3,4,2,'Test project','Тестирование ввода сяким-то пользователем');
+INSERT INTO scenario VALUES (3,4,3,'Test project','Тестирование ввода тем самым пользователем');
 INSERT INTO test_case VALUES (3,1,'Ввести по порядку следующие цифры','1 2 3','3 2 1','Test project','Проверка ввода формы1');
 INSERT INTO test_case VALUES (3,2,'Ввести по порядку следующие цифры','4 5 6','6 5 4','Test project','Проверка ввода формы2');
 INSERT INTO test_case VALUES (3,3,'Ввести по порядку следующие цифры','7 8 9','9 8 7','Test project','Проверка ввода формы3');
@@ -54,8 +54,8 @@ INSERT INTO test_case VALUES (3,5,'Ввести по порядку следую
 INSERT INTO test_plan_scenarios VALUES (1,1);
 INSERT INTO test_plan_scenarios VALUES (2,1);
 INSERT INTO test_plan_scenarios VALUES (3,2);
-INSERT INTO scenario_case_connection VALUES (false,1,false,1,1,null);
-INSERT INTO scenario_case_connection VALUES (false,2,true,1,2,null);
-INSERT INTO scenario_case_connection VALUES (false,3,true,2,3,null);
-INSERT INTO scenario_case_connection VALUES (false,4,true,2,4,null);
-INSERT INTO scenario_case_connection VALUES (false,5,false,3,5,null);
+INSERT INTO scenario_case_connection VALUES (false,1,false,1,1,1,null);
+INSERT INTO scenario_case_connection VALUES (false,2,true,1,2,1,null);
+INSERT INTO scenario_case_connection VALUES (false,3,true,2,3,1,null);
+INSERT INTO scenario_case_connection VALUES (false,4,true,2,4,1,null);
+INSERT INTO scenario_case_connection VALUES (false,5,false,3,5,2,null);

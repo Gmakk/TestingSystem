@@ -5,10 +5,12 @@ import edu.example.testingsystem.entities.Scenario;
 import edu.example.testingsystem.entities.TestPlan;
 import edu.example.testingsystem.forms.PopulateTestPlanForm;
 import edu.example.testingsystem.forms.TestPlanForm;
+import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.ProjectRepository;
 import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestPlanRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +25,10 @@ public class TestPlansController {
     TestPlanRepository planRepo;
     ProjectRepository projectRepo;
     ScenarioRepository scenarioRepo;
+    ConnectionRepository connectionRepo;
 
     public TestPlansController(TestPlanRepository planRepository , ScenarioRepository scenarioRepo,
-                               ProjectRepository projectRepo) {
+                               ProjectRepository projectRepo, ConnectionRepository connectionRepo) {
         this.planRepo = planRepository;
         this.projectRepo = projectRepo;
         this.scenarioRepo = scenarioRepo;
@@ -54,9 +57,11 @@ public class TestPlansController {
     }
 
     @PostMapping(value="/alter", params="action=delete")
+    @Transactional
     public String processTestPlan(@ModelAttribute("chosenTestPlan") TestPlan testPlan) {
         if (testPlan.getId() == null)
             return "testPlans";
+        connectionRepo.deleteByTestPlan(testPlan);
         planRepo.delete(testPlan);
         return "redirect:/analyst/testPlans";
     }

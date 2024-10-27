@@ -79,8 +79,9 @@ public class ScenariosController {
     }
 
     @PostMapping("/add")
-    public String addScenario(@ModelAttribute("newScenarioTitle") String newScenarioTitle) {
-        Scenario newScenario = new Scenario(null,newScenarioTitle, UserInfoService.getCurrentUser(),null,null);
+    public String addScenario(@ModelAttribute("newScenarioTitle") String newScenarioTitle, Model model) {
+        Scenario newScenario = new Scenario(null,newScenarioTitle, UserInfoService.getCurrentUser(),
+                null,null, (Project) model.getAttribute("selectedProject"));
         scenarioRepo.save(newScenario);
         return "redirect:/analyst/scenarios";
     }
@@ -92,7 +93,7 @@ public class ScenariosController {
             return "redirect:/analyst/scenarios";
         List<ScenarioCaseConnection> scenarioCaseConnections = new ArrayList<>();
         for(TestCase testCase : form.getTestCases())
-            scenarioCaseConnections.add(new ScenarioCaseConnection(null,null,false,false,form.getFormScenario(),testCase));
+            scenarioCaseConnections.add(new ScenarioCaseConnection(null, null, false, false, form.getFormScenario(), testCase,null));
         connectionRepo.saveAll(scenarioCaseConnections);
         return "redirect:/analyst/scenarios";
     }

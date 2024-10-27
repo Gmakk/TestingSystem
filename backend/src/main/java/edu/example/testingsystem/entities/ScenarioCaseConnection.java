@@ -24,4 +24,7 @@ public class ScenarioCaseConnection {
     @ManyToOne
     private TestCase testCase;
 
+    @ManyToOne
+    private TestPlan testPlan;
+
 }

@@ -35,6 +35,9 @@ public class Scenario {
 
     )
     private List<TestPlan> testPlans = new ArrayList<>();
+
+    @ManyToOne
+    private Project project;
 //    @OneToMany(mappedBy = "scenario")
 //    private List<ScenarioCaseConnection> connections = new ArrayList<>();
 }
