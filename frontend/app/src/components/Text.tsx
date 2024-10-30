@@ -7,7 +7,7 @@ export interface TextProps {
     weight?: number
 }
 
-export const Text = styled.span<TextProps>`
+export const StyledText = styled.span<TextProps>`
     color: ${p => p.color ?? "#000000"};
     background: ${p => p.bg ?? ""};
     font-size: ${p => p.size ?? "14"}px;
