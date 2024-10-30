@@ -74,12 +74,13 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) -> authorize
                         //actuator
-                        .requestMatchers(EndpointRequest.toAnyEndpoint().excluding("health", "info")).hasRole("ADMIN")
+                        //.requestMatchers(EndpointRequest.toAnyEndpoint().excluding("health", "info")).hasRole("ADMIN")
 
                         //api
-                        .requestMatchers(HttpMethod.PUT,"/api/testCases/**").hasAuthority("SCOPE_writeTestCases")
-                        .requestMatchers(HttpMethod.DELETE,"/api/testCases/**").hasAuthority("SCOPE_deleteTestCases")
-                        .requestMatchers("/api/**").hasAuthority("SCOPE_fullAccess")
+//                        .requestMatchers(HttpMethod.PUT,"/api/testCases/**").hasAuthority("SCOPE_writeTestCases")
+//                        .requestMatchers(HttpMethod.DELETE,"/api/testCases/**").hasAuthority("SCOPE_deleteTestCases")
+//                        .requestMatchers("/api/**").hasAuthority("SCOPE_fullAccess")
+
 
                         //web
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
