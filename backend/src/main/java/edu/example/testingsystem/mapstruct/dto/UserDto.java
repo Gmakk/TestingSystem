@@ -7,6 +7,7 @@ import edu.example.testingsystem.entities.Role;
 public record UserDto(Integer id,
                       String fullName,
                       String login,
-                      Role role,
-                      Boolean isActive) {
+                      String role,
+                      Boolean isActive,
+                      String password) {
 }

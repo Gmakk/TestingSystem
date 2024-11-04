@@ -34,7 +34,7 @@ public class ProjectsRestApi {
     }
 
     @PatchMapping
-    public ProjectDto setProjectDirector(ProjectDto projectDto) {
+    public ProjectDto setProjectDirector(@RequestBody ProjectDto projectDto) {
         Project found = projectRepository.findById(projectDto.title()).get();
         found.setDirector(userRepository.findById(projectDto.userId()).get());
         return projectMapper.projectToProjectDto(projectRepository.save(found));

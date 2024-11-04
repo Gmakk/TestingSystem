@@ -2,6 +2,7 @@ package edu.example.testingsystem.api;
 
 import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.TestPlan;
+import edu.example.testingsystem.mapstruct.dto.ProjectDto;
 import edu.example.testingsystem.mapstruct.dto.TestPlanDto;
 import edu.example.testingsystem.mapstruct.mapper.TestPlanMapper;
 import edu.example.testingsystem.repos.ProjectRepository;
@@ -30,14 +31,14 @@ public class TestPlanRestController {
     }
 
     @GetMapping("/unapproved")
-    public ResponseEntity<List<Integer>> getUnapproved(String projectTitle) {
-        Project project = projectRepository.findById(projectTitle).get();
+    public ResponseEntity<List<Integer>> getUnapproved(@RequestBody ProjectDto projectTitle) {
+        Project project = projectRepository.findById(projectTitle.title()).get();
         return ResponseEntity.ok(testPlanRepository.findByProjectAndApprovedIsFalse(project).stream().map(testPlan -> testPlan.getId()).toList());
     }
 
     @GetMapping("/approved")
-    public ResponseEntity<List<Integer>> getApproved(String projectTitle) {
-        Project project = projectRepository.findById(projectTitle).get();
+    public ResponseEntity<List<Integer>> getApproved(@RequestBody ProjectDto projectTitle) {
+        Project project = projectRepository.findById(projectTitle.title()).get();
         return ResponseEntity.ok(testPlanRepository.findByProjectAndApprovedIsTrue(project).stream().map(testPlan -> testPlan.getId()).toList());
     }
 
@@ -47,8 +48,8 @@ public class TestPlanRestController {
     }
 
     @PatchMapping("/approve")
-    public ResponseEntity<HttpStatus> approve(@RequestBody List<Integer> approvedPlans) {
-        for (Integer testPlan : approvedPlans) {
+    public ResponseEntity<HttpStatus> approve(@RequestBody ProjectDto approvedPlans) {
+        for (Integer testPlan : approvedPlans.testPlanIds()) {
             TestPlan testPlanObject = testPlanRepository.findById(testPlan).get();
             testPlanObject.setApproved(true);
             testPlanRepository.save(testPlanObject);
