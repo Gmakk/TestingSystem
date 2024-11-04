@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +27,12 @@ public class Userr implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     private Integer id;
+    @Generated( value = GenerationTime.ALWAYS )
+    @Column(columnDefinition = "varchar(255) GENERATED ALWAYS AS (surname || ' ' || name || ' ' || patronymic) STORED")
     private String fullName;
+    private String name;
+    private String surname;
+    private String patronymic;
     @NotNull
     private String login;
     @NotNull

@@ -8,5 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersFullNameForm {
     Userr user;
-    String fullName;
+    String name;
+    String surname;
+    String patronymic;
 }

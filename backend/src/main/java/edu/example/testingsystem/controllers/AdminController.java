@@ -82,7 +82,9 @@ public class AdminController {
     public String setFullName(@ModelAttribute("fullNameForm") UsersFullNameForm form) {
         if(form == null || form.getUser() == null)
             return "redirect:/admin";
-        form.getUser().setFullName(form.getFullName());
+        form.getUser().setName(form.getName());
+        form.getUser().setSurname(form.getSurname());
+        form.getUser().setPatronymic(form.getPatronymic());
         userRepo.save(form.getUser());
         return "redirect:/admin";
     }
