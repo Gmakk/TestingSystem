@@ -20,12 +20,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "handMadeApi/testCases", produces = "application/json")
 @CrossOrigin(origins="http://localhost:9091")
-public class TestCaseRestApi {
+public class TestCaseRestController {
     TestCaseRepository testCaseRepo;
     TestCaseMessagingService messagingService;
 
 
-    public TestCaseRestApi(TestCaseRepository testCaseRepo, KafkaTestCaseMessagingService messagingService) {
+    public TestCaseRestController(TestCaseRepository testCaseRepo, KafkaTestCaseMessagingService messagingService) {
         this.testCaseRepo = testCaseRepo;
         this.messagingService = messagingService;
     }

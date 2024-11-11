@@ -8,7 +8,6 @@ import edu.example.testingsystem.repos.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/project")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class ProjectsRestApi {
+public class ProjectsRestController {
     ProjectRepository projectRepository;
     UserRepository userRepository;
     ProjectMapper projectMapper;
@@ -36,7 +35,7 @@ public class ProjectsRestApi {
     @PatchMapping
     public ProjectDto setProjectDirector(@RequestBody ProjectDto projectDto) {
         Project found = projectRepository.findById(projectDto.title()).get();
-        found.setDirector(userRepository.findById(projectDto.userId()).get());
+        found.setDirector(userRepository.findById(projectDto.director()).get());
         return projectMapper.projectToProjectDto(projectRepository.save(found));
     }
 }

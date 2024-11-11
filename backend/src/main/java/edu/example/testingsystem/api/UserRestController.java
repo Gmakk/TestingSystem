@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/user")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class UserRestApi {
+public class UserRestController {
     RoleRepository roleRepository;
     UserRepository userRepository;
     UserMapper userMapper;

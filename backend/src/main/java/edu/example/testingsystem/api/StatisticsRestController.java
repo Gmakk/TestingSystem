@@ -1,5 +1,5 @@
 package edu.example.testingsystem.api;
 
 //TODO:
-public class StatisticsRestApi {
+public class StatisticsRestController {
 }
