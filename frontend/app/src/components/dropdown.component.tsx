@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
-import ArrowDown from "assets/icons/arrow-down.svg?react";
 import { observer } from "mobx-react-lite";
 import { useRef, useState } from "react";
-import { useOnClickOutside } from "utils/hooks/on-click-outside.hook.ts";
 import { Stack } from "./Stack";
 import { StyledText } from "./Text";
+import ArrowIcon from "../assets/arrow.svg";
 
 export interface Option<T> {
     label: string
@@ -22,22 +21,21 @@ interface DropdownProps<T> {
 
 const DropdownContainer = styled.div<{ width?: number }>`
   position: relative;
-    
-  width:${p => (p.width ? p.width : 300)}px;
+  width: ${p => (p.width ? p.width : 170)}px;
 `;
 
 const DropdownButton = styled.button`
     text-overflow: ellipsis;
     width: 100%;
     display: flex;
-    color: ${p => p.theme.colors.baseColors.inputText};
+    color: ${p => p.theme.colors.text.primary};
     justify-content: space-between;
     font-size: 16px;
     align-items: center;
-    border: none;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: ${p => p.theme.colors.baseColors.dropdownBg};
+    border: 1px solid ${p => p.theme.colors.accentBg };
+    padding: 5px;
+    background-color: transparent;
+    width: 170px;
 `;
 
 const DropdownList = styled.ul`
@@ -46,7 +44,7 @@ const DropdownList = styled.ul`
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: ${p => p.theme.colors.baseColors.secondaryText};
+        background-color: ${p => p.theme.colors.secondaryBg};
         border-radius: 20px;
         width: 2px;
         margin-right: 15px;
@@ -56,22 +54,24 @@ const DropdownList = styled.ul`
     }
       position: absolute;
       width: 100%;
-      background-color: ${p => p.theme.colors.baseColors.dropdownBg};
+      background-color: ${p => p.theme.colors.containerBg};
+      border: 1px solid ${p => p.theme.colors.accentBg};
       max-height: 150px;
       overflow-y: auto;
-      z-index: 999;
+      z-index: 5;
       list-style-type: none;
       padding: 0;
       margin: 0;
 `;
 
 const DropdownListItem = styled.li`
-  padding: 8px;
+    padding: 8px;
     font-size: 16px;
-    color: ${p => p.theme.colors.baseColors.inputText};
+    color: ${p => p.theme.colors.text.primary};
+    cursor: pointer;
 `;
 
-export const Dropdown = observer(<T, >({
+export const Dropdown = observer(<T,>({
     options,
     selectedValue,
     onChange,
@@ -85,26 +85,25 @@ export const Dropdown = observer(<T, >({
         onChange(value);
         setIsOpen(false);
     };
-    useOnClickOutside([ref], () => setIsOpen(false));
 
     return (
         <Stack direction="column" gap={15}>
-            <StyledText weight={500}>{ label }</StyledText>
+            {/* <StyledText weight={500}>{label}</StyledText> */}
             <DropdownContainer ref={ref} width={width}>
                 <DropdownButton disabled={readonly} onClick={() => setIsOpen(!isOpen)}>
-                    { options.find(option => option.value === selectedValue?.value)?.label ?? "Выберите" }
-                    <ArrowDown style={{ rotate: isOpen ? "180deg" : "0deg" }} />
+                    {options.find(option => option.value === selectedValue?.value)?.label ?? label}
+                    <img src={ArrowIcon} style={{ rotate: isOpen ? "180deg" : "0deg" }} />
                 </DropdownButton>
-                { isOpen && (
+                {isOpen && (
                     <DropdownList>
-                        { options.map(option => (
+                        {options.map(option => (
                             <DropdownListItem key={String(option.value)}
-                                              onClick={() => handleSelect(option)}>
-                                { option.label }
+                                onClick={() => handleSelect(option)}>
+                                {option.label}
                             </DropdownListItem>
-                        )) }
+                        ))}
                     </DropdownList>
-                ) }
+                )}
             </DropdownContainer>
         </Stack>
     );

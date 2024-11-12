@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { Stack } from "./stack.component.tsx";
-import { Typography } from "./text.component.tsx";
+import { Stack } from "./Stack";
+import { StyledText } from "./Text";
 
 const Wrapper = styled.div<{ visible?: boolean }>`
     align-items: center;
@@ -89,10 +89,10 @@ const Spinner = styled.div`
 export const Loader: FC<{ visible?: boolean; loadingText?: string;finallyText?: string; pending?: boolean }> = observer(({ visible, loadingText, finallyText, pending }) => (
     <Wrapper visible={visible}>
         <Card>
-            <Stack.Vertical gap={61} align="center" style={{ paddingTop: "150px" }}>
+            <Stack direction="column" gap={61} align="center" style={{ paddingTop: "150px" }}>
                 <Spinner />
-                <Typography>{ loadingText }</Typography>
-            </Stack.Vertical>
+                <StyledText>{ loadingText }</StyledText>
+            </Stack>
         </Card>
     </Wrapper>
 ));

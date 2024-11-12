@@ -10,7 +10,7 @@ interface ButtonSwitchProps {
 
 const ButtonContainer = styled.div`
     display: flex;
-    background: ${p => p.theme.colors.baseColors.consoleBG};
+    background: ${p => p.theme.colors.accentBg};
     border-radius: 6px;
     padding: 3px 2px;
     gap: 10px;
@@ -24,8 +24,8 @@ const Button = styled.button<{ isActive: boolean }>`
   border-radius: 6px;
     font-size: 12pt;
   cursor: pointer;
-  color: ${p => p.theme.colors.baseColors.primaryText};
-  background-color: ${({ isActive }) => (isActive ? p => p.theme.colors.baseColors.interactiveText : "transparent")};
+  color: ${p => p.theme.colors.text.primary};
+  background-color: ${({ isActive }) => (isActive ? p => p.theme.colors.text.secondary: "transparent")};
   transition: background-color 0.3s;
 `;
 
