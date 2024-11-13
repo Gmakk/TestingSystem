@@ -37,26 +37,26 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Integer id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(userMapper.userToUserDto(userRepository.findById(id).get()));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> updateActiveUserStatus(@PathVariable Integer id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> updateActiveUserStatus(@PathVariable("id") Integer id, @RequestBody UserDto userDto) {
         Userr user =userRepository.findById(id).get();
         user.setIsActive(userDto.isActive());
         return ResponseEntity.ok(userMapper.userToUserDto(userRepository.save(user)));
     }
 
     @PatchMapping("/{id}/role")
-    public ResponseEntity<UserDto> updateRole(@PathVariable Integer id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> updateRole(@PathVariable("id") Integer id, @RequestBody UserDto userDto) {
         Userr user =userRepository.findById(id).get();
         user.setRole(roleRepository.findById(userDto.role()).get());
         return ResponseEntity.ok(userMapper.userToUserDto(userRepository.save(user)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Integer id) {
         if(!userRepository.existsById(id))
             throw new NoSuchElementException("Attempt to delete user with non-existing id " + id);
         userRepository.deleteById(id);

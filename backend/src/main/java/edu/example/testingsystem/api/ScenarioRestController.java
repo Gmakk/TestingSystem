@@ -32,7 +32,7 @@ public class ScenarioRestController {
     UserRepository userRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ScenarioDto> getScenarioById(@PathVariable Integer id) {
+    public ResponseEntity<ScenarioDto> getScenarioById(@PathVariable("id") Integer id) {
         Optional<Scenario> scenario = scenarioRepository.findById(id);
         if (scenario.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,7 +59,7 @@ public class ScenarioRestController {
     }
 
     @GetMapping("/byproject/{title}")
-    public ResponseEntity<List<ScenarioDto>> getScenariosByProject(@PathVariable String title){
+    public ResponseEntity<List<ScenarioDto>> getScenariosByProject(@PathVariable("title") String title){
         Optional<Project> optionalProject= projectRepository.findById(title);
         if(!optionalProject.isPresent())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

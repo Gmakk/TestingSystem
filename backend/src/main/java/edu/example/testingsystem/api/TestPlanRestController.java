@@ -43,7 +43,7 @@ public class TestPlanRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TestPlanDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<TestPlanDto> getById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.findById(id).get()));
     }
 

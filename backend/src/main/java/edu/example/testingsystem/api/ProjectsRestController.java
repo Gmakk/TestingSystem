@@ -28,7 +28,7 @@ public class ProjectsRestController {
     }
 
     @GetMapping("/{title}")
-    public ProjectDto getProjectById(@PathVariable String title) {
+    public ProjectDto getProjectById(@PathVariable("title") String title) {
         return projectMapper.projectToProjectDto(projectRepository.findById(title).get());
     }
 
