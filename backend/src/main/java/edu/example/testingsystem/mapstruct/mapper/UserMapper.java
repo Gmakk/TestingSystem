@@ -14,7 +14,6 @@ public interface UserMapper {
     @Mapping(target = "role", source = "user.role.title")
     UserDto userToUserDto(Userr user);
 
-
     default List<UserDto> usersToUserDtos(List<Userr> users){
         return users.stream().map(this::userToUserDto).toList();
     };

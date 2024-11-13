@@ -5,6 +5,7 @@ import edu.example.testingsystem.mapstruct.dto.TestCaseDto;
 import edu.example.testingsystem.mapstruct.mapper.TestCaseMapper;
 import edu.example.testingsystem.messaging.TestCaseMessagingService;
 import edu.example.testingsystem.messaging.kafka.KafkaTestCaseMessagingService;
+import edu.example.testingsystem.repos.ConnectionRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 //TODO: PageRequest? ResponseEntity? CrossOrigin?
@@ -30,12 +33,7 @@ public class TestCaseRestController {
     TestCaseRepository testCaseRepo;
     TestCaseMessagingService messagingService;
     TestCaseMapper testCaseMapper;
-
-    @GetMapping(params = "recent")
-    public List<TestCase> getRecentTestCases() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("id"));
-        return testCaseRepo.findAll(pageRequest).getContent();
-    }
+    ConnectionRepository connectionRepo;
 
     @GetMapping("/{id}")
     public ResponseEntity<TestCaseDto> getTestCaseById(@PathVariable("id") Integer id) {
@@ -46,56 +44,30 @@ public class TestCaseRestController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TestCase createTestCase(@RequestBody TestCase testCase) {
-
-
-
-        //messagingService.sendTestCase(testCase);
-
-
-        return testCaseRepo.save(testCase);
+    @PatchMapping("/{id}")
+    public ResponseEntity<TestCaseDto> patchTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseDto testCaseDto) {
+        Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
+        if(optionalTestCase.isEmpty())
+            return ResponseEntity.notFound().build();
+        TestCase patched = testCaseMapper.patchTestCase(optionalTestCase.get(),testCaseDto);
+        return ResponseEntity.ok(testCaseMapper.toDto(testCaseRepo.save(patched)));
     }
 
-    //полная замена содержимого по указанному id
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public TestCase updateTestCase(@PathVariable("id") Integer id, @RequestBody TestCase testCase) {
-        testCase.setId(id);
-        return testCaseRepo.save(testCase);
-    }
-
-    //частичная замена содержимого по указанному id
-    @PatchMapping(path = "/{id}", consumes = "application/json")
-    public TestCase patchTestCase(@PathVariable("id") Integer id, @RequestBody TestCase patch) {
-        TestCase testCase = testCaseRepo.findById(id).get();
-        if(patch.getTitle() != null) {
-            testCase.setTitle(patch.getTitle());
-        }
-        if(patch.getProject() != null) {
-            testCase.setProject(patch.getProject());
-        }
-        if(patch.getCreator() != null) {
-            testCase.setCreator(patch.getCreator());
-        }
-        if(patch.getDescription() != null) {
-            testCase.setDescription(patch.getDescription());
-        }
-        if(patch.getInputData() != null) {
-            testCase.setInputData(patch.getInputData());
-        }
-        if(patch.getOutputData() != null) {
-            testCase.setOutputData(patch.getOutputData());
-        }
-        return testCaseRepo.save(testCase);
+    @PostMapping
+    public ResponseEntity<TestCaseDto> createTestCase(@RequestBody TestCaseDto testCaseDto) {
+        TestCase savedTestCase = testCaseRepo.save(testCaseMapper.toTestCase(testCaseDto));
+        return ResponseEntity.ok(testCaseMapper.toDto(savedTestCase));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTestCase(@PathVariable("id") Integer id) {
-        try{
-            testCaseRepo.deleteById(id);
-        }catch (EmptyResultDataAccessException ex) {}
+    @Transactional
+    public ResponseEntity<HttpStatus> deleteTestCase(@PathVariable("id") Integer id) {
+        Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
+        if(optionalTestCase.isEmpty())
+            throw new NoSuchElementException("Attempt to delete test case with non-existing id " + id);
+        connectionRepo.deleteByTestCase(optionalTestCase.get());
+        testCaseRepo.deleteById(optionalTestCase.get().getId());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

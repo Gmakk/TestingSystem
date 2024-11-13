@@ -1,6 +1,5 @@
-package edu.example.testingsystem.api.Exception;
+package edu.example.testingsystem.api.exception;
 
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
