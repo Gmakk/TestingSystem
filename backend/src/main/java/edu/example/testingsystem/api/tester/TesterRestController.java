@@ -49,7 +49,7 @@ public class TesterRestController {
         return ResponseEntity.ok(scenarioMapper.toDtos(scenarioList));
     }
 
-    @GetMapping("/scenario/{scenarioId}/next")
+    @GetMapping("/scenario/{scenarioId}/nextConnection")
     public ResponseEntity<ConnectionDto> getNextTestCase(@PathVariable("scenarioId") Integer scenarioId) {
         Optional<Scenario> optionalScenario = scenarioRepository.findById(scenarioId);
         if(optionalScenario.isEmpty())
@@ -58,6 +58,17 @@ public class TesterRestController {
         if(connectionList.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(connectionMapper.toDto(connectionList.get(0)));
+    }
+
+    @GetMapping("/scenario/{scenarioId}/allConnections")
+    public ResponseEntity<List<ConnectionDto>> getAllTestCases(@PathVariable("scenarioId") Integer scenarioId) {
+        Optional<Scenario> optionalScenario = scenarioRepository.findById(scenarioId);
+        if(optionalScenario.isEmpty())
+            return ResponseEntity.notFound().build();
+        List<ScenarioCaseConnection> connectionList = connectionRepository.findByScenarioAndExecutedIsFalse(optionalScenario.get());
+        if(connectionList.isEmpty())
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(connectionMapper.toDtoList(connectionList));
     }
 
     @PatchMapping("/connection/{connectionId}/submit")
