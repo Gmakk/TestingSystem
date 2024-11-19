@@ -1,17 +1,19 @@
 package edu.example.testingsystem.mapstruct.mapper;
 
-import edu.example.testingsystem.entities.Scenario;
+import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.mapstruct.dto.ScenarioDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import edu.example.testingsystem.mapstruct.dto.TestCaseDto;
+import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ScenarioMapper {
 
-    @Mapping(target = "creator", expression = "java(scenario.getCreator().getId())")
-    @Mapping(target = "executor", expression = "java(scenario.getExecutor().getId())")
+    @Mapping(target = "creator", source = "scenario.creator.id",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "executor", source = "scenario.executor.id",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "testPlans", expression = "java(scenario.getTestPlans().stream().map(testPlan -> testPlan.getId()).toList())")
     @Mapping(target = "projectTitle", expression = "java(scenario.getProject().getTitle())")
     ScenarioDto toDto(Scenario scenario);
@@ -19,5 +21,15 @@ public interface ScenarioMapper {
     default List<ScenarioDto> toDtos(List<Scenario> scenarios){
         return scenarios.stream().map(this::toDto).toList();
     }
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "title", source = "title")
+    Scenario patchScenario(@MappingTarget Scenario scenario, ScenarioDto scenarioDto);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "title", source = "scenarioDto.title")
+    @Mapping(target = "creator", source = "creator")
+    @Mapping(target = "project", source = "project")
+    Scenario toScenario(ScenarioDto scenarioDto, Userr creator, Project project);
 
 }

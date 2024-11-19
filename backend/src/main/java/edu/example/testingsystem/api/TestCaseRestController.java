@@ -35,6 +35,11 @@ public class TestCaseRestController {
     TestCaseMapper testCaseMapper;
     ConnectionRepository connectionRepo;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<TestCaseDto>> getAll() {
+        return ResponseEntity.ok(testCaseMapper.toDtos(testCaseRepo.findAll()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TestCaseDto> getTestCaseById(@PathVariable("id") Integer id) {
         Optional<TestCase> testCase = testCaseRepo.findById(id);
