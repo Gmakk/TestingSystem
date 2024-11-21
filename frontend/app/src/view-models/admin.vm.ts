@@ -81,7 +81,6 @@ export class AdminViewModel {
         return filteredList;
     }
 
-
     public list(): AdminForm[] {
         return [
             {

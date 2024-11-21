@@ -1,6 +1,6 @@
 export enum routes {
     $root = "/",
-    $test = "/test",
+    $tester = "/tester",
     $admin = "/admin"
 }
 

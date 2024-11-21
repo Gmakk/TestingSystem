@@ -1,5 +1,6 @@
-import axios from 'axios';
-import { toast, Toaster } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
+import * as z from "zod";
 
 class HttpRequest {
     private baseUrl: string;
@@ -15,9 +16,16 @@ class HttpRequest {
         endpoint: string,
         data?: any,
         params?: Record<string, string | number>,
-        dtoClass?: new (...args: any[]) => T
+        responseSchema?: z.Schema<T>,
+        requestSchema?: z.Schema<any>
     ): Promise<T | { error: any }> {
         try {
+
+            if (requestSchema && data) {
+                const parsedData = requestSchema.parse(data);
+                data = parsedData;
+            }
+
             const response = await axios.request({
                 method,
                 url: `${this.baseUrl}${endpoint}`,
@@ -27,17 +35,26 @@ class HttpRequest {
             });
 
             if (response.status >= 400) {
-                toast.error("Ошибка получения данных", response.data)
+                toast.error("Ошибка получения данных", response.data);
                 return { error: response.data };
             }
 
-            if (dtoClass) {
-                return new dtoClass(response.data);
+            if (responseSchema) {
+                try {
+                  const parsedData = responseSchema.parse(response.data);
+                  return parsedData;
+                } catch (error: any) {
+                    toast.error("Ошибка валидации ответа", error);
+                    return { error };
+                }
             }
 
             return response.data;
         } catch (error: any) {
+            toast.error("Ошибка запроса", error);
             return { error };
         }
     }
 }
+
+export const httpRequest = new HttpRequest("http://localhost:9091/api");
