@@ -39,15 +39,15 @@ public class TestPlanRestController {
     }
 
     @GetMapping("/unapproved")
-    public ResponseEntity<List<Integer>> getUnapproved(@RequestBody ProjectDto projectTitle) {
+    public ResponseEntity<List<TestPlanDto>> getUnapproved(@RequestBody ProjectDto projectTitle) {
         Project project = projectRepository.findById(projectTitle.title()).get();
-        return ResponseEntity.ok(testPlanRepository.findByProjectAndApprovedIsFalse(project).stream().map(testPlan -> testPlan.getId()).toList());
+        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsFalse(project)));
     }
 
     @GetMapping("/approved")
-    public ResponseEntity<List<Integer>> getApproved(@RequestBody ProjectDto projectTitle) {
+    public ResponseEntity<List<TestPlanDto>> getApproved(@RequestBody ProjectDto projectTitle) {
         Project project = projectRepository.findById(projectTitle.title()).get();
-        return ResponseEntity.ok(testPlanRepository.findByProjectAndApprovedIsTrue(project).stream().map(testPlan -> testPlan.getId()).toList());
+        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsTrue(project)));
     }
 
     @GetMapping("/{id}")

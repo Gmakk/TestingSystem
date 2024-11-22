@@ -87,6 +87,15 @@ public class ScenarioRestController {
         return ResponseEntity.ok(scenarioMapper.toDtos(scenarioList));
     }
 
+    @GetMapping("/bytestplan/{id}")
+    public ResponseEntity<List<ScenarioDto>> getScenariosByTestPlan(@PathVariable("id") Integer id){
+        Optional<TestPlan> optionalTestPlan= testPlanRepository.findById(id);
+        if(optionalTestPlan.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<Scenario> scenarios = optionalTestPlan.get().getScenarios();
+        return ResponseEntity.ok(scenarioMapper.toDtos(scenarios));
+    }
+
     @PostMapping
     public ResponseEntity<ScenarioDto> createScenario(@RequestBody ScenarioDto scenarioDto) {
         Optional<Project> optionalProject= projectRepository.findById(scenarioDto.projectTitle());
