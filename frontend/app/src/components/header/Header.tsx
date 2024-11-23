@@ -6,7 +6,7 @@ import { useTheme } from "@emotion/react";
 import logout from "../../assets/logout.svg";
 
 const Container = styled.div`
-    height: 100px;
+    min-height: 100px;
     background: ${p => p.theme.colors.secondaryBg};
     display: flex;
     flex-direction: row;

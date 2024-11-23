@@ -10,7 +10,7 @@ export interface PageProps {
 export const Page: React.FC<PageProps> = x => {
     const theme = useTheme()
     return (
-        <Stack direction="column" style={{ height: "100vh" }}>
+        <Stack direction="column" style={{ height: "100vh", overflow: "hidden" }}>
             <Header />
             <div style={{ background: theme.colors.primaryBg, height: "100%" }}>
                 {x.children}

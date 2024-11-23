@@ -8,7 +8,7 @@ export namespace ProjectsApi {
         if ('error' in result) {
             toast.error('Ошибка получения списка проектов:', result.error);
         } else {
-            console.log('Список проектов', result);
+            return result;
         }
     }
 }
