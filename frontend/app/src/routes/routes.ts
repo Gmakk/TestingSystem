@@ -1,7 +1,8 @@
 export enum routes {
     $root = "/",
     $tester = "/tester",
-    $admin = "/admin"
+    $admin = "/admin",
+    $analyst = "/analyst"
 }
 
 export type RoutePath = routes;

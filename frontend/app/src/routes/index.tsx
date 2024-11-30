@@ -23,15 +23,10 @@ export const router = createBrowserRouter([
         path: routes.$admin,
         lazy: () => import("../pages/admin.page")
         .then(m => ({ Component: m.AdminPage })),
+    },
+    {
+        path: routes.$analyst,
+        lazy: () => import("../pages/analyst.page")
+        .then(m => ({Component: m.AnalystPage}))
     }
 ]);
-
-// function recursiveMap(a: RouteObject[]) {
-//     return [
-//         a,
-//         ...a.map(r => r.children ?? [])
-//     ].flat();
-// }
-
-// export const flatRoutes = router.routes
-//     .flatMap(r => [r, ...recursiveMap(r.children!)]);
