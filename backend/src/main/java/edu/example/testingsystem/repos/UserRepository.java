@@ -2,6 +2,8 @@ package edu.example.testingsystem.repos;
 
 import edu.example.testingsystem.entities.Role;
 import edu.example.testingsystem.entities.Userr;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ public interface UserRepository
     List<Userr> findByLogin(String login);
 
     List<Userr> findByRole(Role role);
+
+    Page<Userr> findAllByRole(Role role, Pageable pageable);
 
     @Transactional
     void deleteByIsActive(Boolean isActive);

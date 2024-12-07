@@ -2,6 +2,7 @@ package edu.example.testingsystem.api.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ExceptionProcessing extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = NoSuchElementException.class)
     protected ResponseEntity<Object> handleNotFound(NoSuchElementException ex, WebRequest request) {
-        String bodyOfResponse = "Unable to find such object";
+        String bodyOfResponse = "Не удалось найти указанный объект";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
@@ -30,6 +31,12 @@ public class ExceptionProcessing extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     protected ResponseEntity<Object> handleRuntimeException(DataIntegrityViolationException ex, WebRequest request) {
         String bodyOfResponse = "Нарушение ограничения целостности";
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = PropertyReferenceException.class)
+    protected ResponseEntity<Object> handleRuntimeException(PropertyReferenceException ex, WebRequest request) {
+        String bodyOfResponse = "Неверное названия поля для фильтрации";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 

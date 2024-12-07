@@ -49,4 +49,24 @@ public class StatisticsRestController {
                 .contentType(MediaType.parseMediaType("text/plain"))
                 .body(jsonString.getBytes());
     }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<ProjectStatistics>> projectStatOrderedByPassedAsc() {
+        List<ProjectStatistics> projectStatisticsList = collector.collectStatistics();
+        projectStatisticsList = projectStatisticsList.stream().sorted((first, second) -> {
+            //если у кого-то впринципе нет содержимого, то считаем его наименее выполненным
+            if(first.getTotal() == 0 && second.getTotal() != 0)
+                return -1;
+            if(first.getTotal() != 0 && second.getTotal() == 0)
+                return 1;
+            if(first.getTotal() == 0 && second.getTotal() == 0)
+                return 0;
+            //далее сравниваем процент выполнения
+            Float firstCompletedPart = (float) (first.getPassed() / first.getTotal());
+            Float secondCompletedPart = (float) (second.getPassed() / second.getTotal());
+            return firstCompletedPart.compareTo(secondCompletedPart);
+        }).toList();
+
+        return ResponseEntity.ok(projectStatisticsList);
+    }
 }
