@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { AsyncExecution } from "../utils/async-action";
 import { ProjectsApi } from "../api/projects";
+import { TestCase } from "./tester.vm";
 
 export type TestCaseType = {
     id: number
@@ -27,7 +28,7 @@ export type ProjectType = {
 
 export type Form = {
     type: "TEST_CASE"
-    item: TestCaseType
+    item: TestCaseType | null
 } | {
     type: "TEST_PLAN"
     item: TestPlanType
@@ -51,9 +52,13 @@ export class AnalystPageViewModel {
         this.selected = item;
     }
 
-    save(id: number) {
-        this.testCases = this.testCases.filter(v => v.id !== id);
-        this.select(null);
+    save(id: number | null, item: Omit<TestCase, "id">) {
+        if (id) {
+            this.testCases = this.testCases.filter(v => v.id !== id);
+            this.select(null);
+        } else {
+            alert(`Создан тест-кейс с тайтлом ${item.title}`)
+        }
     }
 
     projects: string[] = [];
@@ -62,7 +67,7 @@ export class AnalystPageViewModel {
         this.projects = await ProjectsApi.getProjects() ?? [];
     })
 
-    testPlans: {id: number, title: string}[] = [{id: 3, title:"Тестирование формы поиска"}, {id: 4, title:"Тестирование формы регистрации"}];
+    testPlans: { id: number, title: string }[] = [{ id: 3, title: "Тестирование формы поиска" }, { id: 4, title: "Тестирование формы регистрации" }];
 
     scenarios: string[] = ["Неуспешная регистрация - некорректный email", "Успешный поиск", "Неуспешная отправка - пустое поле сообщения"]
 

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useMemo, useState } from "react";
+import React, { CSSProperties, useMemo, useState } from "react";
 import { Page } from "../components/Page";
 import { TestCase } from "../view-models/tester.vm";
 import styled from "@emotion/styled";
@@ -12,6 +12,8 @@ import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
 import { AnalystPageViewModel, ProjectType } from "../view-models/analyst.vm";
 import { Expandee } from "../components/expandee.component";
+import { Input } from "../components/input.component";
+import { Dropdown } from "../components/dropdown.component";
 
 const GridContainer = styled.div`
     display: grid;
@@ -20,6 +22,22 @@ const GridContainer = styled.div`
     padding: 30px 50px;
     height: 88vh;
 `;
+
+export const HorizontalLine = styled.div`
+    width: 100%;
+    height: 0;
+    border-bottom: 2px solid #F3E7E7;
+`
+
+export const InputFormStyles: CSSProperties = {
+    boxShadow: "none",
+    border: "1px solid #D6ADAD",
+    padding: "10px",
+    borderRadius: "6px",
+    fontSize: "18px",
+    color: "#313131",
+    fontWeight: 300
+}
 
 export interface CollapseListProps {
     data: string[]
@@ -96,49 +114,49 @@ const TestCaseComponent: React.FC<{ item: TestCase, vm: AnalystPageViewModel }> 
     )
 })
 
-const FormTestCase: React.FC<{ item: TestCase, vm: AnalystPageViewModel }> = observer(x => {
+const FormTestCase: React.FC<{ item: TestCase | null, vm: AnalystPageViewModel }> = observer(x => {
     const theme = useTheme();
-    const [checked, setChecked] = useState(false);
+
+    const [form, setForm] = useState({
+        title: x.item?.title ?? "",
+        description: x.item?.description ?? "",
+        inputData: x.item?.inputData ?? "",
+        outputData: x.item?.outputData ?? ""
+    })
+
     return (
-        <Stack direction={"column"} gap={30}>
-            <Stack direction="column" style={{
-                background: theme.colors.containerBg, padding: "10px 50px 40px 50px",
-                boxShadow: "0px 0px 20px rgba(49, 49, 49, 0.15)",
-            }}>
+        <Stack direction="column" gap={30} style={{
+            background: theme.colors.containerBg, padding: "10px 40px 40px 50px",
+            boxShadow: "0px 0px 20px rgba(49, 49, 49, 0.15)", height: "100%"
+        }}>
+            <Stack direction="row">
+                <StyledText size={22} weight={600}>{x.item ? "Создание тест-кейса" : "Редактирование тест-кейса"}</StyledText>
+                <Expandee />
                 <img src={CloseIcon} style={{
                     cursor: "pointer", width: "25px",
                     position: "relative", alignSelf: "end",
-                    top: 0, right: -40
+                    top: 0, right: -30
                 }} onClick={() => x.vm.select(null)} />
-                <Stack direction="column" gap={20}>
-                    <Stack direction="column" gap={6}>
-                        <StyledText size={22} weight={700}>{x.item.title}</StyledText>
-                        <StyledText size={18}>{x.item.description}</StyledText>
-                    </Stack>
-                    <Stack direction="row" gap={60}>
-                        <Stack direction="column">
-                            <StyledText size={18}>Входные данные</StyledText>
-                            <StyledText size={18}>{x.item.inputData}</StyledText>
-                        </Stack>
-                        <Stack direction="column">
-                            <StyledText size={18} weight={600}>Выходные данные</StyledText>
-                            <StyledText size={18}>{x.item.outputData}</StyledText>
-                        </Stack>
-                    </Stack>
-                    <div style={{ minHeight: "100px" }}></div>
-                    <Stack direction="row" align="center">
-                        <Checkbox checked={checked} onChange={v => setChecked(v)} />
-                        <StyledText size={15}>Выполнено успешно</StyledText>
-                    </Stack>
-                </Stack>
             </Stack>
-            <Stack direction="column" gap={10}>
-                <StyledText size={20}>Комментарий</StyledText>
-                <textarea style={{ background: theme.colors.containerBg, borderRadius: "6px", padding: "10px 15px" }}></textarea>
+            {!x.item ? <Stack direction="column" gap={25}>
+                <Dropdown width="100%" options={[]} onChange={() => void 0} label="Выберите проект" selectedValue={undefined}
+                />
+                <HorizontalLine />
+            </Stack> : null}
+            <Stack direction="column" gap={20}>
+                <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
+                    style={InputFormStyles} placeholder="Введите название" />
+                <textarea style={InputFormStyles} placeholder="Введите описание" rows={3}
+                    value={form.description} onChange={v => setForm({ ...form, description: v.target.value })} />
+                <textarea style={InputFormStyles} placeholder="Введите входные данные"
+                    value={form.inputData} onChange={v => setForm({ ...form, inputData: v.target.value })} />
+                <textarea style={InputFormStyles} placeholder="Введите выходные данные"
+                    value={form.outputData} onChange={v => setForm({ ...form, outputData: v.target.value })} />
             </Stack>
-            <div style={{ alignSelf: "end" }}>
-                <PrimaryButton text="Сохранить" onClick={() => x.vm.save(x.item.id)} />
-            </div>
+            <Stack direction="row" gap={20} justify="end">
+                <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
+                <PrimaryButton text="Сохранить" onClick={() => void 0} />
+            </Stack>
         </Stack>
     )
 })
@@ -166,7 +184,7 @@ export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel
                     <Stack direction="column" gap={5} style={{ border: `1px solid ${theme.colors.secondaryBg}`, padding: "5px 10px" }}>
                         {x.form.testPlans.map(v => (
                             <Stack direction="row" gap={5}>
-                                <Checkbox checked={false}/>
+                                <Checkbox checked={false} />
                                 <StyledText weight={600} size={15}>{v.title}</StyledText>
                             </Stack>
                         ))}
@@ -182,13 +200,13 @@ export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel
     )
 })
 
-export const ButtonGroup: React.FC = observer(() => {
+export const ButtonGroup: React.FC<{ vm: AnalystPageViewModel }> = observer(x => {
     return (
         <Stack direction="row" justify="space-between">
             <SecondaryButton text="Статистика" />
             <PrimaryButton text="Создать тест-план" />
             <PrimaryButton text="Создать сценарий" />
-            <PrimaryButton text="Создать тест-кейс" />
+            <PrimaryButton text="Создать тест-кейс" onClick={() => x.vm.select({ type: "TEST_CASE", item: null })} />
         </Stack>
     )
 })
@@ -220,8 +238,8 @@ export const AnalystPage: React.FC = observer(() => {
                     }}>
                     {vm.projects?.map(v => <Project title={v} vm={vm} />)}
                 </Stack>
-                <Stack direction="column" gap={20}>
-                    <ButtonGroup />
+                <Stack direction="column" gap={30}>
+                    <ButtonGroup vm={vm} />
                     {vm.selected && Form()}
                 </Stack>
             </GridContainer>

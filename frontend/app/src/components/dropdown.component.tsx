@@ -13,18 +13,18 @@ export interface Option<T> {
 interface DropdownProps<T> {
     options: Option<T>[]
     label: string
-    width?: number
+    width?: string
     selectedValue: Option<T> | undefined
     onChange: (value: Option<T>) => void
     readonly?: boolean
 }
 
-const DropdownContainer = styled.div<{ width?: number }>`
+const DropdownContainer = styled.div<{ width?: string }>`
   position: relative;
-  width: ${p => (p.width ? p.width : 170)}px;
+  width: ${p => (p.width ? p.width : "170px")};
 `;
 
-const DropdownButton = styled.button`
+const DropdownButton = styled.button<{ width?: string }>`
     text-overflow: ellipsis;
     width: 100%;
     display: flex;
@@ -32,10 +32,10 @@ const DropdownButton = styled.button`
     justify-content: space-between;
     font-size: 16px;
     align-items: center;
-    border: 1px solid ${p => p.theme.colors.accentBg };
+    border: 1px solid ${p => p.theme.colors.secondaryBg};
     padding: 5px;
     background-color: transparent;
-    width: 170px;
+    width: ${p => (p.width ? p.width : "170px")};
 `;
 
 const DropdownList = styled.ul`
@@ -90,7 +90,7 @@ export const Dropdown = observer(<T,>({
         <Stack direction="column" gap={15}>
             {/* <StyledText weight={500}>{label}</StyledText> */}
             <DropdownContainer ref={ref} width={width}>
-                <DropdownButton disabled={readonly} onClick={() => setIsOpen(!isOpen)}>
+                <DropdownButton disabled={readonly} onClick={() => setIsOpen(!isOpen)} width={width}>
                     {options.find(option => option.value === selectedValue?.value)?.label ?? label}
                     <img src={ArrowIcon} style={{ rotate: isOpen ? "180deg" : "0deg" }} />
                 </DropdownButton>

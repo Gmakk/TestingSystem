@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
 import React, { CSSProperties } from "react";
+import { StyledText } from "./Text";
 
 export interface InputProps {
     value: string
-    onChange: (v: string) => void
+    onChange?: (v: string) => void
     placeholder?: string
     style?: CSSProperties
+    readonly?: boolean
 }
 
 const StyledInput = styled.input`
@@ -21,8 +23,9 @@ const StyledInput = styled.input`
 
 export const Input: React.FC<InputProps> = x => {
     return (
-        <StyledInput value={x.value} style={x.style}
-            onChange={v => x.onChange(v.target.value)}
-            placeholder={x.placeholder ?? "Введите значение"} />
+        x.readonly ? <StyledText style={x.style}>{x.value}</StyledText> :
+            <StyledInput value={x.value} style={x.style}
+                onChange={v => x.onChange ? x.onChange(v.target.value) : void 0}
+                placeholder={x.placeholder ?? "Введите значение"} />
     );
 };
