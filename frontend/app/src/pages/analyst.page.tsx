@@ -10,7 +10,7 @@ import { StyledText } from "../components/Text";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
-import { AnalystPageViewModel, ProjectType } from "../view-models/analyst.vm";
+import { AnalystPageViewModel, ProjectType, TestCaseType } from "../view-models/analyst.vm";
 import { Expandee } from "../components/expandee.component";
 import { Input } from "../components/input.component";
 import { Dropdown } from "../components/dropdown.component";
@@ -114,14 +114,15 @@ const TestCaseComponent: React.FC<{ item: TestCase, vm: AnalystPageViewModel }> 
     )
 })
 
-const FormTestCase: React.FC<{ item: TestCase | null, vm: AnalystPageViewModel }> = observer(x => {
+const FormTestCase: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewModel }> = observer(x => {
     const theme = useTheme();
 
     const [form, setForm] = useState({
         title: x.item?.title ?? "",
         description: x.item?.description ?? "",
         inputData: x.item?.inputData ?? "",
-        outputData: x.item?.outputData ?? ""
+        outputData: x.item?.outputData ?? "",
+        projectTitle: x.item?.projectTitle ?? ""
     })
 
     return (
@@ -139,8 +140,9 @@ const FormTestCase: React.FC<{ item: TestCase | null, vm: AnalystPageViewModel }
                 }} onClick={() => x.vm.select(null)} />
             </Stack>
             {!x.item ? <Stack direction="column" gap={25}>
-                <Dropdown width="100%" options={[]} onChange={() => void 0} label="Выберите проект" selectedValue={undefined}
-                />
+                <Dropdown width="100%" options={x.vm.projects.map(v => ({ label: v, value: v }))}
+                    onChange={v => setForm({ ...form, projectTitle: v.value })} label="Выберите проект"
+                    selectedValue={{ label: form.projectTitle, value: form.projectTitle }} />
                 <HorizontalLine />
             </Stack> : null}
             <Stack direction="column" gap={20}>
@@ -155,7 +157,7 @@ const FormTestCase: React.FC<{ item: TestCase | null, vm: AnalystPageViewModel }
             </Stack>
             <Stack direction="row" gap={20} justify="end">
                 <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                <PrimaryButton text="Сохранить" onClick={() => void 0} />
+                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveTestCase(x.item.id, form) : x.vm.saveTestCase(null, form)} />
             </Stack>
         </Stack>
     )
@@ -193,7 +195,7 @@ export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel
                 <Expandee />
                 <Stack direction="row" gap={20} style={{ alignSelf: "end", justifySelf: "end", position: "relative", bottom: -20, right: -35 }}>
                     <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                    <PrimaryButton text="Сохранить изменения" onClick={() => x.vm.select(null)} />
+                    <PrimaryButton text="Сохранить" onClick={() => x.vm.select(null)} />
                 </Stack>
             </Stack>
         </Stack>

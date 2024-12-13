@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { AsyncExecution } from "../utils/async-action";
 import { ProjectsApi } from "../api/projects";
-import { TestCase } from "./tester.vm";
+import { AnalystApi } from "../api/analyst";
 
 export type TestCaseType = {
     id: number
@@ -9,6 +9,7 @@ export type TestCaseType = {
     description: string
     inputData: string
     outputData: string
+    projectTitle: string
 }
 
 export type TestPlanType = {
@@ -52,12 +53,13 @@ export class AnalystPageViewModel {
         this.selected = item;
     }
 
-    save(id: number | null, item: Omit<TestCase, "id">) {
+    async saveTestCase(id: number | null, item: Omit<TestCaseType, "id">) {
         if (id) {
-            this.testCases = this.testCases.filter(v => v.id !== id);
+            const res = await AnalystApi.editTestCase(id, item);
             this.select(null);
         } else {
-            alert(`Создан тест-кейс с тайтлом ${item.title}`)
+            const res = await AnalystApi.createTestCase(item);
+            this.select(null);
         }
     }
 
@@ -77,35 +79,40 @@ export class AnalystPageViewModel {
             "title": "Проверка ввода формы: Элементы с пробелами",
             "description": "Ввести по порядку следующие цифры",
             "inputData": " 1 2 3 ",
-            "outputData": "3 2 1 "
+            "outputData": "3 2 1 ",
+            "projectTitle": "project1"
         },
         {
             "id": 6,
             "title": "Проверка ввода формы: Отрицательные числа",
             "description": "Ввести по порядку следующие цифры",
             "inputData": "-1 -2 -3",
-            "outputData": "-3 -2 -1"
+            "outputData": "-3 -2 -1",
+            "projectTitle": "project1"
         },
         {
             "id": 7,
             "title": "Проверка ввода формы: Смешанные числа",
             "description": "Ввести по порядку следующие цифры",
             "inputData": "-1 2 -3 4",
-            "outputData": "4 -3 2 -1"
+            "outputData": "4 -3 2 -1",
+            "projectTitle": "project1"
         },
         {
             "id": 3,
             "title": "Invalid Email - Missing Domain",
             "description": "Check for valid email format",
             "inputData": "test@",
-            "outputData": "false"
+            "outputData": "false",
+            "projectTitle": "project1"
         },
         {
             "id": 4,
             "title": "Valid Email - Multiple .",
             "description": "Check for valid email format",
             "inputData": "test@sub.example.com",
-            "outputData": "true"
+            "outputData": "true",
+            "projectTitle": "project1"
         },
     ]
 }
