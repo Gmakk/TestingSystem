@@ -1,11 +1,17 @@
 package edu.example.testingsystem.api;
 
+import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.Scenario;
+import edu.example.testingsystem.entities.ScenarioCaseConnection;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.mapstruct.dto.TestCaseDto;
+import edu.example.testingsystem.mapstruct.dto.TestCaseSubmitDto;
 import edu.example.testingsystem.mapstruct.mapper.TestCaseMapper;
 import edu.example.testingsystem.messaging.TestCaseMessagingService;
 import edu.example.testingsystem.messaging.kafka.KafkaTestCaseMessagingService;
 import edu.example.testingsystem.repos.ConnectionRepository;
+import edu.example.testingsystem.repos.ProjectRepository;
+import edu.example.testingsystem.repos.ScenarioRepository;
 import edu.example.testingsystem.repos.TestCaseRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,6 +41,8 @@ public class TestCaseRestController {
     TestCaseMessagingService messagingService;
     TestCaseMapper testCaseMapper;
     ConnectionRepository connectionRepo;
+    private final ProjectRepository projectRepository;
+    private final ScenarioRepository scenarioRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<TestCaseDto>> getAll() {
@@ -49,18 +58,40 @@ public class TestCaseRestController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/byscenario/{id}")
+    public ResponseEntity<List<TestCaseDto>> getByScenarioId(@PathVariable("id") Integer id) {
+        Optional<Scenario> optionalScenario = scenarioRepository.findById(id);
+        if (optionalScenario.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        List<Integer> testCaseIds = connectionRepo.findByScenario(optionalScenario.get())
+                .stream()
+                .map(ScenarioCaseConnection::getTestCase)
+                .map(TestCase::getId)
+                .toList();
+
+        return ResponseEntity.ok(testCaseMapper.toDtos(testCaseRepo.findAllById(testCaseIds)));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<TestCaseDto> patchTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseDto testCaseDto) {
         Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
         if(optionalTestCase.isEmpty())
             return ResponseEntity.notFound().build();
-        TestCase patched = testCaseMapper.patchTestCase(optionalTestCase.get(),testCaseDto);
+        Optional<Project> optionalProject = projectRepository.findById(testCaseDto.projectTitle());
+        if(optionalProject.isEmpty())
+            return ResponseEntity.notFound().build();
+        TestCase patched = testCaseMapper.patchTestCase(optionalTestCase.get(),testCaseDto, optionalProject.get());
         return ResponseEntity.ok(testCaseMapper.toDto(testCaseRepo.save(patched)));
     }
 
     @PostMapping
     public ResponseEntity<TestCaseDto> createTestCase(@RequestBody TestCaseDto testCaseDto) {
-        TestCase savedTestCase = testCaseRepo.save(testCaseMapper.toTestCase(testCaseDto));
+        //TODO: добавить указание создателя тест-кейса
+        Optional<Project> optionalProject = projectRepository.findById(testCaseDto.projectTitle());
+        if(optionalProject.isEmpty())
+            return ResponseEntity.notFound().build();
+        TestCase savedTestCase = testCaseRepo.save(testCaseMapper.toTestCase(testCaseDto, optionalProject.get()));
         return ResponseEntity.ok(testCaseMapper.toDto(savedTestCase));
     }
 
@@ -75,4 +106,24 @@ public class TestCaseRestController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PatchMapping("{id}/submit")
+    public ResponseEntity<HttpStatus> submitTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseSubmitDto submitDto) {
+        Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
+        if(optionalTestCase.isEmpty())
+            throw new NoSuchElementException("There is no test case with id " + id);
+        Optional<Scenario> optionalScenario = scenarioRepository.findById(submitDto.scenario());
+        if(optionalScenario.isEmpty())
+            throw new NoSuchElementException("There is no scenario with id " + id);
+
+        Optional<ScenarioCaseConnection> optionalConnection = connectionRepo.findByScenarioAndTestCase(optionalScenario.get(), optionalTestCase.get());
+        if(optionalConnection.isEmpty())
+            throw  new NoSuchElementException("Probably this test case isnt connected to given scenario " + id);
+
+        ScenarioCaseConnection connection = optionalConnection.get();
+        connection.setExecuted(true);
+        connection.setPassed(submitDto.passed());
+        connection.setComment(submitDto.comment());
+        connectionRepo.save(connection);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 }

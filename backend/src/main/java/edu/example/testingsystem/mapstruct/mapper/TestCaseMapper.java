@@ -1,5 +1,6 @@
 package edu.example.testingsystem.mapstruct.mapper;
 
+import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.TestCase;
 import edu.example.testingsystem.mapstruct.dto.TestCaseDto;
 import org.mapstruct.BeanMapping;
@@ -21,16 +22,18 @@ public interface TestCaseMapper {
     }
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "title", source = "title")
-    @Mapping(target = "description", source = "description")
-    @Mapping(target = "inputData", source = "inputData")
-    @Mapping(target = "outputData", source = "outputData")
-    TestCase toTestCase(TestCaseDto testCaseDto);
+    @Mapping(target = "title", source = "testCaseDto.title")
+    @Mapping(target = "description", source = "testCaseDto.description")
+    @Mapping(target = "inputData", source = "testCaseDto.inputData")
+    @Mapping(target = "outputData", source = "testCaseDto.outputData")
+    @Mapping(target = "project", source = "project")
+    TestCase toTestCase(TestCaseDto testCaseDto, Project project);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "title", source = "title")
-    @Mapping(target = "description", source = "description")
-    @Mapping(target = "inputData", source = "inputData")
-    @Mapping(target = "outputData", source = "outputData")
-    TestCase patchTestCase(@MappingTarget TestCase testCase, TestCaseDto patch);
+    @Mapping(target = "title", source = "patch.title")
+    @Mapping(target = "description", source = "patch.description")
+    @Mapping(target = "inputData", source = "patch.inputData")
+    @Mapping(target = "outputData", source = "patch.outputData")
+    @Mapping(target = "project", source = "project")
+    TestCase patchTestCase(@MappingTarget TestCase testCase, TestCaseDto patch, Project project);
 }

@@ -14,5 +14,6 @@ public record ScenarioDto(Integer id,
                           Integer executor,
                           List<Integer> testPlans,
                           String projectTitle,
-                          List<Integer> scenariosToTester) {
+                          List<Integer> scenariosToTester,
+                          List<Integer> testCases) {
 }

@@ -23,13 +23,13 @@ public interface ScenarioMapper {
     }
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "title", source = "title")
-    Scenario patchScenario(@MappingTarget Scenario scenario, ScenarioDto scenarioDto);
+    @Mapping(target = "title", source = "scenarioDto.title")
+    @Mapping(target = "project", source = "project")
+    Scenario patchScenario(@MappingTarget Scenario scenario, ScenarioDto scenarioDto, Project project);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "title", source = "scenarioDto.title")
-    @Mapping(target = "creator", source = "creator")
     @Mapping(target = "project", source = "project")
-    Scenario toScenario(ScenarioDto scenarioDto, Userr creator, Project project);
+    Scenario toScenario(ScenarioDto scenarioDto, Project project);
 
 }

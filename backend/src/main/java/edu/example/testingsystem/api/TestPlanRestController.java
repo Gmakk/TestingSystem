@@ -1,15 +1,12 @@
 package edu.example.testingsystem.api;
 
 import edu.example.testingsystem.entities.Project;
+import edu.example.testingsystem.entities.Scenario;
 import edu.example.testingsystem.entities.TestPlan;
-import edu.example.testingsystem.entities.Userr;
 import edu.example.testingsystem.mapstruct.dto.ProjectDto;
 import edu.example.testingsystem.mapstruct.dto.TestPlanDto;
 import edu.example.testingsystem.mapstruct.mapper.TestPlanMapper;
-import edu.example.testingsystem.repos.ConnectionRepository;
-import edu.example.testingsystem.repos.ProjectRepository;
-import edu.example.testingsystem.repos.TestPlanRepository;
-import edu.example.testingsystem.repos.UserRepository;
+import edu.example.testingsystem.repos.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +29,7 @@ public class TestPlanRestController {
     TestPlanMapper testPlanMapper;
     private final ConnectionRepository connectionRepository;
     private final UserRepository userRepository;
+    private final ScenarioRepository scenarioRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<TestPlanDto>> getAll() {
@@ -48,6 +47,12 @@ public class TestPlanRestController {
     public ResponseEntity<List<TestPlanDto>> getApproved(@RequestBody ProjectDto projectTitle) {
         Project project = projectRepository.findById(projectTitle.title()).get();
         return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsTrue(project)));
+    }
+
+    @GetMapping("/byproject")
+    public ResponseEntity<List<TestPlanDto>> getTestPlanByProject(@RequestBody ProjectDto projectTitle) {
+        Project project = projectRepository.findById(projectTitle.title()).get();
+        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProject(project)));
     }
 
     @GetMapping("/{id}")
@@ -71,15 +76,41 @@ public class TestPlanRestController {
 
     @PostMapping
     public ResponseEntity<TestPlanDto> create(@RequestBody TestPlanDto testPlanDto) {
-        Optional<Userr> optionalUser = userRepository.findById(testPlanDto.creatorId());
-        if(optionalUser.isEmpty())
-            return ResponseEntity.notFound().build();
         Optional<Project> optionalProject = projectRepository.findById(testPlanDto.projectTitle());
         if(optionalProject.isEmpty())
             return ResponseEntity.notFound().build();
-        TestPlan newTestPlan =  testPlanRepository.save(testPlanMapper.toTestPlan(testPlanDto,optionalUser.get(),optionalProject.get()));
-        return ResponseEntity.ok(testPlanMapper.toDto(newTestPlan));
+
+        TestPlan newTestPlan = testPlanMapper.toTestPlan(testPlanDto, optionalProject.get());
+        assignScenariosToTestPlan(testPlanDto.scenarios(), newTestPlan);
+
+        return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(newTestPlan)));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TestPlanDto> update(@PathVariable("id") Integer id, @RequestBody TestPlanDto testPlanDto) {
+        Optional<TestPlan> optionalTestPlan = testPlanRepository.findById(id);
+        if(optionalTestPlan.isEmpty())
+            return ResponseEntity.notFound().build();
+        Optional<Project> optionalProject= projectRepository.findById(testPlanDto.projectTitle());
+        if(optionalProject.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        TestPlan testPlanObject = testPlanMapper.patchTestPlan(optionalTestPlan.get(), testPlanDto, optionalProject.get());
+        assignScenariosToTestPlan(testPlanDto.scenarios(), testPlanObject);
+        return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(testPlanObject)));
+    }
+
+    private void assignScenariosToTestPlan(List<Integer> scenarios, TestPlan testPlan){
+        List<Integer> alreadyAddedScenarioIds = testPlan.getScenarios().stream()
+                .map(Scenario::getId)
+                .toList();
+        List<Scenario> scenarioToAddList = scenarioRepository.findAllById(scenarios).stream()
+                .filter(scenario -> !alreadyAddedScenarioIds.contains(scenario.getId()))
+                .toList();
+        testPlan.getScenarios().addAll(scenarioToAddList);
+    }
+
+
 
     @DeleteMapping("/{id}")
     @Transactional

@@ -1,13 +1,11 @@
 package edu.example.testingsystem.api;
 
-import edu.example.testingsystem.entities.Project;
-import edu.example.testingsystem.entities.Scenario;
-import edu.example.testingsystem.entities.TestPlan;
-import edu.example.testingsystem.entities.Userr;
+import edu.example.testingsystem.entities.*;
 import edu.example.testingsystem.mapstruct.dto.ProjectDto;
 import edu.example.testingsystem.mapstruct.dto.ScenarioDto;
 import edu.example.testingsystem.mapstruct.mapper.ScenarioMapper;
 import edu.example.testingsystem.repos.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +27,7 @@ public class ScenarioRestController {
     ScenarioRepository scenarioRepository;
     UserRepository userRepository;
     ConnectionRepository connectionRepository;
+    TestCaseRepository testCaseRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<ScenarioDto>> getScenarios() {
@@ -64,12 +63,35 @@ public class ScenarioRestController {
 
     @PatchMapping("{id}")
     public ResponseEntity<ScenarioDto> patchScenario(@PathVariable("id") Integer id, @RequestBody ScenarioDto scenarioDto) {
+        //поиск проекта
+        Optional<Project> optionalProject = projectRepository.findById(scenarioDto.projectTitle());
+        if(optionalProject.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        //поиск самого сценария
         Optional<Scenario> scenarioOptional = scenarioRepository.findById(id);
         if(scenarioOptional.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        //назначение тест-кейсов сценарию
+        assignTestCasesToScenario(scenarioDto.testCases(), scenarioOptional.get());
+
         Scenario scenario = scenarioOptional.get();
-        scenario = scenarioMapper.patchScenario(scenario, scenarioDto);
+        scenario = scenarioMapper.patchScenario(scenario, scenarioDto, optionalProject.get());
+
+
+
         return ResponseEntity.ok(scenarioMapper.toDto(scenarioRepository.save(scenario)));
+    }
+
+    @PostMapping
+    public ResponseEntity<ScenarioDto> createScenario(@RequestBody ScenarioDto scenarioDto) {
+        Optional<Project> optionalProject= projectRepository.findById(scenarioDto.projectTitle());
+        if(optionalProject.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Scenario newScenario = scenarioRepository.save(scenarioMapper.toScenario(scenarioDto,optionalProject.get()));
+        //назначение тест-кейсов сценарию
+        assignTestCasesToScenario(scenarioDto.testCases(), newScenario);
+        return ResponseEntity.ok(scenarioMapper.toDto(newScenario));
     }
 
     @GetMapping("/byproject/{title}")
@@ -96,18 +118,6 @@ public class ScenarioRestController {
         return ResponseEntity.ok(scenarioMapper.toDtos(scenarios));
     }
 
-    @PostMapping
-    public ResponseEntity<ScenarioDto> createScenario(@RequestBody ScenarioDto scenarioDto) {
-        Optional<Project> optionalProject= projectRepository.findById(scenarioDto.projectTitle());
-        if(optionalProject.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        Optional<Userr> optionalUser = userRepository.findById(scenarioDto.creator());
-        if(optionalUser.isEmpty())
-            return ResponseEntity.notFound().build();
-        Scenario newSCenario = scenarioRepository.save(scenarioMapper.toScenario(scenarioDto,optionalUser.get(),optionalProject.get()));
-        return ResponseEntity.ok(scenarioMapper.toDto(newSCenario));
-    }
-
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<HttpStatus> deleteScenario(@PathVariable("id") Integer id) {
@@ -117,5 +127,22 @@ public class ScenarioRestController {
         connectionRepository.deleteByScenario(scenarioOptional.get());
         scenarioRepository.delete(scenarioOptional.get());
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    private void assignTestCasesToScenario(List<Integer> testCases, Scenario scenario){
+        List<ScenarioCaseConnection> scenarioCaseConnections =connectionRepository.findByScenario(scenario);
+        List<Integer> currentTestCases = scenarioCaseConnections.stream()
+                .map(ScenarioCaseConnection::getTestCase)
+                .map(TestCase::getId)
+                .toList();
+        Optional<TestCase> optionalTestCase;
+        for(Integer testCaseId : testCases){
+            optionalTestCase = testCaseRepository.findById(testCaseId);
+            if(optionalTestCase.isEmpty())
+                throw new EntityNotFoundException(testCaseId.toString());
+            if(!currentTestCases.contains(testCaseId))
+                scenarioCaseConnections.add(new ScenarioCaseConnection(null, null, false, false, scenario, optionalTestCase.get(),null));
+        }
+        connectionRepository.saveAll(scenarioCaseConnections);
     }
 }
