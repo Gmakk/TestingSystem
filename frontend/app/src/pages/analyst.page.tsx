@@ -14,7 +14,7 @@ import { AnalystPageViewModel, ProjectType, ScenarioType, TestCaseType } from ".
 import { Expandee } from "../components/expandee.component";
 import { Input } from "../components/input.component";
 import { Dropdown } from "../components/dropdown.component";
-import Multiselect from "multiselect-react-dropdown";
+import { MultiSelectDropdown, Option } from "../components/multiselect.component";
 
 const GridContainer = styled.div`
     display: grid;
@@ -164,10 +164,6 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
     )
 })
 
-type Option = {
-    name: string
-    id: number
-}
 const ScenarioForm: React.FC<{ item: ScenarioType | null, vm: AnalystPageViewModel }> = observer(x => {
     const theme = useTheme();
 
@@ -225,20 +221,11 @@ const ScenarioForm: React.FC<{ item: ScenarioType | null, vm: AnalystPageViewMod
             <Stack direction="column" gap={20}>
                 <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
                     style={InputFormStyles} placeholder="Введите название" />
-                <Multiselect placeholder="Включить тест-кейсы" emptyRecordMsg="Список пуст"
-                    style={{
-                        chips: {
-                            background: theme.colors.accentBg
-                        },
-                        searchBox: InputFormStyles
-                    }}
-                    options={state.options}
-                    selectedValues={state.selected}
-                    onSelect={onSelect}
-                    onRemove={onRemove}
-                    displayValue="name"
-                />
+                <MultiSelectDropdown options={state.options}
+                    selectedOptions={state.selected}
+                    onSelect={onSelect} onRemove={onRemove} />
             </Stack>
+            <Expandee />
             <Stack direction="row" gap={20} justify="end">
                 <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
                 <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveScenario.launch(x.item.id, saveForm()) : x.vm.saveScenario.launch(null, saveForm())} />
