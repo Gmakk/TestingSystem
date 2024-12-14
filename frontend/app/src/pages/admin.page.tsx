@@ -171,7 +171,7 @@ export const AdminPage: React.FC<AdminPageProps> = observer(() => {
                         <Form vm={vm.selected} />
                         <Stack direction="row" gap={20} style={{ justifySelf: "flex-end" }}>
                             <SecondaryButton text="Отменить" onClick={() => vm.select(null)} />
-                            <PrimaryButton text="Сохранить изменения" onClick={() => vm.save()} />
+                            <PrimaryButton text="Сохранить" onClick={() => vm.save()} />
                         </Stack>
                     </Stack> : <Rigth vm={vm} />}
             </GridContainer>

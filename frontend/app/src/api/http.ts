@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 import * as z from "zod";
+import { ApiError } from "./api-error";
 
 class HttpRequest {
     private baseUrl: string;
@@ -12,7 +13,7 @@ class HttpRequest {
     }
 
     async request<T>(
-        method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
         endpoint: string,
         data?: any,
         params?: Record<string, string | number>,
@@ -51,8 +52,7 @@ class HttpRequest {
 
             return response.data;
         } catch (error: any) {
-            toast.error("Ошибка запроса", error);
-            return { error };
+            throw new Error(error)
         }
     }
 }

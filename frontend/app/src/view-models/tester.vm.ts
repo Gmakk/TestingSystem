@@ -21,7 +21,7 @@ export class TesterPageViewModel {
         "title": "Проверка ввода формы: Элементы с пробелами",
         "description": "Ввести по порядку следующие цифры",
         "inputData": " 1 2 3 ",
-        "outputData": "3 2 1 "
+        "outputData": "3 2 1 ",
     };
 
     select(item: TestCase | null) {
@@ -49,35 +49,35 @@ export class TesterPageViewModel {
             "title": "Проверка ввода формы: Элементы с пробелами",
             "description": "Ввести по порядку следующие цифры",
             "inputData": " 1 2 3 ",
-            "outputData": "3 2 1 "
+            "outputData": "3 2 1 ",
         },
         {
             "id": 6,
             "title": "Проверка ввода формы: Отрицательные числа",
             "description": "Ввести по порядку следующие цифры",
             "inputData": "-1 -2 -3",
-            "outputData": "-3 -2 -1"
+            "outputData": "-3 -2 -1",
         },
         {
             "id": 7,
             "title": "Проверка ввода формы: Смешанные числа",
             "description": "Ввести по порядку следующие цифры",
             "inputData": "-1 2 -3 4",
-            "outputData": "4 -3 2 -1"
+            "outputData": "4 -3 2 -1",
         },
         {
             "id": 3,
             "title": "Invalid Email - Missing Domain",
             "description": "Check for valid email format",
             "inputData": "test@",
-            "outputData": "false"
+            "outputData": "false",
         },
         {
             "id": 4,
             "title": "Valid Email - Multiple .",
             "description": "Check for valid email format",
             "inputData": "test@sub.example.com",
-            "outputData": "true"
+            "outputData": "true",
         },
     ]
 }

@@ -8,7 +8,7 @@ export interface TextProps {
 }
 
 export const StyledText = styled.span<TextProps>`
-    color: ${p => p.color ?? "#000000"};
+    color: ${p => p.color ?? "#313131"};
     background: ${p => p.bg ?? ""};
     font-size: ${p => p.size ?? "14"}px;
     font-weight: ${p => p.weight ?? "500"};
