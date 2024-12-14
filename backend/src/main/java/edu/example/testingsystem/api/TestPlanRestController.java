@@ -4,6 +4,7 @@ import edu.example.testingsystem.entities.Project;
 import edu.example.testingsystem.entities.Scenario;
 import edu.example.testingsystem.entities.TestPlan;
 import edu.example.testingsystem.mapstruct.dto.ProjectDto;
+import edu.example.testingsystem.mapstruct.dto.ScenarioDto;
 import edu.example.testingsystem.mapstruct.dto.TestPlanDto;
 import edu.example.testingsystem.mapstruct.mapper.TestPlanMapper;
 import edu.example.testingsystem.repos.*;
@@ -100,11 +101,11 @@ public class TestPlanRestController {
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(testPlanObject)));
     }
 
-    private void assignScenariosToTestPlan(List<Integer> scenarios, TestPlan testPlan){
+    private void assignScenariosToTestPlan(List<ScenarioDto> scenarios, TestPlan testPlan){
         List<Integer> alreadyAddedScenarioIds = testPlan.getScenarios().stream()
                 .map(Scenario::getId)
                 .toList();
-        List<Scenario> scenarioToAddList = scenarioRepository.findAllById(scenarios).stream()
+        List<Scenario> scenarioToAddList = scenarioRepository.findAllById(scenarios.stream().map(ScenarioDto::id).toList()).stream()
                 .filter(scenario -> !alreadyAddedScenarioIds.contains(scenario.getId()))
                 .toList();
         testPlan.getScenarios().addAll(scenarioToAddList);
