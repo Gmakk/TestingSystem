@@ -20,6 +20,8 @@ export type TestPlanType = {
 export type ScenarioType = {
     id: number
     title: string
+    testCases: number[]
+    projectTitle: string
 }
 
 export type ProjectType = {
@@ -32,10 +34,10 @@ export type Form = {
     item: TestCaseType | null
 } | {
     type: "TEST_PLAN"
-    item: TestPlanType
+    item: TestPlanType | null
 } | {
     type: "SCENARIO"
-    item: ScenarioType
+    item: ScenarioType | null
 } | {
     type: "PROJECT"
     item: ProjectType
@@ -63,8 +65,28 @@ export class AnalystPageViewModel {
         }
     }
 
-    projects: string[] = [];
+    public saveScenario = new AsyncExecution(async (id: number | null, item: Omit<ScenarioType, "id">) => {
+        if (id) {
+            const res = await AnalystApi.editScenario(id, item);
+            this.select(null);
+        } else {
+            const res = await AnalystApi.createScenario(item);
+            this.select(null);
+        }
+    })
 
+
+    testCasesByScenario: { id: number, title: string } [] = []
+    public getTestCasesByScenario = new AsyncExecution(async (id: number) => {
+        this.allTestCases = await AnalystApi.getTestCasesByScenario(id) ?? [];
+    })
+
+    allTestCases: { id: number, title: string } [] = []
+    public getAllTestCases = new AsyncExecution(async () => {
+        this.allTestCases = await AnalystApi.getAllTestCases() ?? [];
+    })
+
+    projects: string[] = [];
     public requestProjects = new AsyncExecution(async () => {
         this.projects = await ProjectsApi.getProjects() ?? [];
     })
