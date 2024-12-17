@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 export namespace AnalystModel {
     export const TestCaseCreate = z.object({
@@ -30,10 +30,28 @@ export namespace AnalystModel {
         projectTitle: z.string()
     })
 
-    export const TestCasesList = z.array(
-        z.object({
-            id: z.number(),
-            title: z.string()
-        })
-    )
+    export const ListItem = z.object({
+        id: z.number(),
+        title: z.string()
+    })
+
+    export const List = z.array(ListItem)
+
+    export const TestPlanCreate = z.object({
+        title: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        projectTitle: z.string(),
+        scenarios: z.array(ListItem)
+    })
+
+    export const TestPlan = z.object({
+        id: z.number(),
+        title: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        approved: z.boolean(),
+        projectTitle: z.string(),
+        scenarios: z.array(ListItem)
+    })
 }

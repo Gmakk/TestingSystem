@@ -238,33 +238,28 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
     const theme = useTheme();
 
     useEffect(() => {
-        x.vm.getAllTestCases.launch();
+        x.vm.getAllTestPlans.launch();
     }, [])
 
     const [form, setForm] = useState({
         title: x.item?.title ?? "",
-        testCases: x.vm?.testCasesByScenario ?? [],
+        startDate: x.item?.startDate ?? "",
+        endDate: x.item?.endDate ?? "",
+        scenarios: x.item?.scenarios ?? [],
         projectTitle: x.item?.projectTitle ?? ""
     })
 
     const state = {
-        options: x.vm.allTestCases.map(v => ({ name: v.title, id: v.id })),
-        selected: form.testCases.map(v => ({ name: v.title, id: v.id })),
+        options: x.vm.allTestPlans.map(v => ({ name: v.title, id: v.id })),
+        selected: form.scenarios.map(v => ({ name: v.title, id: v.id })),
     };
 
     const onSelect = (selectedList: Option[], selectedItem: Option) => {
-        form.testCases.push({ id: selectedItem.id, title: selectedItem.name })
+        form.scenarios.push({ id: selectedItem.id, title: selectedItem.name })
     }
 
     const onRemove = (selectedList: Option[], selectedItem: Option) => {
-        form.testCases = form.testCases.filter(v => v.id != selectedItem.id)
-    }
-
-    const saveForm = () => {
-        return {
-            ...form,
-            testCases: form.testCases.map(v => v.id)
-        }
+        form.scenarios = form.scenarios.filter(v => v.id != selectedItem.id)
     }
 
     return (
@@ -291,8 +286,8 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
                 <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
                     style={InputFormStyles} placeholder="Введите название" />
                     <Stack direction="row" gap={50}>
-                        <DatePicker />
-                        <DatePicker />
+                        <DatePicker value={form.startDate} onChange={v => setForm({ ...form, startDate: v })} />
+                        <DatePicker value={form.endDate} onChange={v => setForm({ ...form, endDate: v })} />
                     </Stack>
                 <MultiSelectDropdown options={state.options} placeholder="Включить сценарии"
                     selectedOptions={state.selected}
@@ -301,7 +296,7 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
             <Expandee />
             <Stack direction="row" gap={20} justify="end">
                 <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveScenario.launch(x.item.id, saveForm()) : x.vm.saveScenario.launch(null, saveForm())} />
+                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveTestPlan.launch(x.item.id, form) : x.vm.saveTestPlan.launch(null, form)} />
             </Stack>
         </Stack>
     )
