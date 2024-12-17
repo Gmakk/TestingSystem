@@ -10,11 +10,12 @@ import { StyledText } from "../components/Text";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
-import { AnalystPageViewModel, ProjectType, ScenarioType, TestCaseType } from "../view-models/analyst.vm";
+import { AnalystPageViewModel, ProjectType, ScenarioType, TestCaseType, TestPlanType } from "../view-models/analyst.vm";
 import { Expandee } from "../components/expandee.component";
 import { Input } from "../components/input.component";
 import { Dropdown } from "../components/dropdown.component";
 import { MultiSelectDropdown, Option } from "../components/multiselect.component";
+import { DatePicker } from "../components/datepicker.component";
 
 const GridContainer = styled.div`
     display: grid;
@@ -169,7 +170,6 @@ const ScenarioForm: React.FC<{ item: ScenarioType | null, vm: AnalystPageViewMod
 
     useEffect(() => {
         x.vm.getAllTestCases.launch();
-        console.log("123", x.vm.allTestCases, form.testCases)
     }, [])
 
     const [form, setForm] = useState({
@@ -221,7 +221,80 @@ const ScenarioForm: React.FC<{ item: ScenarioType | null, vm: AnalystPageViewMod
             <Stack direction="column" gap={20}>
                 <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
                     style={InputFormStyles} placeholder="Введите название" />
-                <MultiSelectDropdown options={state.options}
+                <MultiSelectDropdown options={state.options} placeholder="Включить тест-кейсы"
+                    selectedOptions={state.selected}
+                    onSelect={onSelect} onRemove={onRemove} />
+            </Stack>
+            <Expandee />
+            <Stack direction="row" gap={20} justify="end">
+                <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
+                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveScenario.launch(x.item.id, saveForm()) : x.vm.saveScenario.launch(null, saveForm())} />
+            </Stack>
+        </Stack>
+    )
+})
+
+const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewModel }> = observer(x => {
+    const theme = useTheme();
+
+    useEffect(() => {
+        x.vm.getAllTestCases.launch();
+    }, [])
+
+    const [form, setForm] = useState({
+        title: x.item?.title ?? "",
+        testCases: x.vm?.testCasesByScenario ?? [],
+        projectTitle: x.item?.projectTitle ?? ""
+    })
+
+    const state = {
+        options: x.vm.allTestCases.map(v => ({ name: v.title, id: v.id })),
+        selected: form.testCases.map(v => ({ name: v.title, id: v.id })),
+    };
+
+    const onSelect = (selectedList: Option[], selectedItem: Option) => {
+        form.testCases.push({ id: selectedItem.id, title: selectedItem.name })
+    }
+
+    const onRemove = (selectedList: Option[], selectedItem: Option) => {
+        form.testCases = form.testCases.filter(v => v.id != selectedItem.id)
+    }
+
+    const saveForm = () => {
+        return {
+            ...form,
+            testCases: form.testCases.map(v => v.id)
+        }
+    }
+
+    return (
+        <Stack direction="column" gap={30} style={{
+            background: theme.colors.containerBg, padding: "10px 40px 40px 50px",
+            boxShadow: "0px 0px 20px rgba(49, 49, 49, 0.15)", height: "100%"
+        }}>
+            <Stack direction="row">
+                <StyledText size={22} weight={600}>{!x.item ? "Создание тест-плана" : "Редактирование тест-плана"}</StyledText>
+                <Expandee />
+                <img src={CloseIcon} style={{
+                    cursor: "pointer", width: "25px",
+                    position: "relative", alignSelf: "end",
+                    top: 0, right: -30
+                }} onClick={() => x.vm.select(null)} />
+            </Stack>
+            {!x.item ? <Stack direction="column" gap={25}>
+                <Dropdown width="100%" options={x.vm.projects.map(v => ({ label: v, value: v }))}
+                    onChange={v => setForm({ ...form, projectTitle: v.value })} label="Выберите проект"
+                    selectedValue={{ label: form.projectTitle, value: form.projectTitle }} />
+                <HorizontalLine />
+            </Stack> : null}
+            <Stack direction="column" gap={20}>
+                <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
+                    style={InputFormStyles} placeholder="Введите название" />
+                    <Stack direction="row" gap={50}>
+                        <DatePicker />
+                        <DatePicker />
+                    </Stack>
+                <MultiSelectDropdown options={state.options} placeholder="Включить сценарии"
                     selectedOptions={state.selected}
                     onSelect={onSelect} onRemove={onRemove} />
             </Stack>
@@ -295,7 +368,7 @@ export const AnalystPage: React.FC = observer(() => {
             case "TEST_CASE": return <TestCaseForm item={selected.item} vm={vm} />
             case "PROJECT": return <ProjectForm form={selected.item} vm={vm} />;
             case "SCENARIO": return <ScenarioForm item={selected.item} vm={vm} />;
-            case "TEST_PLAN": return;
+            case "TEST_PLAN": return <TestPlanForm item={selected.item} vm={vm} />;
         }
     }
 

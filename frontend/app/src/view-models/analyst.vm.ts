@@ -15,6 +15,7 @@ export type TestCaseType = {
 export type TestPlanType = {
     id: number
     title: string
+    projectTitle: string
 }
 
 export type ScenarioType = {
@@ -74,7 +75,6 @@ export class AnalystPageViewModel {
             this.select(null);
         }
     })
-
 
     testCasesByScenario: { id: number, title: string } [] = []
     public getTestCasesByScenario = new AsyncExecution(async (id: number) => {
