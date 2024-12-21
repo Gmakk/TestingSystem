@@ -12,12 +12,13 @@ export interface MultiSelectDropdownProps {
     selectedOptions: Option[]
     onSelect: (selectedList: Option[], selectedItem: Option) => void
     onRemove: (selectedList: Option[], selectedItem: Option) => void
+    placeholder: string
 }
 
 export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = x => {
     const theme = useTheme();
     return (
-        <Multiselect placeholder="Включить тест-кейсы" emptyRecordMsg="Список пуст"
+        <Multiselect placeholder={x.placeholder} emptyRecordMsg="Список пуст"
             style={{
                 chips: {
                     background: theme.colors.accentBg

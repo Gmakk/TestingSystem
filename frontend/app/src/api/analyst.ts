@@ -74,7 +74,7 @@ export namespace AnalystApi {
             "/testCase/all",
             undefined,
             undefined,
-            AnalystModel.TestCasesList,
+            AnalystModel.List,
             undefined)
         if ('error' in result) {
             toast.error('Ошибка получения списка всех тест-кейсов:', result.error);
@@ -89,10 +89,57 @@ export namespace AnalystApi {
             `testCase/byscenario/${scenarioId}`,
             undefined,
             undefined,
-            AnalystModel.TestCasesList,
+            AnalystModel.List,
             undefined)
         if ('error' in result) {
             toast.error(`Ошибка получения списка тест-кейсов по сценарию ${scenarioId}:`, result.error);
+        } else {
+            return result;
+        }
+    }
+
+    export async function createTestPlan(data: z.infer<typeof AnalystModel.TestPlanCreate>) {
+        try {
+            const result = await httpRequest.request(
+                "POST",
+                "/testplan",
+                data,
+                undefined,
+                AnalystModel.TestPlan,
+                AnalystModel.TestPlanCreate
+            );
+            return result;
+        } catch (e) {
+            toast.error(`Произошла ошибка при создании тест-плана: ${e}`)
+        }
+    }
+
+    export async function editTestPlan(id: number, data: z.infer<typeof AnalystModel.TestPlanCreate>) {
+        try {
+            const res = await httpRequest.request(
+                "PATCH",
+                `/testplan/${id}`,
+                data,
+                undefined,
+                AnalystModel.TestPlan,
+                AnalystModel.TestPlanCreate
+            )
+            return res;
+        } catch (e) {
+            toast.error(`Произошла ошибка при редактировании тест-плана: ${e}`)
+        }
+    }
+
+    export async function getAllTestPlans() {
+        const result = await httpRequest.request(
+            "GET",
+            "/testplan/all",
+            undefined,
+            undefined,
+            AnalystModel.List,
+            undefined)
+        if ('error' in result) {
+            toast.error('Ошибка получения списка всех тест-планов:', result.error);
         } else {
             return result;
         }

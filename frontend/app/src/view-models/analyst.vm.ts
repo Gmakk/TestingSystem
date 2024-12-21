@@ -15,6 +15,11 @@ export type TestCaseType = {
 export type TestPlanType = {
     id: number
     title: string
+    projectTitle: string
+    scenarios: { id: number, title: string }[]
+    startDate: string
+    endDate: string
+    approved: boolean
 }
 
 export type ScenarioType = {
@@ -75,15 +80,29 @@ export class AnalystPageViewModel {
         }
     })
 
+    public saveTestPlan = new AsyncExecution(async (id: number | null, item: Omit<TestPlanType, "id" | "approved">) => {
+        if (id) {
+            const res = await AnalystApi.editTestPlan(id, item);
+            this.select(null);
+        } else {
+            const res = await AnalystApi.createTestPlan(item);
+            this.select(null);
+        }
+    })
 
-    testCasesByScenario: { id: number, title: string } [] = []
+    testCasesByScenario: { id: number, title: string }[] = []
     public getTestCasesByScenario = new AsyncExecution(async (id: number) => {
         this.allTestCases = await AnalystApi.getTestCasesByScenario(id) ?? [];
     })
 
-    allTestCases: { id: number, title: string } [] = []
+    allTestCases: { id: number, title: string }[] = []
     public getAllTestCases = new AsyncExecution(async () => {
         this.allTestCases = await AnalystApi.getAllTestCases() ?? [];
+    })
+
+    allTestPlans: { id: number, title: string }[] = []
+    public getAllTestPlans = new AsyncExecution(async () => {
+        this.allTestPlans = await AnalystApi.getAllTestPlans() ?? [];
     })
 
     projects: string[] = [];
