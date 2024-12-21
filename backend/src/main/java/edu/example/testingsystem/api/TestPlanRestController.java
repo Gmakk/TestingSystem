@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,22 +39,31 @@ public class TestPlanRestController {
         return ResponseEntity.ok(testPlanMapper.toDtos(testPlanDtoList));
     }
 
-    @GetMapping("/unapproved")
-    public ResponseEntity<List<TestPlanDto>> getUnapproved(@RequestBody ProjectDto projectTitle) {
-        Project project = projectRepository.findById(projectTitle.title()).get();
-        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsFalse(project)));
+    @GetMapping("/unapproved/{title}")
+    public ResponseEntity<List<TestPlanDto>> getUnapproved(@PathVariable("title") String title) {
+        Optional<Project> optionalProject = projectRepository.findById(title);
+        if (optionalProject.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        else
+            return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsFalse(optionalProject.get())));
     }
 
-    @GetMapping("/approved")
-    public ResponseEntity<List<TestPlanDto>> getApproved(@RequestBody ProjectDto projectTitle) {
-        Project project = projectRepository.findById(projectTitle.title()).get();
-        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsTrue(project)));
+    @GetMapping("/approved/{title}")
+    public ResponseEntity<List<TestPlanDto>> getApproved(@PathVariable("title") String title) {
+        Optional<Project> optionalProject = projectRepository.findById(title);
+        if (optionalProject.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        else
+            return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProjectAndApprovedIsTrue(optionalProject.get())));
     }
 
-    @GetMapping("/byproject")
-    public ResponseEntity<List<TestPlanDto>> getTestPlanByProject(@RequestBody ProjectDto projectTitle) {
-        Project project = projectRepository.findById(projectTitle.title()).get();
-        return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProject(project)));
+    @GetMapping("/byproject/{title}")
+    public ResponseEntity<List<TestPlanDto>> getTestPlanByProject(@PathVariable("title") String title) {
+        Optional<Project> optionalProject = projectRepository.findById(title);
+        if (optionalProject.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        else
+            return ResponseEntity.ok(testPlanMapper.toDtos(testPlanRepository.findByProject(optionalProject.get())));
     }
 
     @GetMapping("/{id}")
@@ -67,8 +77,8 @@ public class TestPlanRestController {
 
     @PatchMapping("/approve")
     public ResponseEntity<HttpStatus> approve(@RequestBody ProjectDto approvedPlans) {
-        for (TestPlanDto testPlan : approvedPlans.testPlans()) {
-            TestPlan testPlanObject = testPlanRepository.findById(testPlan.id()).get();
+        for (Integer testPlanId : approvedPlans.testPlanIds()) {
+            TestPlan testPlanObject = testPlanRepository.findById(testPlanId).get();
             testPlanObject.setApproved(true);
             testPlanRepository.save(testPlanObject);
         }
