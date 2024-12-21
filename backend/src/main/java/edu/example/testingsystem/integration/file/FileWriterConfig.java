@@ -29,7 +29,7 @@ public class FileWriterConfig {
     @ServiceActivator(inputChannel = "fileWriterChannel")
     public FileWritingMessageHandler fileWriter(){
         FileWritingMessageHandler handler =
-                new FileWritingMessageHandler(new File("src/main/resources"));
+                new FileWritingMessageHandler(new File("backend/src/main/stat"));
         handler.setExpectReply(false);
         handler.setFileExistsMode(FileExistsMode.REPLACE_IF_MODIFIED);
         handler.setAppendNewLine(true);
