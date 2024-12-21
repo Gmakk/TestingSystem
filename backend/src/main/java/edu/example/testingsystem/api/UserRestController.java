@@ -81,36 +81,27 @@ public class UserRestController {
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String role){
 
+        Sort sortEntity = Sort.unsorted();
+        Pageable pagable;
+        Page<Userr> pageWitUser;
 
-        //если указана роль, проверяем, есть ли такая
+        //если есть сортировка, применяем ее
+        if(sort != null && !sort.isEmpty()) {
+            sortEntity = Sort.by(sort);
+        }
+        pagable = PageRequest.of(page, size, sortEntity);
+
+        //если указана роль, проверяем, есть ли такая м указываем при поиске
         Role roleEntity = null;
         if(role != null && !role.isEmpty()){
             Optional<Role> optionalRole = roleRepository.findById(role);
             if(optionalRole.isEmpty())
                 throw new NoSuchElementException("Attempt to retrieve user with non-existing role " + role);
             roleEntity = optionalRole.get();
-        }
 
-        Pageable pagable;
-        Page<Userr> pageWitUser;
-        if(sort != null && !sort.isEmpty()) {
-            //есть сортировка по полю и фильтрация по роли
-            if(role != null && !role.isEmpty()){
-                pagable = PageRequest.of(page, size, Sort.by(sort));
-                pageWitUser = userRepository.findAllByRole(roleEntity, pagable);
-            }else {//есть сортировка по полю и нет фильтрации по роли
-                pagable = PageRequest.of(page, size, Sort.by(sort));
-                pageWitUser = userRepository.findAll(pagable);
-            }
-        }else {
-            //нет сортировки по полю и есть фильтрация по роли
-            if(role != null && !role.isEmpty()){
-                pagable = PageRequest.of(page, size);
-                pageWitUser = userRepository.findAllByRole(roleEntity, pagable);
-            }else {//нет сортировки по полю и фильтрации по роли
-                pagable = PageRequest.of(page, size);
-                pageWitUser = userRepository.findAll(pagable);
-            }
+            pageWitUser = userRepository.findAllByRole(roleEntity, pagable);
+        }else {//нет фильтрации по роли
+            pageWitUser = userRepository.findAll(pagable);
         }
 
         return pageWitUser.map(userMapper::userToUserDto);
