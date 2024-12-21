@@ -67,8 +67,8 @@ public class TestPlanRestController {
 
     @PatchMapping("/approve")
     public ResponseEntity<HttpStatus> approve(@RequestBody ProjectDto approvedPlans) {
-        for (Integer testPlan : approvedPlans.testPlanIds()) {
-            TestPlan testPlanObject = testPlanRepository.findById(testPlan).get();
+        for (TestPlanDto testPlan : approvedPlans.testPlans()) {
+            TestPlan testPlanObject = testPlanRepository.findById(testPlan.id()).get();
             testPlanObject.setApproved(true);
             testPlanRepository.save(testPlanObject);
         }
@@ -82,7 +82,7 @@ public class TestPlanRestController {
             return ResponseEntity.notFound().build();
 
         TestPlan newTestPlan = testPlanMapper.toTestPlan(testPlanDto, optionalProject.get());
-        assignScenariosToTestPlan(testPlanDto.scenarios(), newTestPlan);
+        assignScenariosToTestPlan(testPlanDto.scenarioIds(), newTestPlan);
 
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(newTestPlan)));
     }
@@ -97,15 +97,15 @@ public class TestPlanRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         TestPlan testPlanObject = testPlanMapper.patchTestPlan(optionalTestPlan.get(), testPlanDto, optionalProject.get());
-        assignScenariosToTestPlan(testPlanDto.scenarios(), testPlanObject);
+        assignScenariosToTestPlan(testPlanDto.scenarioIds(), testPlanObject);
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(testPlanObject)));
     }
 
-    private void assignScenariosToTestPlan(List<ScenarioDto> scenarios, TestPlan testPlan){
+    private void assignScenariosToTestPlan(List<Integer> scenarios, TestPlan testPlan){
         List<Integer> alreadyAddedScenarioIds = testPlan.getScenarios().stream()
                 .map(Scenario::getId)
                 .toList();
-        List<Scenario> scenarioToAddList = scenarioRepository.findAllById(scenarios.stream().map(ScenarioDto::id).toList()).stream()
+        List<Scenario> scenarioToAddList = scenarioRepository.findAllById(scenarios).stream()
                 .filter(scenario -> !alreadyAddedScenarioIds.contains(scenario.getId()))
                 .toList();
         testPlan.getScenarios().addAll(scenarioToAddList);

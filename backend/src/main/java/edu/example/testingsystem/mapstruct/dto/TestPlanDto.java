@@ -14,5 +14,6 @@ public record TestPlanDto(Integer id,
                           Integer creatorId,
                           Boolean approved,
                           List<ScenarioDto> scenarios,
+                          List<Integer> scenarioIds,
                           String projectTitle) {
 }

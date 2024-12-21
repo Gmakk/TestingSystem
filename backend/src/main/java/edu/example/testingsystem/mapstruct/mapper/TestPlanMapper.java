@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TestPlanMapper {
 
+    @Mapping(target = "scenarioIds", ignore = true)
     @Mapping(target = "creatorId", source = "testPlan.creator.id",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "projectTitle", expression = "java(testPlan.getProject().getTitle())")
