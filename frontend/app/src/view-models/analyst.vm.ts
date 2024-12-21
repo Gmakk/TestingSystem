@@ -45,7 +45,7 @@ export type Form = {
     item: ScenarioType | null
 } | {
     type: "PROJECT"
-    item: ProjectType
+    item: ProjectType | null
 }
 
 export class AnalystPageViewModel {
@@ -90,14 +90,27 @@ export class AnalystPageViewModel {
         }
     })
 
+    getProjectByTitle = new AsyncExecution(async (title: string) => {
+        return AnalystApi.getProjectById(title);
+    })
+
+    getTestPlansByProject = new AsyncExecution(async (title: string) => {
+        return AnalystApi.getTestPlansByProject({ title: title });
+    })
+
     testCasesByScenario: { id: number, title: string }[] = []
     public getTestCasesByScenario = new AsyncExecution(async (id: number) => {
-        this.allTestCases = await AnalystApi.getTestCasesByScenario(id) ?? [];
+        this.testCasesByScenario = await AnalystApi.getTestCasesByScenario(id) ?? [];
     })
 
     allTestCases: { id: number, title: string }[] = []
     public getAllTestCases = new AsyncExecution(async () => {
         this.allTestCases = await AnalystApi.getAllTestCases() ?? [];
+    })
+
+    allScenarios: { id: number, title: string }[] = []
+    public getAllScenarios = new AsyncExecution(async () => {
+        this.allScenarios = await AnalystApi.getAllScenarios() ?? [];
     })
 
     allTestPlans: { id: number, title: string }[] = []

@@ -54,4 +54,13 @@ export namespace AnalystModel {
         projectTitle: z.string(),
         scenarios: z.array(ListItem)
     })
+
+    export const Project = z.object({
+        title: z.string(),
+        testPlans: z.array(ListItem)
+    })
+
+    export const ByProject = z.object({
+        title: z.string()
+    })
 }

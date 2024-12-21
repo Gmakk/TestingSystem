@@ -9,13 +9,13 @@ import ArrowIcon from "../assets/listArrow.svg";
 import { StyledText } from "../components/Text";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import CloseIcon from "../assets/close.svg";
-import { Checkbox } from "../components/checkbox.component";
 import { AnalystPageViewModel, ProjectType, ScenarioType, TestCaseType, TestPlanType } from "../view-models/analyst.vm";
 import { Expandee } from "../components/expandee.component";
 import { Input } from "../components/input.component";
 import { Dropdown } from "../components/dropdown.component";
 import { MultiSelectDropdown, Option } from "../components/multiselect.component";
 import { DatePicker } from "../components/datepicker.component";
+import { isolateGlobalState } from "mobx/dist/internal";
 
 const GridContainer = styled.div`
     display: grid;
@@ -48,28 +48,31 @@ export interface CollapseListProps {
 
 const Project: React.FC<{ title: string, vm: AnalystPageViewModel }> = x => {
     const [isOpen, setIsOpen] = useState(false);
+    const [testPlans, setTestPlans] = useState<{ id: number, title: string }[]>([])
 
-    const openProject = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    const openList = async () => {
+        setTestPlans(await x.vm.getTestPlansByProject.launch(x.title) ?? []);
+        setIsOpen(!isOpen)
+    }
+
+    const openProject = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         e.preventDefault();
-        // запросить здесь по строке проект (видимо включенные в него тест-планы)
-        const mock = {
-            title: x.title,
-            testPlans: x.vm.testPlans
-        }
+        const data = await x.vm.getProjectByTitle.launch(x.title);
+
         x.vm.select({
             type: "PROJECT",
-            item: mock
+            item: data ?? null
         })
     }
 
     return (
         <Stack direction="column">
             <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} onClick={() => setIsOpen(!isOpen)} style={{ rotate: isOpen ? "270deg" : "0deg", cursor: "pointer" }} />
+                <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: isOpen ? "270deg" : "0deg", cursor: "pointer" }} />
                 <StyledText size={20} onClick={e => openProject(e)} >{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.testPlans.map(v => <TestPlan title={v.title} vm={x.vm} />)}
+                {testPlans.map(v => <TestPlan title={v.title} vm={x.vm} />)}
             </Stack>}
         </Stack>
     )
@@ -238,7 +241,7 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
     const theme = useTheme();
 
     useEffect(() => {
-        x.vm.getAllTestPlans.launch();
+        x.vm.getAllScenarios.launch();
     }, [])
 
     const [form, setForm] = useState({
@@ -250,7 +253,7 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
     })
 
     const state = {
-        options: x.vm.allTestPlans.map(v => ({ name: v.title, id: v.id })),
+        options: x.vm.allScenarios.map(v => ({ name: v.title, id: v.id })),
         selected: form.scenarios.map(v => ({ name: v.title, id: v.id })),
     };
 
@@ -285,10 +288,10 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
             <Stack direction="column" gap={20}>
                 <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
                     style={InputFormStyles} placeholder="Введите название" />
-                    <Stack direction="row" gap={50}>
-                        <DatePicker value={form.startDate} onChange={v => setForm({ ...form, startDate: v })} />
-                        <DatePicker value={form.endDate} onChange={v => setForm({ ...form, endDate: v })} />
-                    </Stack>
+                <Stack direction="row" gap={50}>
+                    <DatePicker value={form.startDate} onChange={v => setForm({ ...form, startDate: v })} />
+                    <DatePicker value={form.endDate} onChange={v => setForm({ ...form, endDate: v })} />
+                </Stack>
                 <MultiSelectDropdown options={state.options} placeholder="Включить сценарии"
                     selectedOptions={state.selected}
                     onSelect={onSelect} onRemove={onRemove} />
@@ -302,15 +305,16 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
     )
 })
 
-export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel }> = observer(x => {
+export const ProjectForm: React.FC<{ form: ProjectType | null, vm: AnalystPageViewModel }> = observer(x => {
     const theme = useTheme();
+
     return (
         <Stack direction="column" gap={30} style={{
             background: theme.colors.containerBg, padding: "10px 50px 40px 50px",
             boxShadow: "0px 0px 20px rgba(49, 49, 49, 0.15)", height: "100%"
         }}>
             <Stack direction="row" justify="space-between">
-                <StyledText weight={500} size={22}>{x.form.title}</StyledText>
+                <StyledText weight={500} size={22}>{x.form?.title}</StyledText>
                 <img src={CloseIcon} style={{
                     cursor: "pointer", width: "25px",
                     position: "relative", alignSelf: "end",
@@ -320,12 +324,11 @@ export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel
             <Stack direction="column" gap={30} style={{ height: "100%" }}>
                 <Stack direction="column" gap={5}>
                     <StyledText style={{ border: `1px solid ${theme.colors.secondaryBg}`, padding: "3px 7px" }} size={15} weight={700}>
-                        Включить тест-планы
+                        Включенные тест-планы
                     </StyledText>
                     <Stack direction="column" gap={5} style={{ border: `1px solid ${theme.colors.secondaryBg}`, padding: "5px 10px" }}>
-                        {x.form.testPlans.map(v => (
+                        {x.form?.testPlans.map(v => (
                             <Stack direction="row" gap={5}>
-                                <Checkbox checked={false} />
                                 <StyledText weight={600} size={15}>{v.title}</StyledText>
                             </Stack>
                         ))}
@@ -334,7 +337,7 @@ export const ProjectForm: React.FC<{ form: ProjectType, vm: AnalystPageViewModel
                 <Expandee />
                 <Stack direction="row" gap={20} style={{ alignSelf: "end", justifySelf: "end", position: "relative", bottom: -20, right: -35 }}>
                     <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                    <PrimaryButton text="Сохранить" onClick={() => x.vm.select(null)} />
+                    {/* <PrimaryButton text="Сохранить" onClick={() => x.vm.select(null)} /> */}
                 </Stack>
             </Stack>
         </Stack>

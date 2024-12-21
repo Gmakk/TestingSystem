@@ -83,6 +83,21 @@ export namespace AnalystApi {
         }
     }
 
+    export async function getAllScenarios() {
+        const result = await httpRequest.request(
+            "GET",
+            "/scenario/all",
+            undefined,
+            undefined,
+            AnalystModel.List,
+            undefined)
+        if ('error' in result) {
+            toast.error('Ошибка получения списка всех сценариев:', result.error);
+        } else {
+            return result;
+        }
+    }
+
     export async function getTestCasesByScenario(scenarioId: number) {
         const result = await httpRequest.request(
             "GET",
@@ -137,7 +152,40 @@ export namespace AnalystApi {
             undefined,
             undefined,
             AnalystModel.List,
-            undefined)
+            undefined
+        )
+        if ('error' in result) {
+            toast.error('Ошибка получения списка всех тест-планов:', result.error);
+        } else {
+            return result;
+        }
+    }
+
+    export async function getProjectById(title: string) {
+        const result = await httpRequest.request(
+            "GET",
+            `/project/${title}`,
+            undefined,
+            undefined,
+            AnalystModel.Project,
+            undefined
+        )
+        if ('error' in result) {
+            toast.error(`Ошибка получения информации о проекте ${title}`, result.error);
+        } else {
+            return result;
+        }
+    }
+
+    export async function getTestPlansByProject(data: z.infer<typeof AnalystModel.ByProject>) {
+        const result = await httpRequest.request(
+            "GET",
+            "/testplan/byproject",
+            data,
+            undefined,
+            AnalystModel.List,
+            AnalystModel.ByProject
+        )
         if ('error' in result) {
             toast.error('Ошибка получения списка всех тест-планов:', result.error);
         } else {
