@@ -46,14 +46,14 @@ public class UserRestController {
         return ResponseEntity.ok(userMapper.userToUserDto(userRepository.findById(id).get()));
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<UserDto> updateActiveUserStatus(@PathVariable("id") Integer id, @RequestBody UserDto userDto) {
         Userr user =userRepository.findById(id).get();
         user.setIsActive(userDto.isActive());
         return ResponseEntity.ok(userMapper.userToUserDto(userRepository.save(user)));
     }
 
-    @PatchMapping("/{id}/role")
+    @PostMapping("/{id}/role")
     public ResponseEntity<UserDto> updateRole(@PathVariable("id") Integer id, @RequestBody UserDto userDto) {
         Userr user =userRepository.findById(id).get();
         user.setRole(roleRepository.findById(userDto.role()).get());
