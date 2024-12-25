@@ -23,7 +23,7 @@ export namespace AnalystApi {
     export async function editTestCase(id: number, data: z.infer<typeof AnalystModel.TestCaseCreate>) {
         try {
             const result = await httpRequest.request(
-                "PATCH",
+                "POST",
                 `/testCase/${id}`,
                 data,
                 undefined,
@@ -55,7 +55,7 @@ export namespace AnalystApi {
     export async function editScenario(id: number, data: z.infer<typeof AnalystModel.ScenarioCreate>) {
         try {
             const result = await httpRequest.request(
-                "PATCH",
+                "POST",
                 `/scenario/${id}`,
                 data,
                 undefined,
@@ -132,7 +132,7 @@ export namespace AnalystApi {
     export async function editTestPlan(id: number, data: z.infer<typeof AnalystModel.TestPlanCreate>) {
         try {
             const res = await httpRequest.request(
-                "PATCH",
+                "POST",
                 `/testplan/${id}`,
                 data,
                 undefined,

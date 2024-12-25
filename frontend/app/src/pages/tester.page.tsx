@@ -10,7 +10,6 @@ import { StyledText } from "../components/Text";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
-import { Expandee } from "../components/expandee.component";
 
 const GridContainer = styled.div`
     display: grid;

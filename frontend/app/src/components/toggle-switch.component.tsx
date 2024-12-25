@@ -16,7 +16,7 @@ const Slider = styled.div<{ isActive: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${props => (props.isActive ? props.theme.colors.baseColors.toggleGreen : "#2b354d")};
+  background-color: ${props => (props.isActive ? props.theme.colors.accentBg : "#2b354d")};
   transition: 0.4s;
   border-radius: 18px;
 

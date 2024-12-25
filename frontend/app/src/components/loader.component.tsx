@@ -84,14 +84,16 @@ const Spinner = styled.div`
         }
         87.5% {
             box-shadow: 0em -2.6em 0em 0em #3F91FD33, 1.8em -1.8em 0 0em #3F91FD33, 2.5em 0em 0 0em #3F91FD33, 1.75em 1.75em 0 0em #3F91FD33, 0em 2.5em 0 0em #3F91FD33, -1.8em 1.8em 0 0em #3F91FD80, -2.6em 0em 0 0em #3F91FD,B3 -1.8em -1.8em 0 0em #3F91FD
-    }`;
+        }
+    }
+`;
 
-export const Loader: FC<{ visible?: boolean; loadingText?: string;finallyText?: string; pending?: boolean }> = observer(({ visible, loadingText, finallyText, pending }) => (
+export const Loader: FC<{ visible?: boolean; loadingText?: string; finallyText?: string; pending?: boolean }> = observer(({ visible, loadingText, finallyText, pending }) => (
     <Wrapper visible={visible}>
         <Card>
             <Stack direction="column" gap={61} align="center" style={{ paddingTop: "150px" }}>
                 <Spinner />
-                <StyledText>{ loadingText }</StyledText>
+                <StyledText>{loadingText}</StyledText>
             </Stack>
         </Card>
     </Wrapper>
