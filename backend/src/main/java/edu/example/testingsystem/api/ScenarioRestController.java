@@ -42,7 +42,7 @@ public class ScenarioRestController {
         return new ResponseEntity<>(scenarioMapper.toDto(scenario.get()), HttpStatus.OK);
     }
 
-    @PatchMapping("/assign")
+    @PostMapping("/assign")
     public ResponseEntity<List<ScenarioDto>> assignScenarioToTester(@RequestBody ScenarioDto scenarioDto) {
         Optional<Userr> optionalExecutor = userRepository.findById(scenarioDto.executor());
         if (optionalExecutor.isEmpty())
@@ -61,7 +61,7 @@ public class ScenarioRestController {
         return ResponseEntity.ok(scenarioMapper.toDtos(scenarioRepository.saveAll(scenarios)));
     }
 
-    @PatchMapping("{id}")
+    @PostMapping("{id}")
     public ResponseEntity<ScenarioDto> patchScenario(@PathVariable("id") Integer id, @RequestBody ScenarioDto scenarioDto) {
         //поиск проекта
         Optional<Project> optionalProject = projectRepository.findById(scenarioDto.projectTitle());

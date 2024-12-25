@@ -71,7 +71,7 @@ public class TesterRestController {
         return ResponseEntity.ok(connectionMapper.toDtoList(connectionList));
     }
 
-    @PatchMapping("/connection/{connectionId}/submit")
+    @PostMapping("/connection/{connectionId}/submit")
     public ResponseEntity<ConnectionDto> submit(@PathVariable("connectionId") Integer connectionId, @RequestBody ConnectionDto connectionDto) {
         Optional<ScenarioCaseConnection> optionalConnection = connectionRepository.findById(connectionId);
         if(optionalConnection.isEmpty())

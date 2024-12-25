@@ -73,7 +73,7 @@ public class TestCaseRestController {
         return ResponseEntity.ok(testCaseMapper.toDtos(testCaseRepo.findAllById(testCaseIds)));
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<TestCaseDto> patchTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseDto testCaseDto) {
         Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
         if(optionalTestCase.isEmpty())
@@ -106,7 +106,7 @@ public class TestCaseRestController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PatchMapping("{id}/submit")
+    @PostMapping("{id}/submit")
     public ResponseEntity<HttpStatus> submitTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseSubmitDto submitDto) {
         Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
         if(optionalTestCase.isEmpty())

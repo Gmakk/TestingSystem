@@ -11,7 +11,7 @@ import { UserTypes } from "../shared/const";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import infoIcon from "../assets/info.svg";
 import { StyledText } from "../components/Text";
-import { Dropdown, Option } from "../components/dropdown.component";
+import { Dropdown } from "../components/dropdown.component";
 import { Tooltip } from "react-tooltip";
 
 export interface AdminPageProps {

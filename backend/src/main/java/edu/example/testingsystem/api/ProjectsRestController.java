@@ -32,7 +32,7 @@ public class ProjectsRestController {
         return projectMapper.projectToProjectDto(projectRepository.findById(title).get());
     }
 
-    @PatchMapping
+    @PostMapping
     public ProjectDto setProjectDirector(@RequestBody ProjectDto projectDto) {
         Project found = projectRepository.findById(projectDto.title()).get();
         found.setDirector(userRepository.findById(projectDto.director()).get());

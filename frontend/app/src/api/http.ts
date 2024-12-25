@@ -13,7 +13,7 @@ class HttpRequest {
     }
 
     async request<T>(
-        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE',
         endpoint: string,
         data?: any,
         params?: Record<string, string | number>,

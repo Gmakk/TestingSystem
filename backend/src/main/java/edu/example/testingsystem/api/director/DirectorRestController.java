@@ -22,7 +22,7 @@ public class DirectorRestController {
     ScenarioRepository scenarioRepository;
     UserRepository userRepository;
 
-    @PatchMapping("/assign")
+    @PostMapping("/assign")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<HttpStatus> assignScenariosToTesters(@RequestBody ScenarioAssignForm form) {
         List<Scenario> scenarios = new ArrayList<>();

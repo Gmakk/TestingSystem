@@ -75,7 +75,7 @@ public class TestPlanRestController {
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanOptional.get()));
     }
 
-    @PatchMapping("/approve")
+    @PostMapping("/approve")
     public ResponseEntity<HttpStatus> approve(@RequestBody ProjectDto approvedPlans) {
         for (Integer testPlanId : approvedPlans.testPlanIds()) {
             TestPlan testPlanObject = testPlanRepository.findById(testPlanId).get();
@@ -97,7 +97,7 @@ public class TestPlanRestController {
         return ResponseEntity.ok(testPlanMapper.toDto(testPlanRepository.save(newTestPlan)));
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<TestPlanDto> update(@PathVariable("id") Integer id, @RequestBody TestPlanDto testPlanDto) {
         Optional<TestPlan> optionalTestPlan = testPlanRepository.findById(id);
         if(optionalTestPlan.isEmpty())
