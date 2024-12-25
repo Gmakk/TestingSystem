@@ -1,35 +1,22 @@
 import { z } from "zod";
 import { httpRequest } from "./http";
+import { TesterModel } from "./models/tester";
+import { toast } from "sonner";
 
-const userCreateSchema = z.object({
-    name: z.string().min(3),
-    email: z.string().email(),
-    age: z.number().min(18),
-});
-
-const userDtoSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    email: z.string().email(),
-    age: z.number()
-})
-
-async function createUser() {
-    const userData = { name: 'John Doe', email: 'john.doe@example.com', age: 25 };
-    const result = await httpRequest.request(
-        'POST',
-        '/users',
-        userData,
-        undefined,
-        userDtoSchema,
-        userCreateSchema
-    );
-
-    if ('error' in result) {
-        console.error('Ошибка:', result.error);
-    } else {
-        console.log('Пользователь создан:', result);
+export namespace TesterApi {
+    export async function createTestCase(id: number, data: z.infer<typeof TesterModel.TestCaseSubmit>) {
+        try {
+            const result = await httpRequest.request(
+                "POST",
+                `/testCase/${id}/submit`,
+                data,
+                undefined,
+                undefined,
+                TesterModel.TestCaseSubmit
+            );
+            return result;
+        } catch (e) {
+            toast.error(`Произошла ошибка при выполнении тест-кейса: ${e}`)
+        }
     }
 }
-
-createUser();

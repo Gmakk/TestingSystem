@@ -1,15 +1,17 @@
 import { observer } from "mobx-react-lite";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Page } from "../components/Page";
-import { TestCase, TesterPageViewModel } from "../view-models/tester.vm";
+import { TestCase, TestCaseSubmit, TesterPageViewModel } from "../view-models/tester.vm";
 import styled from "@emotion/styled";
 import { Stack } from "../components/Stack";
 import { useTheme } from "@emotion/react";
-import ArrowIcon from "../assets/listArrow.svg";
 import { StyledText } from "../components/Text";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
+import { canOpen, Projects } from "./Tree.component";
+import { Form, TestCaseType, TreeComponentViewModel } from "../view-models/tree.vm";
+import { number } from "zod";
 
 const GridContainer = styled.div`
     display: grid;
@@ -24,66 +26,13 @@ export interface CollapseListProps {
     onClick: () => void
 }
 
-const Project: React.FC<{ title: string, vm: TesterPageViewModel }> = x => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <Stack direction="column">
-            <Stack direction="row" onClick={() => setIsOpen(!isOpen)} align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} style={{ rotate: isOpen ? "270deg" : "0deg" }} />
-                <StyledText size={20}>{x.title}</StyledText>
-            </Stack>
-            {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.testPlans.map(v => <TestPlan title={v} vm={x.vm} />)}
-            </Stack>}
-        </Stack>
-    )
-}
-
-const TestPlan: React.FC<{ title: string, vm: TesterPageViewModel }> = x => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <Stack direction="column">
-            <Stack direction="row" onClick={() => setIsOpen(!isOpen)} align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} style={{ rotate: isOpen ? "270deg" : "0deg" }} />
-                <StyledText size={20}>{x.title}</StyledText>
-            </Stack>
-            {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.scenarios.map(v => <Scenario title={v} vm={x.vm} />)}
-            </Stack>}
-        </Stack>
-    )
-}
-
-const Scenario: React.FC<{ title: string, vm: TesterPageViewModel }> = x => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <Stack direction="column">
-            <Stack direction="row" onClick={() => setIsOpen(!isOpen)} align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} style={{ rotate: isOpen ? "270deg" : "0deg" }} />
-                <StyledText size={20}>{x.title}</StyledText>
-            </Stack>
-            {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.testCases.map(v => <TestCaseComponent item={v} vm={x.vm} />)}
-            </Stack>}
-        </Stack>
-    )
-}
-
-const TestCaseComponent: React.FC<{ item: TestCase, vm: TesterPageViewModel }> = observer(x => {
-    return (
-        <Stack direction="row" onClick={() => x.vm.select(x.item)} align="center" gap={5}
-            style={{ cursor: "pointer", padding: "0 0 0 25px", background: x.vm.selected?.id === x.item.id ? "rgba(214, 173, 173, 0.5)" : "transparent" }}>
-            <StyledText size={20}>{x.item.title}</StyledText>
-        </Stack>
-    )
-})
-
 const FormTestCase: React.FC<{ item: TestCase, vm: TesterPageViewModel }> = observer(x => {
     const theme = useTheme();
-    const [checked, setChecked] = useState(false);
+    const [form, setForm] = useState<TestCaseSubmit>({
+        passed: false,
+        comment: ""
+    });
+
     return (
         <Stack direction={"column"} gap={30}>
             <Stack direction="column" style={{
@@ -112,17 +61,18 @@ const FormTestCase: React.FC<{ item: TestCase, vm: TesterPageViewModel }> = obse
                     </Stack>
                     <div style={{ minHeight: "100px" }}></div>
                     <Stack direction="row" align="center">
-                        <Checkbox checked={checked} onChange={v => setChecked(v)} />
+                        <Checkbox checked={form.passed} onChange={v => setForm({...form, passed: v })} />
                         <StyledText size={15}>Выполнено успешно</StyledText>
                     </Stack>
                 </Stack>
             </Stack>
             <Stack direction="column" gap={10}>
                 <StyledText size={20}>Комментарий</StyledText>
-                <textarea style={{ background: theme.colors.containerBg, borderRadius: "6px", padding: "10px 15px" }}></textarea>
+                <textarea style={{ background: theme.colors.containerBg, borderRadius: "6px", padding: "10px 15px" }}
+                value={form.comment} onChange={e => setForm({...form, comment: e.target.value })} />
             </Stack>
             <div style={{ alignSelf: "end" }}>
-                <PrimaryButton text="Сохранить" onClick={() => x.vm.save(x.item.id)} />
+                <PrimaryButton text="Сохранить" onClick={() => x.vm.submit.launch(x.item.id, x.vm.currentScenarioId, form)} />
             </div>
         </Stack>
     )
@@ -130,7 +80,19 @@ const FormTestCase: React.FC<{ item: TestCase, vm: TesterPageViewModel }> = obse
 
 export const TesterPage: React.FC = observer(() => {
     const vm = useMemo(() => new TesterPageViewModel(), []);
+    const treeVm = useMemo(() => new TreeComponentViewModel(), []);
     const theme = useTheme();
+
+    const selectCallback = useCallback((item: Form | null) => {
+        vm.select(item ? item.item as unknown as TestCaseType : null);
+    }, [vm]);
+
+    const canOpen: canOpen = {
+        project: false,
+        testPlan: false,
+        scenario: false,
+        testCase: true
+    }
 
     return (
         <Page>
@@ -142,7 +104,7 @@ export const TesterPage: React.FC = observer(() => {
                         padding: "20px 30px",
                         overflowY: "auto"
                     }}>
-                    {vm.projects?.map(v => <Project title={v} vm={vm} />)}
+                    {vm.projects?.map(v => <Projects title={v} vm={treeVm} select={selectCallback} canOpen={canOpen} setScenarioId={v => vm.currentScenarioId = v} />)}
                 </Stack>
                 <Stack direction="column" gap={20}>
                     <SecondaryButton text="Статистика" />

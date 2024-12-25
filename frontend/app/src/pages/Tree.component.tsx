@@ -17,6 +17,7 @@ export const Projects: React.FC<{
     vm: TreeComponentViewModel,
     select: (item: Form | null) => void
     canOpen: canOpen
+    setScenarioId?: (id: number | null) => void
 }> = observer(x => {
     const [isOpen, setIsOpen] = useState(false);
     const [testPlans, setTestPlans] = useState<{ id: number, title: string }[]>([])
@@ -40,10 +41,10 @@ export const Projects: React.FC<{
         <Stack direction="column">
             <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
                 <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: !isOpen ? "270deg" : "0deg", cursor: "pointer" }} />
-                <StyledText size={20} onClick={e => openProject(e)} >{x.title}</StyledText>
+                <StyledText size={20} onClick={e => x.canOpen.project ? openProject(e) : void 0} >{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {testPlans.map(v => <TestPlan id={v.id} title={v.title} vm={x.vm} project={x.title} select={x.select} canOpen={x.canOpen} />)}
+                {testPlans.map(v => <TestPlan id={v.id} title={v.title} vm={x.vm} project={x.title} select={x.select} canOpen={x.canOpen} setScenarioId={x.setScenarioId} />)}
             </Stack>}
         </Stack>
     )
@@ -56,6 +57,7 @@ export const TestPlan: React.FC<{
     project: string
     select: (item: Form | null) => void,
     canOpen: canOpen
+    setScenarioId?: (id: number | null) => void
 }> = observer(x => {
     const [isOpen, setIsOpen] = useState(false);
     const [scenarios, setScenarios] = useState<{ id: number, title: string }[]>([])
@@ -79,10 +81,10 @@ export const TestPlan: React.FC<{
         <Stack direction="column">
             <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
                 <img onClick={() => openList()} src={ArrowIcon} style={{ rotate: !isOpen ? "270deg" : "0deg" }} />
-                <StyledText onClick={e => openTestPlan(e)} size={20}>{x.title}</StyledText>
+                <StyledText onClick={e => x.canOpen.testPlan ? openTestPlan(e) : void 0} size={20}>{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {scenarios.map(v => <Scenario id={v.id} title={v.title} vm={x.vm} project={x.project} select={x.select} canOpen={x.canOpen} />)}
+                {scenarios.map(v => <Scenario id={v.id} title={v.title} vm={x.vm} project={x.project} select={x.select} canOpen={x.canOpen} setScenarioId={x.setScenarioId} />)}
             </Stack>}
         </Stack>
     )
@@ -95,6 +97,7 @@ export const Scenario: React.FC<{
     project: string
     select: (item: Form | null) => void
     canOpen: canOpen
+    setScenarioId?: (id: number | null) => void
 }> = observer(x => {
     const [isOpen, setIsOpen] = useState(false);
     const [testCases, setTestCases] = useState<{ id: number, title: string }[]>([])
@@ -122,10 +125,10 @@ export const Scenario: React.FC<{
         <Stack direction="column">
             <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
                 <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: !isOpen ? "270deg" : "0deg" }} />
-                <StyledText onClick={e => openScenario(e)} size={20}>{x.title}</StyledText>
+                <StyledText onClick={e => x.canOpen.scenario ? openScenario(e) : void 0} size={20}>{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {testCases.map(v => <TestCaseComponent id={v.id} title={v.title} vm={x.vm} select={x.select} canOpen={x.canOpen} />)}
+                {testCases.map(v => <TestCaseComponent id={v.id} title={v.title} vm={x.vm} select={x.select} canOpen={x.canOpen} scenarioId={x.id} setScenarioId={x.setScenarioId} />)}
             </Stack>}
         </Stack>
     )
@@ -137,10 +140,13 @@ const TestCaseComponent: React.FC<{
     vm: TreeComponentViewModel
     select: (item: Form | null) => void
     canOpen: canOpen
+    scenarioId?: number
+    setScenarioId?: (id: number | null) => void
 }> = observer(x => {
     const openTestCase = async () => {
         const data = await x.vm.getTestCaseById.launch(x.id);
 
+        x.setScenarioId ? x.setScenarioId(x.scenarioId ?? null) : void 0;
         x.select({
             type: "TEST_CASE",
             item: data ?? null
@@ -150,7 +156,7 @@ const TestCaseComponent: React.FC<{
     return (
         <Stack direction="row" align="center" gap={5}
             style={{ cursor: "pointer", padding: "0 0 0 25px" }}>
-            <StyledText onClick={() => openTestCase()} size={20}>{x.title}</StyledText>
+            <StyledText onClick={() => x.canOpen.testCase ? openTestCase() : void 0} size={20}>{x.title}</StyledText>
         </Stack>
     )
 })
