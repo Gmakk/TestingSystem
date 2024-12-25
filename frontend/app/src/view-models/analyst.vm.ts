@@ -2,6 +2,8 @@ import { makeAutoObservable } from "mobx";
 import { AsyncExecution } from "../utils/async-action";
 import { ProjectsApi } from "../api/projects";
 import { AnalystApi } from "../api/analyst";
+import { AnalystModel } from "../api/models/analyst";
+import { z } from "zod";
 
 export type TestCaseType = {
     id: number
@@ -80,7 +82,7 @@ export class AnalystPageViewModel {
         }
     })
 
-    public saveTestPlan = new AsyncExecution(async (id: number | null, item: Omit<TestPlanType, "id" | "approved">) => {
+    public saveTestPlan = new AsyncExecution(async (id: number | null, item: z.infer<typeof AnalystModel.TestPlanCreate>) => {
         if (id) {
             const res = await AnalystApi.editTestPlan(id, item);
             this.select(null);
@@ -95,12 +97,34 @@ export class AnalystPageViewModel {
     })
 
     getTestPlansByProject = new AsyncExecution(async (title: string) => {
-        return AnalystApi.getTestPlansByProject({ title: title });
+        return AnalystApi.getTestPlansByProject(title);
+    })
+
+    getScenariosByProject = new AsyncExecution(async (title: string) => {
+        return AnalystApi.getScenariosByProject(title)
+    })
+
+    getTestPlanById = new AsyncExecution(async (id: number) => {
+        return AnalystApi.getTestPlanById(id)
+    })
+
+    getTestCasesByProject = new AsyncExecution(async (title: string) => {
+        return AnalystApi.getTestCasesByProject(title)
+    })
+
+    getScenarioById = new AsyncExecution(async (id: number) => {
+        return AnalystApi.getScenarioById(id)
+    })
+
+    getTestCaseById = new AsyncExecution(async (id: number) => {
+        return AnalystApi.getTestCaseById(id)
     })
 
     testCasesByScenario: { id: number, title: string }[] = []
     public getTestCasesByScenario = new AsyncExecution(async (id: number) => {
-        this.testCasesByScenario = await AnalystApi.getTestCasesByScenario(id) ?? [];
+        const res = await AnalystApi.getTestCasesByScenario(id) ?? [];
+        this.testCasesByScenario = res;
+        return res;
     })
 
     allTestCases: { id: number, title: string }[] = []
@@ -122,51 +146,4 @@ export class AnalystPageViewModel {
     public requestProjects = new AsyncExecution(async () => {
         this.projects = await ProjectsApi.getProjects() ?? [];
     })
-
-    testPlans: { id: number, title: string }[] = [{ id: 3, title: "Тестирование формы поиска" }, { id: 4, title: "Тестирование формы регистрации" }];
-
-    scenarios: string[] = ["Неуспешная регистрация - некорректный email", "Успешный поиск", "Неуспешная отправка - пустое поле сообщения"]
-
-    testCases: TestCaseType[] = [
-        {
-            "id": 5,
-            "title": "Проверка ввода формы: Элементы с пробелами",
-            "description": "Ввести по порядку следующие цифры",
-            "inputData": " 1 2 3 ",
-            "outputData": "3 2 1 ",
-            "projectTitle": "project1"
-        },
-        {
-            "id": 6,
-            "title": "Проверка ввода формы: Отрицательные числа",
-            "description": "Ввести по порядку следующие цифры",
-            "inputData": "-1 -2 -3",
-            "outputData": "-3 -2 -1",
-            "projectTitle": "project1"
-        },
-        {
-            "id": 7,
-            "title": "Проверка ввода формы: Смешанные числа",
-            "description": "Ввести по порядку следующие цифры",
-            "inputData": "-1 2 -3 4",
-            "outputData": "4 -3 2 -1",
-            "projectTitle": "project1"
-        },
-        {
-            "id": 3,
-            "title": "Invalid Email - Missing Domain",
-            "description": "Check for valid email format",
-            "inputData": "test@",
-            "outputData": "false",
-            "projectTitle": "project1"
-        },
-        {
-            "id": 4,
-            "title": "Valid Email - Multiple .",
-            "description": "Check for valid email format",
-            "inputData": "test@sub.example.com",
-            "outputData": "true",
-            "projectTitle": "project1"
-        },
-    ]
 }

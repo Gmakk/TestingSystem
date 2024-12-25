@@ -42,7 +42,7 @@ export namespace AnalystModel {
         startDate: z.string(),
         endDate: z.string(),
         projectTitle: z.string(),
-        scenarios: z.array(ListItem)
+        scenarioIds: z.array(z.number())
     })
 
     export const TestPlan = z.object({

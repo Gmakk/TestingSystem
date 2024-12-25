@@ -46,7 +46,7 @@ export interface CollapseListProps {
     onClick: () => void
 }
 
-const Project: React.FC<{ title: string, vm: AnalystPageViewModel }> = x => {
+const Project: React.FC<{ title: string, vm: AnalystPageViewModel }> = observer(x => {
     const [isOpen, setIsOpen] = useState(false);
     const [testPlans, setTestPlans] = useState<{ id: number, title: string }[]>([])
 
@@ -68,53 +68,98 @@ const Project: React.FC<{ title: string, vm: AnalystPageViewModel }> = x => {
     return (
         <Stack direction="column">
             <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: isOpen ? "270deg" : "0deg", cursor: "pointer" }} />
+                <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: !isOpen ? "270deg" : "0deg", cursor: "pointer" }} />
                 <StyledText size={20} onClick={e => openProject(e)} >{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {testPlans.map(v => <TestPlan title={v.title} vm={x.vm} />)}
+                {testPlans.map(v => <TestPlan id={v.id} title={v.title} vm={x.vm} project={x.title} />)}
             </Stack>}
         </Stack>
     )
-}
+})
 
-const TestPlan: React.FC<{ title: string, vm: AnalystPageViewModel }> = x => {
+const TestPlan: React.FC<{ id: number, title: string, vm: AnalystPageViewModel, project: string }> = observer(x => {
     const [isOpen, setIsOpen] = useState(false);
+    const [scenarios, setScenarios] = useState<{ id: number, title: string }[]>([])
+
+    const openList = async () => {
+        setScenarios(await x.vm.getScenariosByProject.launch(x.project) ?? []);
+        setIsOpen(!isOpen)
+    }
+
+    const openTestPlan = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        e.preventDefault();
+        const data = await x.vm.getTestPlanById.launch(x.id);
+
+        x.vm.select({
+            type: "TEST_PLAN",
+            item: data ?? null
+        })
+    }
 
     return (
         <Stack direction="column">
-            <Stack direction="row" onClick={() => setIsOpen(!isOpen)} align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} style={{ rotate: isOpen ? "270deg" : "0deg" }} />
-                <StyledText size={20}>{x.title}</StyledText>
+            <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
+                <img onClick={() => openList()} src={ArrowIcon} style={{ rotate: !isOpen ? "270deg" : "0deg" }} />
+                <StyledText onClick={e => openTestPlan(e)} size={20}>{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.scenarios.map(v => <Scenario title={v} vm={x.vm} />)}
+                {scenarios.map(v => <Scenario id={v.id} title={v.title} vm={x.vm} project={x.project} />)}
             </Stack>}
         </Stack>
     )
-}
+})
 
-const Scenario: React.FC<{ title: string, vm: AnalystPageViewModel }> = x => {
+const Scenario: React.FC<{ id: number, title: string, vm: AnalystPageViewModel, project: string }> = x => {
     const [isOpen, setIsOpen] = useState(false);
+    const [testCases, setTestCases] = useState<{ id: number, title: string }[]>([])
+
+    const openList = async () => {
+        setTestCases(await x.vm.getTestCasesByScenario.launch(x.id) ?? []);
+        setIsOpen(!isOpen)
+    }
+
+    const openScenario = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        e.preventDefault();
+        const data = await x.vm.getScenarioById.launch(x.id);
+        const testCases = x.vm.testCasesByScenario;
+
+        x.vm.select({
+            type: "SCENARIO",
+            item: data ? {
+                ...data,
+                testCases: testCases.map(v => v.id)
+            } : null
+        })
+    }
 
     return (
         <Stack direction="column">
-            <Stack direction="row" onClick={() => setIsOpen(!isOpen)} align="center" gap={5} style={{ cursor: "pointer" }}>
-                <img src={ArrowIcon} style={{ rotate: isOpen ? "270deg" : "0deg" }} />
-                <StyledText size={20}>{x.title}</StyledText>
+            <Stack direction="row" align="center" gap={5} style={{ cursor: "pointer" }}>
+                <img src={ArrowIcon} onClick={() => openList()} style={{ rotate: !isOpen ? "270deg" : "0deg" }} />
+                <StyledText onClick={e => openScenario(e)} size={20}>{x.title}</StyledText>
             </Stack>
             {isOpen && <Stack direction="column" gap={12} style={{ padding: "15px 0 0 25px" }}>
-                {x.vm.testCases.map(v => <TestCaseComponent item={v} vm={x.vm} />)}
+                {testCases.map(v => <TestCaseComponent id={v.id} title={v.title} vm={x.vm} />)}
             </Stack>}
         </Stack>
     )
 }
 
-const TestCaseComponent: React.FC<{ item: TestCase, vm: AnalystPageViewModel }> = observer(x => {
+const TestCaseComponent: React.FC<{ id: number, title: string, vm: AnalystPageViewModel }> = observer(x => {
+    const openTestCase = async () => {
+        const data = await x.vm.getTestCaseById.launch(x.id);
+
+        x.vm.select({
+            type: "TEST_CASE",
+            item: data ?? null
+        })
+    }
+
     return (
-        <Stack direction="row" onClick={() => void 0} align="center" gap={5}
+        <Stack direction="row" align="center" gap={5}
             style={{ cursor: "pointer", padding: "0 0 0 25px" }}>
-            <StyledText size={20}>{x.item.title}</StyledText>
+            <StyledText onClick={() => openTestCase()} size={20}>{x.title}</StyledText>
         </Stack>
     )
 })
@@ -265,6 +310,13 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
         form.scenarios = form.scenarios.filter(v => v.id != selectedItem.id)
     }
 
+    const Form = () => {
+        return {
+            ...form,
+            scenarioIds: form.scenarios.map(v => v.id)
+        }
+    }
+
     return (
         <Stack direction="column" gap={30} style={{
             background: theme.colors.containerBg, padding: "10px 40px 40px 50px",
@@ -299,7 +351,7 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
             <Expandee />
             <Stack direction="row" gap={20} justify="end">
                 <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveTestPlan.launch(x.item.id, form) : x.vm.saveTestPlan.launch(null, form)} />
+                <PrimaryButton text="Сохранить" onClick={() => x.item ? x.vm.saveTestPlan.launch(x.item.id, Form()) : x.vm.saveTestPlan.launch(null, Form())} />
             </Stack>
         </Stack>
     )
@@ -332,6 +384,7 @@ export const ProjectForm: React.FC<{ form: ProjectType | null, vm: AnalystPageVi
                                 <StyledText weight={600} size={15}>{v.title}</StyledText>
                             </Stack>
                         ))}
+                        {x.form?.testPlans.length === 0 && <StyledText>В проекте нет тест-планов</StyledText>}
                     </Stack>
                 </Stack>
                 <Expandee />
@@ -359,9 +412,8 @@ export const AnalystPage: React.FC = observer(() => {
     const vm = useMemo(() => new AnalystPageViewModel(), []);
     const theme = useTheme();
 
-    const selected = vm.selected;
-
     const Form = () => {
+        const selected = vm.selected;
         switch (selected?.type) {
             case "TEST_CASE": return <TestCaseForm item={selected.item} vm={vm} />
             case "PROJECT": return <ProjectForm form={selected.item} vm={vm} />;
