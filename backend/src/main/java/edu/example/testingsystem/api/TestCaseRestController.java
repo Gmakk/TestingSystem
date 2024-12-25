@@ -64,7 +64,7 @@ public class TestCaseRestController {
         if (optionalScenario.isEmpty())
             return ResponseEntity.notFound().build();
 
-        List<Integer> testCaseIds = connectionRepo.findByScenario(optionalScenario.get())
+        List<Integer> testCaseIds = connectionRepo.findByScenarioAndExecutedIsFalse(optionalScenario.get())
                 .stream()
                 .map(ScenarioCaseConnection::getTestCase)
                 .map(TestCase::getId)
