@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import { AsyncExecution } from "../utils/async-action";
-import { ProjectsApi } from "../api/projects";
+import { ProjectsApi } from "../api/endpoints/projects";
 import { toast } from "sonner";
-import { TesterApi } from "../api/tester";
+import { TesterApi } from "../api/endpoints/tester";
 
 export type TestCase = {
     id: number

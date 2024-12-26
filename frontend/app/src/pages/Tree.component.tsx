@@ -63,7 +63,7 @@ export const TestPlan: React.FC<{
     const [scenarios, setScenarios] = useState<{ id: number, title: string }[]>([])
 
     const openList = async () => {
-        setScenarios(await x.vm.getScenariosByProject.launch(x.project) ?? []);
+        setScenarios(await x.vm.getScenariosByTestPlan.launch(x.id) ?? []);
         setIsOpen(!isOpen)
     }
 

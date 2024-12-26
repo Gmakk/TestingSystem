@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { httpRequest } from "./http"
-import { ProjectsModel } from "./models/projects"
+import { ProjectsModel } from "../models/projects"
 
 export namespace ProjectsApi {
     export const getProjects = async () => {

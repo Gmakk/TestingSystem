@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { httpRequest } from "./http";
-import { TesterModel } from "./models/tester";
+import { TesterModel } from "../models/tester";
 import { toast } from "sonner";
 
 export namespace TesterApi {

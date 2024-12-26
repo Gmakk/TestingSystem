@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnalystModel } from "./models/analyst";
+import { AnalystModel } from "../models/analyst";
 import { httpRequest } from "./http";
 import { toast } from "sonner";
 
@@ -204,6 +204,22 @@ export namespace AnalystApi {
         )
         if ('error' in result) {
             toast.error(`Ошибка получения списка сценариев в проекте: ${project}`, result.error);
+        } else {
+            return result;
+        }
+    }
+
+    export async function getScenariosByTestPlan(id: number) {
+        const result = await httpRequest.request(
+            "GET",
+            `/scenario/bytestplan/${id}`,
+            undefined,
+            undefined,
+            AnalystModel.List,
+            undefined
+        )
+        if ('error' in result) {
+            toast.error(`Ошибка получения списка сценариев в тест-плане: ${id}`, result.error);
         } else {
             return result;
         }
