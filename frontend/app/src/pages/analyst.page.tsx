@@ -15,7 +15,6 @@ import { MultiSelectDropdown, Option } from "../components/multiselect.component
 import { DatePicker } from "../components/datepicker.component";
 import { canOpen, Projects } from "./Tree.component";
 import { TestCaseType, ScenarioType, TestPlanType, ProjectType, TreeComponentViewModel, Form } from "../view-models/tree.vm";
-import { number } from "zod";
 
 const GridContainer = styled.div`
     display: grid;

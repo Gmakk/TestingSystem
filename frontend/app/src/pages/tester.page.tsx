@@ -11,7 +11,6 @@ import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
 import { canOpen, Projects } from "./Tree.component";
 import { Form, TestCaseType, TreeComponentViewModel } from "../view-models/tree.vm";
-import { number } from "zod";
 
 const GridContainer = styled.div`
     display: grid;
