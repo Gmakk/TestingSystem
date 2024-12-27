@@ -6,13 +6,6 @@ export const router = createBrowserRouter([
         path: routes.$root,
         lazy: () => import("../pages/root.page")
             .then(m => ({ Component: m.RootPage })),
-        // children: [
-        //     {
-        //         index: true,
-        //         lazy: () => import("pages/redirect.page")
-        //             .then(m => ({ Component: m.RedirectPage }))
-        //     },
-        // ]
     },
     {
         path: routes.$tester,
@@ -28,5 +21,10 @@ export const router = createBrowserRouter([
         path: routes.$analyst,
         lazy: () => import("../pages/analyst.page")
         .then(m => ({Component: m.AnalystPage}))
+    },
+    {
+        path: routes.$director,
+        lazy: () => import("../pages/director.page")
+        .then(m => ({Component: m.DirectorPage}))
     }
 ]);

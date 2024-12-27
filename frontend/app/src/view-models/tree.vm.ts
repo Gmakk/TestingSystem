@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { AnalystApi } from "../api/analyst";
+import { AnalystApi } from "../api/endpoints/analyst";
 import { AsyncExecution } from "../utils/async-action";
 
 export type TestCaseType = {
@@ -58,6 +58,10 @@ export class TreeComponentViewModel {
 
     getTestPlansByProject = new AsyncExecution(async (title: string) => {
         return AnalystApi.getTestPlansByProject(title);
+    })
+
+    getScenariosByTestPlan = new AsyncExecution(async (testPlanId: number) => {
+        return AnalystApi.getScenariosByTestPlan(testPlanId)
     })
 
     getScenariosByProject = new AsyncExecution(async (title: string) => {

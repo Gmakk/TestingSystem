@@ -32,7 +32,7 @@ class HttpRequest {
                 url: `${this.baseUrl}${endpoint}`,
                 data,
                 params,
-                headers: this.headers,
+                headers: this.headers
             });
 
             if (response.status >= 400) {

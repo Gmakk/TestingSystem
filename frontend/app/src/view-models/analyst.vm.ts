@@ -1,10 +1,10 @@
 import { makeAutoObservable } from "mobx";
 import { AsyncExecution } from "../utils/async-action";
-import { AnalystApi } from "../api/analyst";
+import { AnalystApi } from "../api/endpoints/analyst";
 import { AnalystModel } from "../api/models/analyst";
 import { z } from "zod";
 import { Form, ScenarioType, TestCaseType } from "./tree.vm";
-import { ProjectsApi } from "../api/projects";
+import { ProjectsApi } from "../api/endpoints/projects";
 
 export class AnalystPageViewModel {
     constructor() {
