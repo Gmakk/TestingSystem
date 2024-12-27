@@ -7,7 +7,7 @@ import edu.example.testingsystem.entities.Userr;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ScenarioDto(Integer id,
                           String title,
                           Integer creator,

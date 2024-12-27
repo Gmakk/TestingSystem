@@ -46,7 +46,9 @@ INSERT INTO test_plan VALUES (true,3,1000,'2024-12-24 12:00:00','2024-5-24 12:00
 INSERT INTO test_plan VALUES (true,3,2000,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование вывода');
 INSERT INTO scenario VALUES (3,4,1000,'Test project','Тестирование ввода таким-то пользователем');
 INSERT INTO scenario VALUES (3,4,2000,'Test project','Тестирование ввода сяким-то пользователем');
-INSERT INTO scenario VALUES (3,4,3000,'Test project2','Тестирование ввода тем самым пользователем');
+INSERT INTO scenario VALUES (3,4,3000,'Test project','Тестирование ввода тем самым пользователем');
+INSERT INTO scenario VALUES (3,null,4000,'Test project','Тестирование ввода unassigned1');
+INSERT INTO scenario VALUES (3,null,5000,'Test project2','Тестирование ввода unassigned1');
 INSERT INTO test_case VALUES (3,1000,'Ввести по порядку следующие цифры','1 2 3','3 2 1','Test project','Проверка ввода формы1');
 INSERT INTO test_case VALUES (3,2000,'Ввести по порядку следующие цифры','4 5 6','6 5 4','Test project','Проверка ввода формы2');
 INSERT INTO test_case VALUES (3,3000,'Ввести по порядку следующие цифры','7 8 9','9 8 7','Test project','Проверка ввода формы3');
