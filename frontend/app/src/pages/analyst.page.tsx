@@ -189,7 +189,7 @@ const TestPlanForm: React.FC<{ item: TestPlanType | null, vm: AnalystPageViewMod
     };
 
     const onSelect = (selectedList: Option[], selectedItem: Option) => {
-        form.scenarios.push({ id: selectedItem.id, title: selectedItem.name })
+        form.scenarios.push({ id: selectedItem.id, title: selectedItem.name, executor: null })
     }
 
     const onRemove = (selectedList: Option[], selectedItem: Option) => {
