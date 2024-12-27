@@ -31,7 +31,8 @@ INSERT INTO userr (id, is_active, login, name, surname, patronymic, password, ro
                          ('1',true,'director','Иван','Иванов','Иванович','$2a$10$RRwcXonX5z.GafLQ4H8pz.0KzLxtkMMV1Pbs51hQruLpaODgEjDte','director'),
                          ('3',true,'analyst','Иван','Иванов','Иванович','$2a$10$RJef5odVkEbE1mFrMIZfmet4f/JrLLEmDtdIPcgkFLwvMuejbSTJO','analyst'),
                          ('4',true,'tester','Иван','Иванов','Иванович','$2a$10$jiPCz.K8lA8q7XGvp5OaguLKg.QxjlZwcJnwFyMtyNvzSgzehVRci','tester'),
-                         ('5',false,'inactive','Иван','Иванов','Иванович','$2y$10$qpuOza3wgD10NnOGi4jey.FquLv.cK6E8zYh2oVeBW2twb49fRkVm','tester');
+                         ('5',false,'inactive','Иван','Иванов','Иванович','$2y$10$qpuOza3wgD10NnOGi4jey.FquLv.cK6E8zYh2oVeBW2twb49fRkVm','tester'),
+                         ('6',true,'withoutRole','Иван','Иванов','Иванович','$2a$10$eiiuEujCNpZFukmY4js5z.InuQtYvoRbsxQ8qaZ5yvf3FTIYDWvsO',null);
 
 
 
@@ -45,7 +46,7 @@ INSERT INTO test_plan VALUES (true,3,1000,'2024-12-24 12:00:00','2024-5-24 12:00
 INSERT INTO test_plan VALUES (true,3,2000,'2024-12-24 12:00:00','2024-5-24 12:00:00','Test project','Тестирование вывода');
 INSERT INTO scenario VALUES (3,4,1000,'Test project','Тестирование ввода таким-то пользователем');
 INSERT INTO scenario VALUES (3,4,2000,'Test project','Тестирование ввода сяким-то пользователем');
-INSERT INTO scenario VALUES (3,4,3000,'Test project','Тестирование ввода тем самым пользователем');
+INSERT INTO scenario VALUES (3,4,3000,'Test project2','Тестирование ввода тем самым пользователем');
 INSERT INTO test_case VALUES (3,1000,'Ввести по порядку следующие цифры','1 2 3','3 2 1','Test project','Проверка ввода формы1');
 INSERT INTO test_case VALUES (3,2000,'Ввести по порядку следующие цифры','4 5 6','6 5 4','Test project','Проверка ввода формы2');
 INSERT INTO test_case VALUES (3,3000,'Ввести по порядку следующие цифры','7 8 9','9 8 7','Test project','Проверка ввода формы3');

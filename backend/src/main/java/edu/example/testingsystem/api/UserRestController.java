@@ -106,4 +106,17 @@ public class UserRestController {
 
         return pageWitUser.map(userMapper::userToUserDto);
     }
+
+    @DeleteMapping("/deleteInactive")
+    public ResponseEntity<HttpStatus> deleteInactiveUsers() {
+        userRepository.deleteByIsActive(false);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/deleteWithoutRoles")
+    public ResponseEntity<HttpStatus> deleteUsersWithoutRoles() {
+        userRepository.deleteByRole(null);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
