@@ -87,6 +87,8 @@ public class TestPlanRestController {
 
     @PostMapping
     public ResponseEntity<TestPlanDto> create(@RequestBody TestPlanDto testPlanDto) {
+        if(testPlanDto.startDate() == null || testPlanDto.endDate() == null || testPlanDto.endDate().before(testPlanDto.startDate()))
+            return ResponseEntity.badRequest().build();
         Optional<Project> optionalProject = projectRepository.findById(testPlanDto.projectTitle());
         if(optionalProject.isEmpty())
             return ResponseEntity.notFound().build();

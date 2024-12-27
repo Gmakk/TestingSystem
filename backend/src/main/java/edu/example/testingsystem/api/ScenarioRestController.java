@@ -99,14 +99,10 @@ public class ScenarioRestController {
         Optional<Project> optionalProject= projectRepository.findById(title);
         if(optionalProject.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<TestPlan> testPlans = testPlanRepository.findByProjectAndApprovedIsTrue(optionalProject.get());
-        Set<Scenario> scenarios = new HashSet<>();//чтобы избежать дубликатов, когда один сценарий в двух планах
-        for (TestPlan testPlan : testPlans) {
-            scenarios.addAll(testPlan.getScenarios());
-        }
-        List<Scenario> scenarioList = new ArrayList<>();
-        scenarioList.addAll(scenarios);
-        return ResponseEntity.ok(scenarioMapper.toDtos(scenarioList));
+
+        List<Scenario> scenarios = scenarioRepository.findByProject(optionalProject.get());
+
+        return ResponseEntity.ok(scenarioMapper.toDtos(scenarios));
     }
 
     @GetMapping("/bytestplan/{id}")
