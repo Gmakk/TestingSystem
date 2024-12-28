@@ -102,7 +102,8 @@ public class TestPlanRestController {
 
     @PostMapping("/{id}")
     public ResponseEntity<TestPlanDto> update(@PathVariable("id") Integer id, @RequestBody TestPlanDto testPlanDto) {
-        if(testPlanDto.title() != null && testPlanDto.title().isBlank())
+        if((testPlanDto.title() != null && testPlanDto.title().isBlank())
+                || (testPlanDto.startDate() != null && testPlanDto.endDate() != null && testPlanDto.endDate().before(testPlanDto.startDate())))
             return ResponseEntity.badRequest().build();
         Optional<TestPlan> optionalTestPlan = testPlanRepository.findById(id);
         if(optionalTestPlan.isEmpty())
