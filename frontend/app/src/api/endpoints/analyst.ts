@@ -199,7 +199,7 @@ export namespace AnalystApi {
             `/scenario/byproject/${project}`,
             undefined,
             undefined,
-            AnalystModel.List,
+            AnalystModel.ScenarioList,
             undefined
         )
         if ('error' in result) {
@@ -215,7 +215,7 @@ export namespace AnalystApi {
             `/scenario/bytestplan/${id}`,
             undefined,
             undefined,
-            AnalystModel.List,
+            AnalystModel.ScenarioList,
             undefined
         )
         if ('error' in result) {

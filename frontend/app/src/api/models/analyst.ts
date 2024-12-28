@@ -37,6 +37,12 @@ export namespace AnalystModel {
 
     export const List = z.array(ListItem)
 
+    export const ScenarioList = z.array(z.object({
+        id: z.number(),
+        title: z.string(),
+        executor: z.number().nullable()
+    }))
+
     export const TestPlanCreate = z.object({
         title: z.string(),
         startDate: z.string(),
@@ -52,7 +58,7 @@ export namespace AnalystModel {
         endDate: z.string(),
         approved: z.boolean(),
         projectTitle: z.string(),
-        scenarios: z.array(ListItem)
+        scenarios: ScenarioList
     })
 
     export const Project = z.object({

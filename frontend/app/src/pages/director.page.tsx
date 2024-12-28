@@ -1,13 +1,13 @@
 import { useTheme } from "@emotion/react";
 import { observer } from "mobx-react-lite";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import { Page } from "../components/Page";
 import { Stack } from "../components/Stack";
 import { TreeComponentViewModel, Form, TestPlanType } from "../view-models/tree.vm";
 import { canOpen, Projects } from "./Tree.component";
 import styled from "@emotion/styled";
-import { DirectorPageViewModel } from "../view-models/director.vm";
+import { Assing, DirectorPageViewModel, UserInfo } from "../view-models/director.vm";
 import { StyledText } from "../components/Text";
 import { Expandee } from "../components/expandee.component";
 import CloseIcon from "../assets/close.svg";
@@ -20,11 +20,26 @@ const GridContainer = styled.div`
     height: 88vh;
 `;
 
+export const ScenarioAssign: React.FC<{
+    allTesters: UserInfo[]
+    scenario: { id: number, title: string, executor: number | null }
+    assignFn: (v: Assing) => void
+}> = () => {
+    return (
+        <Stack direction="row">
+
+        </Stack>
+    )
+}
+
 export const TestPlanForm: React.FC<{
-    item: TestPlanType | null
+    item: TestPlanType
     vm: DirectorPageViewModel
 }> = x => {
     const theme = useTheme();
+    useEffect(() => {
+        x.vm.getTesters.launch();
+    }, [])
     return (
         <Stack direction="column" gap={30} style={{
             background: theme.colors.containerBg, padding: "10px 40px 40px 50px",
@@ -32,7 +47,7 @@ export const TestPlanForm: React.FC<{
         }}>
             <Stack direction="column">
                 <Stack direction="row">
-                    <StyledText size={22} weight={600}>{x.item?.title}</StyledText>
+                    <StyledText size={22} weight={600}>{x.item.title}</StyledText>
                     <Expandee />
                     <img src={CloseIcon} style={{
                         cursor: "pointer", width: "25px",
@@ -40,13 +55,26 @@ export const TestPlanForm: React.FC<{
                         top: 0, right: -30
                     }} onClick={() => x.vm.select(null)} />
                 </Stack>
-                <StyledText style={{ fontSize: "18px" }}>{x.item?.startDate.split("T")[0]} — {x.item?.endDate.split("T")[0]}</StyledText>
+                <StyledText style={{ fontSize: "18px" }}>{x.item.startDate.split("T")[0]} — {x.item.endDate.split("T")[0]}</StyledText>
             </Stack>
             <Expandee />
-            <Stack direction="row" gap={20} justify="end">
+            {x.item.approved ?
+                <Stack direction="column">
+                    {x.item.scenarios.map(v =>
+                        <ScenarioAssign allTesters={x.vm.allTesters}
+                            scenario={v}
+                            assignFn={v => x.vm.assignTester.launch(v)} />)
+                    }
+                </Stack> :
+                <Stack direction="column" gap={30}>
+                    <StyledText>Сначала необходимо утвердить тест-план</StyledText>
+                    <PrimaryButton text="" onClick={() => x.vm.approveTestPlan.launch(x.item.id)} />
+                </Stack>
+            }
+            {x.item.approved && <Stack direction="row" gap={20} justify="end">
                 <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
                 <PrimaryButton text="Сохранить" onClick={() => void 0} />
-            </Stack>
+            </Stack>}
         </Stack>
     )
 }

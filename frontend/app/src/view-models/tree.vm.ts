@@ -15,7 +15,7 @@ export type TestPlanType = {
     id: number
     title: string
     projectTitle: string
-    scenarios: { id: number, title: string }[]
+    scenarios: { id: number, title: string, executor: number | null }[]
     startDate: string
     endDate: string
     approved: boolean
