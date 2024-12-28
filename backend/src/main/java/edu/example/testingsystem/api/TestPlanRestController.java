@@ -87,7 +87,8 @@ public class TestPlanRestController {
 
     @PostMapping
     public ResponseEntity<TestPlanDto> create(@RequestBody TestPlanDto testPlanDto) {
-        if(testPlanDto.startDate() == null || testPlanDto.endDate() == null || testPlanDto.endDate().before(testPlanDto.startDate()))
+        if(testPlanDto.title() == null || testPlanDto.title().isBlank()
+                || testPlanDto.startDate() == null || testPlanDto.endDate() == null || testPlanDto.endDate().before(testPlanDto.startDate()))
             return ResponseEntity.badRequest().build();
         Optional<Project> optionalProject = projectRepository.findById(testPlanDto.projectTitle());
         if(optionalProject.isEmpty())
@@ -101,6 +102,8 @@ public class TestPlanRestController {
 
     @PostMapping("/{id}")
     public ResponseEntity<TestPlanDto> update(@PathVariable("id") Integer id, @RequestBody TestPlanDto testPlanDto) {
+        if(testPlanDto.title() != null && testPlanDto.title().isBlank())
+            return ResponseEntity.badRequest().build();
         Optional<TestPlan> optionalTestPlan = testPlanRepository.findById(id);
         if(optionalTestPlan.isEmpty())
             return ResponseEntity.notFound().build();

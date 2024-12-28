@@ -75,6 +75,8 @@ public class TestCaseRestController {
 
     @PostMapping("/{id}")
     public ResponseEntity<TestCaseDto> patchTestCase(@PathVariable("id") Integer id, @RequestBody TestCaseDto testCaseDto) {
+        if(testCaseDto.title() != null && testCaseDto.title().isBlank())
+            return ResponseEntity.badRequest().build();
         Optional<TestCase> optionalTestCase = testCaseRepo.findById(id);
         if(optionalTestCase.isEmpty())
             return ResponseEntity.notFound().build();
@@ -88,6 +90,8 @@ public class TestCaseRestController {
     @PostMapping
     public ResponseEntity<TestCaseDto> createTestCase(@RequestBody TestCaseDto testCaseDto) {
         //TODO: добавить указание создателя тест-кейса
+        if(testCaseDto.title() == null || testCaseDto.title().isBlank())
+            return ResponseEntity.badRequest().build();
         Optional<Project> optionalProject = projectRepository.findById(testCaseDto.projectTitle());
         if(optionalProject.isEmpty())
             return ResponseEntity.notFound().build();

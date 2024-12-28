@@ -63,6 +63,8 @@ public class ScenarioRestController {
 
     @PostMapping("{id}")
     public ResponseEntity<ScenarioDto> patchScenario(@PathVariable("id") Integer id, @RequestBody ScenarioDto scenarioDto) {
+        if(scenarioDto.title() != null && scenarioDto.title().isBlank())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         //поиск проекта
         Optional<Project> optionalProject = projectRepository.findById(scenarioDto.projectTitle());
         if(optionalProject.isEmpty())
@@ -84,6 +86,8 @@ public class ScenarioRestController {
 
     @PostMapping
     public ResponseEntity<ScenarioDto> createScenario(@RequestBody ScenarioDto scenarioDto) {
+        if(scenarioDto.title() == null || scenarioDto.title().isBlank())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<Project> optionalProject= projectRepository.findById(scenarioDto.projectTitle());
         if(optionalProject.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
