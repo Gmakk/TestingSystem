@@ -6,6 +6,7 @@ import edu.example.testingsystem.mapstruct.dto.UserDto;
 import edu.example.testingsystem.mapstruct.mapper.UserMapper;
 import edu.example.testingsystem.repos.RoleRepository;
 import edu.example.testingsystem.repos.UserRepository;
+import edu.example.testingsystem.security.LoginForm;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -29,6 +31,7 @@ public class UserRestController {
     RoleRepository roleRepository;
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/testers")
     public ResponseEntity<List<UserDto>> getTesters() {
@@ -119,4 +122,16 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody LoginForm loginForm) {
+        Userr foundUser = verifyUser(loginForm);
+        return ResponseEntity.ok(userMapper.userToUserDto(foundUser));
+    }
+
+    public Userr verifyUser(LoginForm form) {
+        Optional<Userr> optionalUser = userRepository.findByLogin(form.getLogin());
+        if(optionalUser.isPresent() && passwordEncoder.matches(form.getPassword(), optionalUser.get().getPassword()))
+            return optionalUser.get();
+        throw new NoSuchElementException("Attempt to login with non-existing login " + form.getLogin());
+    }
 }

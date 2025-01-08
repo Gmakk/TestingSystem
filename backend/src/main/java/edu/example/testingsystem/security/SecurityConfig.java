@@ -32,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -59,9 +60,9 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepo) {
         return login -> {
-            List<Userr> users = userRepo.findByLogin(login);
-            if(!users.isEmpty() && users.get(0) != null) {
-                return users.get(0);
+            Optional<Userr> users = userRepo.findByLogin(login);
+            if(users.isPresent()) {
+                return users.get();
             }
             throw new UsernameNotFoundException("User ‘" + login + "’ not found");
         };
