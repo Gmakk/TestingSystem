@@ -15,6 +15,7 @@ import { MultiSelectDropdown, Option } from "../components/multiselect.component
 import { DatePicker } from "../components/datepicker.component";
 import { canOpen, Projects } from "./Tree.component";
 import { TestCaseType, ScenarioType, TestPlanType, ProjectType, TreeComponentViewModel, Form } from "../view-models/tree.vm";
+import { StatisticsDownload } from "./director.page";
 
 const GridContainer = styled.div`
     display: grid;
@@ -285,7 +286,7 @@ export const ProjectForm: React.FC<{ form: ProjectType | null, vm: AnalystPageVi
 export const ButtonGroup: React.FC<{ vm: AnalystPageViewModel }> = observer(x => {
     return (
         <Stack direction="row" justify="space-between">
-            <SecondaryButton text="Статистика" />
+            <StatisticsDownload />
             <PrimaryButton text="Создать тест-план" onClick={() => x.vm.select({ type: "TEST_PLAN", item: null })} />
             <PrimaryButton text="Создать сценарий" onClick={() => x.vm.select({ type: "SCENARIO", item: null })} />
             <PrimaryButton text="Создать тест-кейс" onClick={() => x.vm.select({ type: "TEST_CASE", item: null })} />

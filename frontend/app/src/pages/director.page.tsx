@@ -1,6 +1,6 @@
 import { useTheme } from "@emotion/react";
 import { observer } from "mobx-react-lite";
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback, useState, useEffect, useRef } from "react";
 import { PrimaryButton, SecondaryButton } from "../components/button.component";
 import { Page } from "../components/Page";
 import { Stack } from "../components/Stack";
@@ -13,9 +13,9 @@ import { Expandee } from "../components/expandee.component";
 import CloseIcon from "../assets/close.svg";
 import { Dropdown } from "../components/dropdown.component";
 import { UsersApi } from "../api/endpoints/users";
-import { number } from "zod";
 import { DirectorApi } from "../api/endpoints/director";
 import { toast } from "sonner";
+import axios from "axios";
 
 const GridContainer = styled.div`
     display: grid;
@@ -24,6 +24,107 @@ const GridContainer = styled.div`
     padding: 30px 50px;
     height: 88vh;
 `;
+
+export const StatisticsDownload: React.FC = () => {
+    const handleDownload = async () => {
+        try {
+            const response = await axios.get('http://localhost:9091/api/statistics', {
+                responseType: 'blob',
+            });
+
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const blob = response.data;
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+
+            let filename = 'Статистика_СуТест.txt';
+            const contentDisposition = response.headers['content-disposition'];
+            if (contentDisposition && contentDisposition.indexOf('filename') > -1) {
+                const filenameMatch = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+            a.download = filename;
+
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+        } catch (error: any) {
+            console.error('Ошибка скачивания файла:', error);
+            alert('Не удалось скачать файл.');
+        }
+    };
+
+    return (
+        <SecondaryButton text="Статистика" onClick={handleDownload} />
+    );
+};
+
+const FileUpload: React.FC = () => {
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setSelectedFile(event.target.files[0]);
+        }
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            alert("Пожалуйста, выберите файл.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const response = await axios.post('http://localhost:9091/api/statistics', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if (response.status === 200) {
+                toast.success("Файл успешно загружен");
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error: any) {
+            console.error('Ошибка загрузки файла:', error);
+            toast.error("Ошибка загрузки файла");
+        }
+    };
+
+    const handleChooseFile = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
+
+    return (
+        <Stack direction="row" gap={10} align="center">
+            <input
+                type="file"
+                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+            />
+            <SecondaryButton onClick={handleChooseFile} text="Выбрать файл" />
+            {selectedFile && <StyledText>{selectedFile.name}</StyledText>}
+            {selectedFile && <PrimaryButton onClick={handleUpload} text="Загрузить файл" />}
+        </Stack>
+    );
+};
 
 export const ScenarioAssign: React.FC<{
     allTesters: UserInfo[]
@@ -104,10 +205,6 @@ export const TestPlanForm: React.FC<{
                 </Stack>
             }
             <Expandee />
-            {/* {x.item.approved && <Stack direction="row" gap={20} justify="end">
-                <SecondaryButton text="Отменить" onClick={() => x.vm.select(null)} />
-                <PrimaryButton text="Сохранить" onClick={() => void 0} />
-            </Stack>} */}
         </Stack>
     )
 }
@@ -142,8 +239,8 @@ export const DirectorPage: React.FC = observer(() => {
                 </Stack>
                 <Stack direction="column" gap={20}>
                     <Stack direction="row" gap={20}>
-                        <SecondaryButton text="Статистика" />
-                        {/* <PrimaryButton text="Утвердить" /> */}
+                        <StatisticsDownload />
+                        <FileUpload />
                     </Stack>
                     {vm.selected && <TestPlanForm item={vm.selected} vm={vm} />}
                 </Stack>

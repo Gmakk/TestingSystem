@@ -11,6 +11,7 @@ import CloseIcon from "../assets/close.svg";
 import { Checkbox } from "../components/checkbox.component";
 import { canOpen, Projects } from "./Tree.component";
 import { Form, TestCaseType, TreeComponentViewModel } from "../view-models/tree.vm";
+import { StatisticsDownload } from "./director.page";
 
 const GridContainer = styled.div`
     display: grid;
@@ -106,7 +107,7 @@ export const TesterPage: React.FC = observer(() => {
                     {vm.projects?.map(v => <Projects title={v} vm={treeVm} select={selectCallback} canOpen={canOpen} setScenarioId={v => vm.currentScenarioId = v} />)}
                 </Stack>
                 <Stack direction="column" gap={20}>
-                    <SecondaryButton text="Статистика" />
+                    <StatisticsDownload />
                     {vm.selected && <FormTestCase item={vm.selected} vm={vm} />}
                 </Stack>
             </GridContainer>
