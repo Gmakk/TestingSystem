@@ -8,7 +8,7 @@ export namespace DirectorApi {
         try {
             const result = await httpRequest.request(
                 "POST",
-                "/user/all",
+                "/director/assign",
                 data,
                 undefined,
                 undefined,

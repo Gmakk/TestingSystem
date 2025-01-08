@@ -1,7 +1,6 @@
 import axios from "axios";
 import { toast } from "sonner";
 import * as z from "zod";
-import { ApiError } from "./api-error";
 
 class HttpRequest {
     private baseUrl: string;

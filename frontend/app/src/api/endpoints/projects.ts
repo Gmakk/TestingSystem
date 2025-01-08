@@ -17,4 +17,10 @@ export namespace ProjectsApi {
             return result;
         }
     }
+
+    // export const getStatistics = async () => {
+    //     try {
+    //         const res = 
+    //     }
+    // }
 }
