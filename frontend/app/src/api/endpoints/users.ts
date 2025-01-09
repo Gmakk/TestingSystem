@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { UsersModel } from "../models/users";
 import { httpRequest } from "./http";
+import { z } from "zod";
 
 export namespace UsersApi {
     export async function getTesters() {
@@ -48,6 +49,22 @@ export namespace UsersApi {
             toast.error(`Ошибка получения пользователя ${id}`, result.error);
         } else {
             return result;
+        }
+    }
+
+    export async function login(data: z.infer<typeof UsersModel.Login>) {
+        try {
+            const result = await httpRequest.request(
+                "POST",
+                "/user/login",
+                data,
+                undefined,
+                UsersModel.User,
+                UsersModel.Login
+            )
+            return result;
+        } catch (e) {
+            toast.error(`Ошибка входа в систему: ${e}`);
         }
     }
 }

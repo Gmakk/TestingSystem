@@ -17,4 +17,9 @@ export namespace UsersModel {
     })
 
     export const Users = z.array(User)
+
+    export const Login = z.object({
+        login: z.string(),
+        password: z.string()
+    })
 }
