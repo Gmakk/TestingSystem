@@ -402,7 +402,8 @@ export const AdminPage: React.FC = observer(() => {
                     <option value=''>Все роли</option>
                     <option value='tester'>tester</option>
                     <option value='admin'>admin</option>
-                    <option value='user'>user</option>
+                    <option value='director'>director</option>
+                    <option value='analyst'>analyst</option>
                 </select>
                 {/* <span style={{ fontSize: "30px", fontWeight: 500, color: theme.colors.text.primary }}>
                     Редактирование данных пользователя</span> */}
