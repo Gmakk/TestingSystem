@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, isAuthenticated, requiredRole }) => {
     const navigate = useNavigate();
-    const userRole = localStorage.getItem('userRole');
+    const userRole = localStorage.getItem("userRole");
 
     useEffect(() => {
         if (!isAuthenticated) {

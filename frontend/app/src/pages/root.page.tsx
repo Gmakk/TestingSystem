@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "../components/Stack";
 import header from "../assets/header.svg";
@@ -20,9 +20,14 @@ export const RootPage: React.FC = () => {
     const [password, setPassword] = useState<string | undefined>();
     const navigate = useNavigate();
 
+    const [redirectPath, setRedirectPath] = useState<routes | null>(null);
+
     useEffect(() => {
-        localStorage.clear()
-    }, [])
+        if (redirectPath) {
+            navigate(redirectPath)
+            setRedirectPath(null)
+        }
+    }, [redirectPath, navigate])
 
     const logIn = async () => {
         if (!login || !password) {
@@ -31,28 +36,32 @@ export const RootPage: React.FC = () => {
         }
 
         const res = await UsersApi.login({ login, password });
+
         if (res !== undefined && "error" in res) {
-            toast.error("Ошибка при входе")
+            toast.error("Ошибка при входе");
         } else {
             if (res?.role) {
-                localStorage.setItem("userRole", res.role);
+                localStorage.setItem('userRole', res.role);
                 localStorage.setItem("userName", res.fullName);
-
+                let targetRoute: routes | null = null;
                 switch (res.role) {
                     case 'tester':
-                        navigate(routes.$tester);
+                        targetRoute = routes.$tester
                         break;
                     case 'admin':
-                        navigate(routes.$admin);
+                        targetRoute = routes.$admin
                         break;
                     case 'analyst':
-                        navigate(routes.$analyst);
+                        targetRoute = routes.$analyst
                         break;
                     case 'director':
-                        navigate(routes.$director);
+                        targetRoute = routes.$director
                         break;
                     default:
                         toast.error("Вход в систему запрещен, либо пользователь не найден");
+                }
+                if (targetRoute) {
+                    setRedirectPath(targetRoute)
                 }
             } else {
                 toast.error("Неверный логин или пароль");
@@ -72,5 +81,5 @@ export const RootPage: React.FC = () => {
                 <PrimaryButton text="Войти" onClick={logIn} />
             </Stack>
         </Stack>
-    )
-}
+    );
+};

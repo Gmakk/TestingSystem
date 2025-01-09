@@ -20,6 +20,7 @@ export const Header = () => {
     const theme = useTheme();
     const nanigate = useNavigate();
     const logOut = () => {
+        localStorage.clear();
         nanigate("/");
     }
     return (
