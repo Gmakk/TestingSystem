@@ -174,6 +174,17 @@ export const TestPlanForm: React.FC<{
     useEffect(() => {
         x.vm.getTesters.launch();
     }, [])
+
+    const approveTestPlan = () => {
+        try {
+            x.vm.approveTestPlan.launch(x.item.id);
+            toast.success("Успешно утвержден");
+            x.vm.select(null);
+        } catch {
+            toast.error("Ошибка при утверждении тест-плана")
+        }
+    }
+
     return (
         <Stack direction="column" gap={30} style={{
             background: theme.colors.containerBg, padding: "10px 40px 40px 50px",
@@ -199,9 +210,9 @@ export const TestPlanForm: React.FC<{
                             assignFn={v => x.vm.assignTester.launch(v)} />)
                     }
                 </Stack> :
-                <Stack direction="column" gap={30}>
-                    <StyledText>Сначала необходимо утвердить тест-план</StyledText>
-                    <PrimaryButton text="" onClick={() => x.vm.approveTestPlan.launch(x.item.id)} />
+                <Stack direction="column" gap={15} style={{ alignItems: "center" }}>
+                    <StyledText size={20} color={theme.colors.accentBg}>Сначала необходимо утвердить тест-план!</StyledText>
+                    <PrimaryButton text="Утвердить" onClick={approveTestPlan} />
                 </Stack>
             }
             <Expandee />
