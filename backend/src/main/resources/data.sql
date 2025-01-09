@@ -32,7 +32,40 @@ INSERT INTO userr (id, is_active, login, name, surname, patronymic, password, ro
                          ('3',true,'analyst','Иван','Иванов','Иванович','$2a$10$RJef5odVkEbE1mFrMIZfmet4f/JrLLEmDtdIPcgkFLwvMuejbSTJO','analyst'),
                          ('4',true,'tester','Иван','Иванов','Иванович','$2a$10$jiPCz.K8lA8q7XGvp5OaguLKg.QxjlZwcJnwFyMtyNvzSgzehVRci','tester'),
                          ('5',false,'inactive','Иван','Иванов','Иванович','$2y$10$qpuOza3wgD10NnOGi4jey.FquLv.cK6E8zYh2oVeBW2twb49fRkVm','tester'),
-                         ('6',true,'withoutRole','Иван','Иванов','Иванович','$2a$10$eiiuEujCNpZFukmY4js5z.InuQtYvoRbsxQ8qaZ5yvf3FTIYDWvsO',null);
+                         ('6',true,'withoutRole','Иван','Иванов','Иванович','$2a$10$eiiuEujCNpZFukmY4js5z.InuQtYvoRbsxQ8qaZ5yvf3FTIYDWvsO',null),
+                         ('7', true, 'admin1', 'Иван', 'Иванов', 'Иванович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('8', true, 'analyst2', 'Петр', 'Петров', 'Петрович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('9', true, 'tester3', 'Сидор', 'Сидоров', 'Сидорович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('10', true, 'admin3', 'Федор', 'Федоров', 'Федорович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('11', true, 'analys4t', 'Алексей', 'Алексеев', 'Алексеевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('12', true, 'tester4', 'Николай', 'Николаев', 'Николаевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('13', true, 'admin4', 'Михаил', 'Михайлов', 'Михайлович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('14', true, 'analyst5', 'Дмитрий', 'Дмитриев', 'Дмитриевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('15', true, 'tester5', 'Василий', 'Васильев', 'Васильевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('16', true, 'admin5', 'Игорь', 'Кузнецов', 'Игоревич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('17', true, 'analyst6', 'Григорий', 'Григорьев', 'Григорьевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('18', true, 'tester6', 'Андрей', 'Андреев', 'Андреевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('19', true, 'admin6', 'Илья', 'Ильин', 'Ильич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('20', true, 'analyst7', 'Павел', 'Павлов', 'Павлович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('21', true, 'tester7', 'Сергей', 'Сергеев', 'Сергеевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('22', true, 'admin7', 'Евгений', 'Евгеньев', 'Евгеньевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('23', true, 'analyst8', 'Борис', 'Борисов', 'Борисович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('24', true, 'tester8', 'Аркадий', 'Аркадьев', 'Аркадьевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('25', true, 'admin8', 'Георгий', 'Георгиев', 'Георгиевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('26', true, 'analyst9', 'Тимофей', 'Тимофеев', 'Тимофеевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('27', true, 'tester9', 'Виктор', 'Викторов', 'Викторович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('28', true, 'admin9', 'Константин', 'Константинов', 'Константинович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('29', true, 'analyst10', 'Олег', 'Олегов', 'Олегович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('30', true, 'tester10', 'Максим', 'Максимов', 'Максимович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('31', true, 'admin10', 'Роман', 'Романов', 'Романович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('32', true, 'analyst11', 'Евдоким', 'Евдокимов', 'Евдокимович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('33', true, 'tester11', 'Станислав', 'Станиславов', 'Станиславович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester'),
+                         ('34', true, 'admin11', 'Яков', 'Яковлев', 'Яковлевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'admin'),
+                         ('35', true, 'analyst12', 'Игнат', 'Игнатьев', 'Игнатьевич', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'analyst'),
+                         ('36', true, 'tester12', 'Тарас', 'Тарасов', 'Тарасович', '$2y$10$EO7pud6LaD4fCWD87DB24uMPZ.HuQCLra0lJu6V8ggrRibaDevpBm', 'tester');
+
+
+
 
 
 
