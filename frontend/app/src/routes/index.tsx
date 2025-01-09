@@ -66,8 +66,7 @@ export const createRoute = (path: routes, requiredRole?: string, Component?: FC)
 export const router = createBrowserRouter([
     {
         path: routes.$root,
-        lazy: () => import("../pages/root.page")
-            .then(m => ({ Component: m.RootPage as FC })),
+        Component: (await import("../pages/root.page")).RootPage as FC
     },
     createRoute(routes.$tester, "tester"),
     createRoute(routes.$admin, "admin"),

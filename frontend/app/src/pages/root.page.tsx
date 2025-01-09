@@ -35,8 +35,8 @@ export const RootPage: React.FC = () => {
             toast.error("Ошибка при входе")
         } else {
             if (res?.role) {
-                localStorage.setItem('userRole', res.role);
-                localStorage.setItem("userName", res.fullName)
+                localStorage.setItem("userRole", res.role);
+                localStorage.setItem("userName", res.fullName);
 
                 switch (res.role) {
                     case 'tester':
