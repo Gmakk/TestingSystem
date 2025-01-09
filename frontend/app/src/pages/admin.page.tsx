@@ -280,7 +280,7 @@
 // })
 
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTheme } from '@emotion/react';
 import { Input } from '../components/input.component';
@@ -317,10 +317,6 @@ const List = styled.div`
     border-radius: 6px;
 `;
 
-// interface AdminPageProps {
-//     vm: AdminViewModel
-// }
-
 interface SortOptions {
     field: 'login' | 'fullName';
     order: 'asc' | 'desc';
@@ -328,7 +324,7 @@ interface SortOptions {
 
 export const AdminPage: React.FC = observer(() => {
     const theme = useTheme();
-    const vm = new AdminViewModel();
+    const vm = useMemo(() => new AdminViewModel(), []); 
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, setPage] = useState(() => {
         const pageParam = searchParams.get('page');
@@ -368,7 +364,7 @@ export const AdminPage: React.FC = observer(() => {
         };
 
         fetchData();
-    }, [page, size, sortOptions, filterRole, vm]);
+    }, [page, size, sortOptions, filterRole, vm, vm.users.length]);
 
 
     const handlePageChange = (newPage: number) => {
@@ -400,8 +396,8 @@ export const AdminPage: React.FC = observer(() => {
     return (
         <Page>
             <GridContainer>
-                <Input value={vm.search} onChange={v => vm.search = v}
-                    placeholder="Введите имя пользователя" />
+                {/* <Input value={vm.search} onChange={v => vm.search = v}
+                    placeholder="Введите имя пользователя" /> */}
                 <select value={filterRole} onChange={e => handleFilterChange(e.target.value)}>
                     <option value=''>Все роли</option>
                     <option value='tester'>tester</option>
@@ -441,7 +437,7 @@ const Item: React.FC<Pick<AdminUser, "fullName" | "role" | "login"> & { onClick:
     return (
         <Stack onClick={x.onClick} direction="column" style={{ background: theme.colors.containerBg, padding: "5px", cursor: "pointer" }}>
             <span color={theme.colors.text.primary} style={{ fontSize: "18px" }}>{x.fullName}</span>
-            <span color={theme.colors.text.primary} style={{ fontSize: "18px" }}>{x.login}</span>
+            {/* <span color={theme.colors.text.primary} style={{ fontSize: "18px" }}>{x.login}</span> */}
             <span color={theme.colors.text.primary} style={{ opacity: 0.5, fontSize: "15px" }}>{x.role ? x.role : UserTypes.withoutRole}</span>
         </Stack>
     )

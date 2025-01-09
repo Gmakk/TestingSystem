@@ -185,7 +185,6 @@ export interface AdminUser {
     isActive: boolean;
 }
 
-
 export class AdminViewModel {
     users: AdminUser[] = [];
     search: string = '';
@@ -208,6 +207,7 @@ export class AdminViewModel {
                 },
             });
             this.users = response.data.content;
+            console.log("users", this.users)
             this.totalPages = response.data.totalPages;
         } catch (error) {
             console.error("Error fetching users:", error);
