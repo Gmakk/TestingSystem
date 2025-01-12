@@ -282,4 +282,18 @@ export namespace AnalystApi {
             toast.error(`Произошла ошибка при получении тест-кейса: ${res.error}`)
         else return res;
     }
+
+    export async function descriptionByTitle(data: z.infer<typeof AnalystModel.Title>) {
+        const res = await httpRequest.request(
+            "POST",
+            "/integration/generate",
+            data,
+            undefined,
+            AnalystModel.DescriptionByTitle,
+            AnalystModel.Title
+        )
+        if ('error' in res)
+            toast.error(`Произошла ошибка при генерации описания по названию: ${res.error}`)
+        else return res;
+    }
 }

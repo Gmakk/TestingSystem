@@ -16,6 +16,8 @@ import { DatePicker } from "../components/datepicker.component";
 import { canOpen, Projects } from "./Tree.component";
 import { TestCaseType, ScenarioType, TestPlanType, ProjectType, TreeComponentViewModel, Form } from "../view-models/tree.vm";
 import { StatisticsDownload } from "./director.page";
+import { toast } from "sonner";
+import { AnalystApi } from "../api/endpoints/analyst";
 
 const GridContainer = styled.div`
     display: grid;
@@ -55,7 +57,16 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
         inputData: x.item?.inputData ?? "",
         outputData: x.item?.outputData ?? "",
         projectTitle: x.item?.projectTitle ?? ""
-    })
+    });
+
+    const generateDescription = async () => {
+        if (form.title.length === 0) {
+            toast.info("Для генерации описания необходимо ввести название");
+        } else {
+            const res = await AnalystApi.descriptionByTitle({ title: form.title });
+            setForm({ ...form, description: res?.discription ?? "" })
+        }
+    }
 
     return (
         <Stack direction="column" gap={30} style={{
@@ -80,8 +91,11 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
             <Stack direction="column" gap={20}>
                 <Input value={form.title} onChange={v => setForm({ ...form, title: v })}
                     style={InputFormStyles} placeholder="Введите название" />
-                <textarea style={InputFormStyles} placeholder="Введите описание" rows={3}
-                    value={form.description} onChange={v => setForm({ ...form, description: v.target.value })} />
+                <Stack direction="column" gap={10}>
+                    <textarea style={InputFormStyles} placeholder="Введите описание" rows={3}
+                        value={form.description} onChange={v => setForm({ ...form, description: v.target.value })} />
+                    <SecondaryButton style={{ alignSelf: "flex-end" }} text="Сгенерировать по названию" onClick={generateDescription} />
+                </Stack>
                 <textarea style={InputFormStyles} placeholder="Введите входные данные"
                     value={form.inputData} onChange={v => setForm({ ...form, inputData: v.target.value })} />
                 <textarea style={InputFormStyles} placeholder="Введите выходные данные"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
 
@@ -13,7 +13,8 @@ interface ButtonProps {
     disabled?: boolean;
     height?: string;
     width?: string;
-    border?: string
+    border?: string;
+    style?: CSSProperties
 }
 
 const StyledButton = styled.button<Omit<ButtonProps, "text">>`
@@ -45,22 +46,25 @@ export const Button: React.FC<ButtonProps> = x => {
             border={x.border}
             width={x.width}
             height={x.height}
+            style={x.style}
         >
             {x.text}
         </StyledButton>
     );
 };
 
-export const PrimaryButton: React.FC<Pick<ButtonProps, "text" | "onClick">> = x => {
+export const PrimaryButton: React.FC<Pick<ButtonProps, "text" | "onClick" | "style">> = x => {
     return <Button text={x.text}
         onClick={x.onClick}
+        style={x.style}
         fontWeight={100} />
 }
 
-export const SecondaryButton: React.FC<Pick<ButtonProps, "text" | "onClick">> = x => {
+export const SecondaryButton: React.FC<Pick<ButtonProps, "text" | "onClick" | "style">> = x => {
     const theme = useTheme();
     return <Button text={x.text}
         onClick={x.onClick}
+        style={x.style}
         backgroundColor="transparent"
         textColor={theme.colors.accentBg}
         border={`1px solid ${theme.colors.accentBg}`} />

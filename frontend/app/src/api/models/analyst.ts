@@ -69,4 +69,12 @@ export namespace AnalystModel {
     export const ByProject = z.object({
         title: z.string()
     })
+
+    export const Title = z.object({
+        title: z.string()
+    })
+
+    export const DescriptionByTitle = z.object({
+        discription: z.string()
+    })
 }
