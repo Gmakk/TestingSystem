@@ -64,7 +64,7 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
             toast.info("Для генерации описания необходимо ввести название");
         } else {
             const res = await AnalystApi.descriptionByTitle({ title: form.title });
-            setForm({ ...form, description: res?.discription ?? "" })
+            setForm({ ...form, description: res?.description ?? "" })
         }
     }
 

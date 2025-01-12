@@ -75,6 +75,6 @@ export namespace AnalystModel {
     })
 
     export const DescriptionByTitle = z.object({
-        discription: z.string()
+        description: z.string()
     })
 }
