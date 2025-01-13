@@ -1,5 +1,8 @@
 package edu.example.testingsystem.api;
 
+import edu.example.testingsystem.ai.AiGenerationService;
+import edu.example.testingsystem.ai.DescriptionGenerationRequest;
+import edu.example.testingsystem.ai.DescriptionGenerationResponse;
 import edu.example.testingsystem.mapstruct.dto.GenerationRequest;
 import edu.example.testingsystem.mapstruct.dto.GenerationResponse;
 import lombok.AccessLevel;
@@ -16,13 +19,16 @@ import java.util.Random;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class IntegrationRestController {
+    AiGenerationService aiGenerationService;
 
     @PostMapping("/generate")
     public ResponseEntity<GenerationResponse> generateDescriptionByTitle(@RequestBody GenerationRequest title) {
-        byte[] array = new byte[20]; // length is bounded by 7
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-16"));
+//        byte[] array = new byte[20]; // length is bounded by 7
+//        new Random().nextBytes(array);
+//        String generatedString = new String(array, Charset.forName("UTF-16"));
 
-        return ResponseEntity.ok(new GenerationResponse(generatedString));
+        DescriptionGenerationResponse result = aiGenerationService.generateDescription(title.title());
+
+        return ResponseEntity.ok(new GenerationResponse(result.response()));
     }
 }
