@@ -42,6 +42,11 @@ export class AnalystPageViewModel {
         }
     }
 
+    public generateDescription = new AsyncExecution(async (title: string) => {
+        const res = await AnalystApi.descriptionByTitle({ title });
+        return res?.description ?? "";
+    })
+
     public saveScenario = new AsyncExecution(async (id: number | null, item: Omit<ScenarioType, "id">) => {
         if (id) {
             await AnalystApi.editScenario(id, item);

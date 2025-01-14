@@ -17,7 +17,7 @@ import { canOpen, Projects } from "./Tree.component";
 import { TestCaseType, ScenarioType, TestPlanType, ProjectType, TreeComponentViewModel, Form } from "../view-models/tree.vm";
 import { StatisticsDownload } from "./director.page";
 import { toast } from "sonner";
-import { AnalystApi } from "../api/endpoints/analyst";
+import { Loader } from "../components/loader.component";
 
 const GridContainer = styled.div`
     display: grid;
@@ -63,8 +63,8 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
         if (form.title.length === 0) {
             toast.info("Для генерации описания необходимо ввести название");
         } else {
-            const res = await AnalystApi.descriptionByTitle({ title: form.title });
-            setForm({ ...form, description: res?.description ?? "" })
+            const description = await x.vm.generateDescription.launch(form.title);
+            setForm({ ...form, description })
         }
     }
 
@@ -95,6 +95,7 @@ const TestCaseForm: React.FC<{ item: TestCaseType | null, vm: AnalystPageViewMod
                     <textarea style={InputFormStyles} placeholder="Введите описание" rows={3}
                         value={form.description} onChange={v => setForm({ ...form, description: v.target.value })} />
                     <SecondaryButton style={{ alignSelf: "flex-end" }} text="Сгенерировать по названию" onClick={generateDescription} />
+                    {x.vm.generateDescription.isPending && <Loader />}
                 </Stack>
                 <textarea style={InputFormStyles} placeholder="Введите входные данные"
                     value={form.inputData} onChange={v => setForm({ ...form, inputData: v.target.value })} />
