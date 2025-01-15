@@ -23,10 +23,6 @@ public class IntegrationRestController {
 
     @PostMapping("/generate")
     public ResponseEntity<GenerationResponse> generateDescriptionByTitle(@RequestBody GenerationRequest title) {
-//        byte[] array = new byte[20]; // length is bounded by 7
-//        new Random().nextBytes(array);
-//        String generatedString = new String(array, Charset.forName("UTF-16"));
-
         DescriptionGenerationResponse result = aiGenerationService.generateDescription(title.title());
 
         return ResponseEntity.ok(new GenerationResponse(result.response()));

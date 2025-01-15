@@ -23,6 +23,7 @@ public class TestCase {
     @ManyToOne
     private Userr creator;
     @NotNull
+    @Column(length = 5000)
     private String description;
     @NotNull
     private String inputData;
